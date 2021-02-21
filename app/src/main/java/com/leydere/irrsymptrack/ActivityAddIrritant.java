@@ -1,101 +1,103 @@
 package com.leydere.irrsymptrack;
 
 import androidx.appcompat.app.AppCompatActivity;
-import java.util.Calendar;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.Calendar;
+
 public class ActivityAddIrritant extends AppCompatActivity {
-    private static Button date, time;
-    private static TextView set_date, set_time;
-    private static final int Date_id = 0;
-    private static final int Time_id = 1;
+    
+    Button dateButton, timeButton;
+    TextView dateTextView, timeTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        date = (Button) findViewById(R.id.selectdate);
-        time = (Button) findViewById(R.id.selecttime);
-        set_date = (TextView) findViewById(R.id.set_date);
-        set_time = (TextView) findViewById(R.id.set_time);
-        date.setOnClickListener(new OnClickListener() {
-
+        setContentView(R.layout.activity_add_irritant);
+        
+        dateButton = findViewById(R.id.dateButton);
+        timeButton = findViewById(R.id.timeButton);
+        dateTextView = findViewById(R.id.dateTextView);
+        timeTextView = findViewById(R.id.timeTextView);
+        
+        dateButton.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View arg0) {
-
-                // Show Date dialog
-                showDialog(Date_id);
-            }
-        });
-        time.setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-
-                // Show time dialog
-                showDialog(Time_id);
+            public void onClick(View view) {
+                handleDateButton();
             }
         });
 
+        timeButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                handleTimeButton();
+            }
+        });
+        
+
+    }
+    //end of OnCreate
+
+    //Supporting methods
+
+    private void handleDateButton() {
+
+        Calendar calendar = Calendar.getInstance();
+
+        int YEAR = calendar.get(Calendar.YEAR);
+        int MONTH = calendar.get(Calendar.MONTH);
+        int DATE = calendar.get(Calendar.DATE);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                // below is Youtuber's format date; formats the string; not certain it is useful for DB though
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.set(Calendar.YEAR, year);
+                calendar1.set(Calendar.MONTH, month);
+                calendar1.set(Calendar.DATE, dayOfMonth);
+
+                CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar1);
+                dateTextView.setText(dateCharSequence);
+
+            }
+        }, YEAR, MONTH, DATE);
+
+        datePickerDialog.show();
     }
 
-    protected Dialog onCreateDialog(int id) {
+    private void handleTimeButton() {
+        Calendar calendar = Calendar.getInstance();
+        int HOUR = calendar.get(Calendar.HOUR_OF_DAY);
+        int MINUTE = calendar.get(Calendar.MINUTE);
 
-        // Get the calander
-        Calendar c = Calendar.getInstance();
+        boolean is24HourFormat = DateFormat.is24HourFormat(this);
 
-        // From calander get the year, month, day, hour, minute
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        int hour = c.get(Calendar.HOUR_OF_DAY);
-        int minute = c.get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-        switch (id) {
-            case Date_id:
+                Calendar calendar1 = Calendar.getInstance();
+                calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                calendar1.set(Calendar.MINUTE, minute);
 
-                // Open the datepicker dialog
-                return new DatePickerDialog(ActivityAddIrritant.this, date_listener, year,
-                        month, day);
-            case Time_id:
+                CharSequence charSequence = DateFormat.format("hh:mm a", calendar1);
+                timeTextView.setText(charSequence);
+            }
+        }, HOUR, MINUTE, is24HourFormat);
 
-                // Open the timepicker dialog
-                return new TimePickerDialog(ActivityAddIrritant.this, time_listener, hour,
-                        minute, false);
-
-        }
-        return null;
+        timePickerDialog.show();
     }
 
-    // Date picker dialog
-    DatePickerDialog.OnDateSetListener date_listener = new DatePickerDialog.OnDateSetListener() {
 
-        @Override
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            // store the data in one string and set it to text
-            String date1 = String.valueOf(month) + "/" + String.valueOf(day)
-                    + "/" + String.valueOf(year);
-            set_date.setText(date1);
-        }
-    };
-    TimePickerDialog.OnTimeSetListener time_listener = new TimePickerDialog.OnTimeSetListener() {
-
-        @Override
-        public void onTimeSet(TimePicker view, int hour, int minute) {
-            // store the data in one string and set it to text
-            String time1 = String.valueOf(hour) + ":" + String.valueOf(minute);
-            set_time.setText(time1);
-        }
-    };
 }
