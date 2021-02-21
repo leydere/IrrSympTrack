@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -42,7 +43,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab2"
+                    android:id="@+id/fab_navToAddSymptom"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|end"
@@ -76,10 +77,11 @@
                     android:layout_alignParentLeft="true">
 
                     <Button
-                        android:id="@+id/button_first_navToSecond"
+                        android:id="@+id/button_first_dummy"
                         android:layout_width="128dp"
                         android:layout_height="48dp"
-                        android:text="@string/symptoms"
+                        android:text="@string/irritants"
+                        android:backgroundTint="@color/purple_200"
                         />
 
                 </RelativeLayout>
@@ -90,10 +92,10 @@
                     android:layout_alignParentRight="true">
 
                     <Button
-                        android:id="@+id/button_first_dummy"
+                        android:id="@+id/button_first_navToSecond"
                         android:layout_width="128dp"
                         android:layout_height="48dp"
-                        android:text="@string/irritants"
+                        android:text="@string/symptoms"
                         />
 
                 </RelativeLayout>

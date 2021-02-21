@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -42,7 +43,7 @@
                     app:layout_constraintTop_toTopOf="parent"  />
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fab3"
+                        android:id="@+id/fab_navToAddIrritant"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|end"
@@ -91,7 +92,9 @@
                     android:id="@+id/button_second_dummy"
                     android:layout_width="128dp"
                     android:layout_height="48dp"
-                    android:text="@string/symptoms"/>
+                    android:text="@string/symptoms"
+                    android:backgroundTint="@color/purple_200"
+                    />
 
             </RelativeLayout>
 
