@@ -174,21 +174,24 @@
                                     android:layout_marginBottom="16dp">
 
                                     <RadioButton
-                                        android:id="@+id/radioButton"
+                                        android:id="@+id/radioButtonLow"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:onClick="onRadioButtonClicked"
                                         android:text="LOW" />
 
                                     <RadioButton
-                                        android:id="@+id/radioButton2"
+                                        android:id="@+id/radioButtonMid"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:onClick="onRadioButtonClicked"
                                         android:text="MID" />
 
                                     <RadioButton
-                                        android:id="@+id/radioButton3"
+                                        android:id="@+id/radioButtonHigh"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:onClick="onRadioButtonClicked"
                                         android:text="HIGH" />
                                 </RadioGroup>
 
@@ -223,7 +226,7 @@
                     </LinearLayout>
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fab"
+                        android:id="@+id/fabAddIrritantRecord"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|end"

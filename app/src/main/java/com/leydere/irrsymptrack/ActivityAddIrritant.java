@@ -4,13 +4,19 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
 
@@ -18,6 +24,10 @@ public class ActivityAddIrritant extends AppCompatActivity {
     
     Button dateButton, timeButton;
     TextView dateTextView, timeTextView;
+    EditText editTextIrritantTitle;
+    FloatingActionButton fabAddIrritantRecord;
+    Calendar calendar = Calendar.getInstance();
+    int radioIdSelected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,11 +38,14 @@ public class ActivityAddIrritant extends AppCompatActivity {
         timeButton = findViewById(R.id.timeButton);
         dateTextView = findViewById(R.id.dateTextView);
         timeTextView = findViewById(R.id.timeTextView);
+        editTextIrritantTitle = findViewById(R.id.editTextIrritantTitle);
+        fabAddIrritantRecord = findViewById(R.id.fabAddIrritantRecord);
+        radioIdSelected = -1;
         
         dateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                handleDateButton();
+                handleDateButton(calendar);
             }
         });
 
@@ -42,14 +55,70 @@ public class ActivityAddIrritant extends AppCompatActivity {
                 handleTimeButton();
             }
         });
+
+        fabAddIrritantRecord.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) { addIrritantRecordFAB(calendar); }
+        });
+
+
         
 
+    } //end of OnCreate
+
+    public void onRadioButtonClicked(View view) {
+        boolean checked = ((RadioButton) view).isChecked();
+
+        switch(view.getId()) {
+            case R.id.radioButtonLow:
+                if (checked)
+                    radioIdSelected = 0;
+                break;
+            case R.id.radioButtonMid:
+                if (checked)
+                    radioIdSelected = 1;
+                break;
+            case R.id.radioButtonHigh:
+                if (checked)
+                    radioIdSelected = 2;
+                break;
+        }
     }
-    //end of OnCreate
 
-    //Supporting methods
+    //
+    private void addIrritantRecordFAB(Calendar calendar) {
+        //TODO add irritant records based off title text, time and date inputs, and severity radio button
 
-    private void handleDateButton() {
+        String dateTimeString = dateTimeFormatToDB(calendar).toString();
+
+        ModelIrritant modelIrritant;
+        try{
+            modelIrritant = new ModelIrritant(editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIdSelected));
+        }
+        catch (Exception e) {
+            Toast.makeText(ActivityAddIrritant.this, "input error", Toast.LENGTH_SHORT).show();
+            modelIrritant = new ModelIrritant("error", "error", "error");
+        }
+
+
+        //tester Toast - can alter text value to my purposes
+        Context context = getApplicationContext();
+        CharSequence toastText = "Toast = " + String.valueOf(radioIdSelected);
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, toastText, duration);
+        toast.show();
+    }
+
+    private CharSequence dateTimeFormatToDB(Calendar calendar) {
+        CharSequence dateCharSequence = DateFormat.format("yyyy-MM-dd", calendar);
+        CharSequence timeCharSequence = DateFormat.format("HH:mm:ss.sss", calendar);
+        return dateCharSequence + " " + timeCharSequence;
+    }
+
+
+    //Supporting time date methods
+
+    private void handleDateButton(Calendar calendar1) {
 
         Calendar calendar = Calendar.getInstance();
 
@@ -62,7 +131,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
                 // below is Youtuber's format date; formats the string; not certain it is useful for DB though
-                Calendar calendar1 = Calendar.getInstance();
+                //Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(Calendar.YEAR, year);
                 calendar1.set(Calendar.MONTH, month);
                 calendar1.set(Calendar.DATE, dayOfMonth);
@@ -91,8 +160,8 @@ public class ActivityAddIrritant extends AppCompatActivity {
                 calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar1.set(Calendar.MINUTE, minute);
 
-                CharSequence charSequence = DateFormat.format("hh:mm a", calendar1);
-                timeTextView.setText(charSequence);
+                CharSequence timeCharSequence = DateFormat.format("hh:mm a", calendar1);
+                timeTextView.setText(timeCharSequence);
             }
         }, HOUR, MINUTE, is24HourFormat);
 
