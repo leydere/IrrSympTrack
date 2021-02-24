@@ -22,7 +22,7 @@ import java.util.Calendar;
 
 public class ActivityAddSymptom extends AppCompatActivity {
 
-    Button dateButton, timeButton;
+    Button dateButton, timeButton, addPictureButton;
     TextView dateTextView, timeTextView;
     EditText editTextSymptomTitle;
     FloatingActionButton fabAddSymptomRecord;
@@ -43,6 +43,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         fabAddSymptomRecord = findViewById(R.id.fabAddSymptomRecord);
         radioSymIdSelected = -1;
         radioGroupSymptom = findViewById(R.id.radioGroupSymptom);
+        addPictureButton = findViewById(R.id.addPictureButton);
 
         dateButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -78,7 +79,12 @@ public class ActivityAddSymptom extends AppCompatActivity {
             }
         });
 
-
+        addPictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO camera functionality goes here
+            }
+        });
 
 
     } //end of OnCreate
