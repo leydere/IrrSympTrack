@@ -66,6 +66,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
 
     } //end of OnCreate
 
+    //adds value to the radio button selected, must be in this format
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
 
@@ -85,12 +86,13 @@ public class ActivityAddIrritant extends AppCompatActivity {
         }
     }
 
-    //
+    // uses this
     private void addIrritantRecordFAB(Calendar calendar) {
-        //TODO add irritant records based off title text, time and date inputs, and severity radio button
 
+        //format dateTime for DB
         String dateTimeString = dateTimeFormatToDB(calendar).toString();
 
+        //create model to go into DB
         ModelIrritant modelIrritant;
         try{
             modelIrritant = new ModelIrritant(editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIdSelected));
@@ -100,13 +102,21 @@ public class ActivityAddIrritant extends AppCompatActivity {
             modelIrritant = new ModelIrritant("error", "error", "error");
         }
 
+        DatabaseHelper databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
+        boolean success = databaseHelper.addIrritantRecord(modelIrritant);
+
+        if (success == true) {
+            Toast.makeText(ActivityAddIrritant.this, "record added successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ActivityAddIrritant.this, "record added failure", Toast.LENGTH_SHORT).show();
+        }
 
         //tester Toast - can alter text value to my purposes
         Context context = getApplicationContext();
         CharSequence toastText = "Toast = " + String.valueOf(radioIdSelected);
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, toastText, duration);
-        toast.show();
+        //toast.show();
     }
 
     private CharSequence dateTimeFormatToDB(Calendar calendar) {
