@@ -169,29 +169,27 @@
                                     android:textSize="18dp"/>
 
                                 <RadioGroup
+                                    android:id="@+id/radioGroupIrritant"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="16dp">
 
                                     <RadioButton
-                                        android:id="@+id/radioButtonLow"
+                                        android:id="@+id/radioButtonIrrLow"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:onClick="onRadioButtonClicked"
                                         android:text="LOW" />
 
                                     <RadioButton
-                                        android:id="@+id/radioButtonMid"
+                                        android:id="@+id/radioButtonIrrMid"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:onClick="onRadioButtonClicked"
                                         android:text="MID" />
 
                                     <RadioButton
-                                        android:id="@+id/radioButtonHigh"
+                                        android:id="@+id/radioButtonIrrHigh"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:onClick="onRadioButtonClicked"
                                         android:text="HIGH" />
                                 </RadioGroup>
 

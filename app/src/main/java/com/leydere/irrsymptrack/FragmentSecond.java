@@ -1,5 +1,6 @@
 package com.leydere.irrsymptrack;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,19 @@ public class FragmentSecond extends Fragment {
             public void onClick(View view) {
                 NavHostFragment.findNavController(FragmentSecond.this)
                         .navigate(R.id.action_SecondFragment_to_FirstFragment);
+            }
+        });
+
+        view.findViewById(R.id.fab_navToAddSymptom).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //TODO test flag Will this work?
+
+                Intent intentAddSymptom = new Intent(getActivity(), ActivityAddSymptom.class);
+                startActivity(intentAddSymptom);
+
+
+
             }
         });
     }

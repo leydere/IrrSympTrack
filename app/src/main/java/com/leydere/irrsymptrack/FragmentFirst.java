@@ -36,7 +36,7 @@ public class FragmentFirst extends Fragment {
             }
         });
 
-        view.findViewById(R.id.fab_navToAddSymptom).setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.fab_navToAddIrritant).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //TODO test flag Will this work?

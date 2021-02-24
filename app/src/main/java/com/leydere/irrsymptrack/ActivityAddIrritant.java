@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -27,7 +27,8 @@ public class ActivityAddIrritant extends AppCompatActivity {
     EditText editTextIrritantTitle;
     FloatingActionButton fabAddIrritantRecord;
     Calendar calendar = Calendar.getInstance();
-    int radioIdSelected;
+    int radioIrrIdSelected;
+    RadioGroup radioGroupIrritant;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,8 @@ public class ActivityAddIrritant extends AppCompatActivity {
         timeTextView = findViewById(R.id.timeTextView);
         editTextIrritantTitle = findViewById(R.id.editTextIrritantTitle);
         fabAddIrritantRecord = findViewById(R.id.fabAddIrritantRecord);
-        radioIdSelected = -1;
+        radioIrrIdSelected = -1;
+        radioGroupIrritant = findViewById(R.id.radioGroupIrritant);
         
         dateButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -61,32 +63,26 @@ public class ActivityAddIrritant extends AppCompatActivity {
             public void onClick(View view) { addIrritantRecordFAB(calendar); }
         });
 
+        radioGroupIrritant.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId==R.id.radioButtonIrrLow){
+                    radioIrrIdSelected = 0;
+                }
+                else if (checkedId==R.id.radioButtonIrrMid){
+                    radioIrrIdSelected = 1;
+                }
+                else if (checkedId==R.id.radioButtonIrrHigh){
+                    radioIrrIdSelected = 2;
+                }
+            }
+        });
+
 
         
 
     } //end of OnCreate
 
-    //adds value to the radio button selected, must be in this format
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
-
-        switch(view.getId()) {
-            case R.id.radioButtonLow:
-                if (checked)
-                    radioIdSelected = 0;
-                break;
-            case R.id.radioButtonMid:
-                if (checked)
-                    radioIdSelected = 1;
-                break;
-            case R.id.radioButtonHigh:
-                if (checked)
-                    radioIdSelected = 2;
-                break;
-        }
-    }
-
-    // uses this
     private void addIrritantRecordFAB(Calendar calendar) {
 
         //format dateTime for DB
@@ -95,7 +91,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
         //create model to go into DB
         ModelIrritant modelIrritant;
         try{
-            modelIrritant = new ModelIrritant(editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIdSelected));
+            modelIrritant = new ModelIrritant(editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIrrIdSelected));
         }
         catch (Exception e) {
             Toast.makeText(ActivityAddIrritant.this, "input error", Toast.LENGTH_SHORT).show();
@@ -113,7 +109,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
 
         //tester Toast - can alter text value to my purposes
         Context context = getApplicationContext();
-        CharSequence toastText = "Toast = " + String.valueOf(radioIdSelected);
+        CharSequence toastText = "Toast = " + String.valueOf(radioIrrIdSelected);
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, toastText, duration);
         //toast.show();

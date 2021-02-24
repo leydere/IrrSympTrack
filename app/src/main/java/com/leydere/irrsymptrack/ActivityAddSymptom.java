@@ -9,7 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -27,7 +27,8 @@ public class ActivityAddSymptom extends AppCompatActivity {
     EditText editTextSymptomTitle;
     FloatingActionButton fabAddSymptomRecord;
     Calendar calendar = Calendar.getInstance();
-    int radioIdSelected;
+    int radioSymIdSelected;
+    RadioGroup radioGroupSymptom;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +41,8 @@ public class ActivityAddSymptom extends AppCompatActivity {
         timeTextView = findViewById(R.id.timeTextView);
         editTextSymptomTitle = findViewById(R.id.editTextSymptomTitle);
         fabAddSymptomRecord = findViewById(R.id.fabAddSymptomRecord);
-        radioIdSelected = -1;
+        radioSymIdSelected = -1;
+        radioGroupSymptom = findViewById(R.id.radioGroupSymptom);
 
         dateButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -61,32 +63,27 @@ public class ActivityAddSymptom extends AppCompatActivity {
             public void onClick(View view) { addSymptomRecordFAB(calendar); }
         });
 
+        radioGroupSymptom.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(checkedId==R.id.radioButtonSymLow){
+                    radioSymIdSelected = 0;
+                }
+                else if (checkedId==R.id.radioButtonSymMid){
+                    radioSymIdSelected = 1;
+                }
+                else if (checkedId==R.id.radioButtonSymHigh){
+                    radioSymIdSelected = 2;
+                }
+            }
+        });
+
 
 
 
     } //end of OnCreate
 
-    //adds value to the radio button selected, must be in this format
-    public void onRadioButtonClicked(View view) {
-        boolean checked = ((RadioButton) view).isChecked();
-
-        switch(view.getId()) {
-            case R.id.radioButtonSymLow:
-                if (checked)
-                    radioIdSelected = 0;
-                break;
-            case R.id.radioButtonSymMid:
-                if (checked)
-                    radioIdSelected = 1;
-                break;
-            case R.id.radioButtonSymHigh:
-                if (checked)
-                    radioIdSelected = 2;
-                break;
-        }
-    }
-
-    // uses this
+    //when floating action button is clicked this method is called from the OnClickListener; functionality to create symptom model and feed to database helper add record method is included
     private void addSymptomRecordFAB(Calendar calendar) {
 
         //format dateTime for DB
@@ -97,7 +94,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         //create model to go into DB
         ModelSymptom modelSymptom;
         try{
-            modelSymptom = new ModelSymptom(editTextSymptomTitle.getText().toString(), dateTimeString, String.valueOf(radioIdSelected), "");
+            modelSymptom = new ModelSymptom(editTextSymptomTitle.getText().toString(), dateTimeString, String.valueOf(radioSymIdSelected), "");
         }
         catch (Exception e) {
             Toast.makeText(ActivityAddSymptom.this, "input error", Toast.LENGTH_SHORT).show();
@@ -115,7 +112,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
 
         //tester Toast - can alter text value to my purposes
         Context context = getApplicationContext();
-        CharSequence toastText = "Toast = " + String.valueOf(radioIdSelected);
+        CharSequence toastText = "Toast = " + String.valueOf(radioSymIdSelected);
         int duration = Toast.LENGTH_SHORT;
         Toast toast = Toast.makeText(context, toastText, duration);
         //toast.show();

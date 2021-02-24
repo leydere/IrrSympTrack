@@ -169,6 +169,7 @@
                             android:textSize="18dp"/>
 
                         <RadioGroup
+                            android:id="@+id/radioGroupSymptom"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="16dp">
@@ -177,21 +178,18 @@
                                 android:id="@+id/radioButtonSymLow"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:onClick="onRadioButtonClicked"
                                 android:text="LOW" />
 
                             <RadioButton
                                 android:id="@+id/radioButtonSymMid"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:onClick="onRadioButtonClicked"
                                 android:text="MID" />
 
                             <RadioButton
                                 android:id="@+id/radioButtonSymHigh"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:onClick="onRadioButtonClicked"
                                 android:text="HIGH" />
                         </RadioGroup>
 
