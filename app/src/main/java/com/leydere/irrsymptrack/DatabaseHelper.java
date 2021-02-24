@@ -114,4 +114,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         long insert = db.insert(TABLE_IRRITANTS, null, contentValues);
         if (insert == -1) { return false; } else { return true; }
     }
+
+    public boolean addSymptomRecord(ModelSymptom modelSymptom){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_SYM_TITLE, modelSymptom.getSymTitle());
+        contentValues.put(COLUMN_SYM_TIMEDATE, modelSymptom.getSymTimeDate());
+        contentValues.put(COLUMN_SYM_SEVERITY, modelSymptom.getSymSeverity());
+        contentValues.put(COLUMN_SYM_IMAGE_PATH, modelSymptom.getSymImagePath());
+
+        long insert = db.insert(TABLE_SYMPTOMS, null, contentValues);
+        if (insert == -1) { return false; } else { return true; }
+    }
 }
