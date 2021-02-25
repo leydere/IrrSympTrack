@@ -9,16 +9,35 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
 
 public class FragmentSecond extends Fragment {
+
+    ArrayList<ModelSymptom> allSymptomsList;
+    DatabaseHelper databaseHelper;
+    RecyclerView symptomRecyclerView;
 
     @Override
     public View onCreateView(
             LayoutInflater inflater, ViewGroup container,
             Bundle savedInstanceState
     ) {
+        View rootView = inflater.inflate(R.layout.fragment_second, container, false);
+        //TODO how to I findViewById for the irritantRecyclerView? *solved?*
+        symptomRecyclerView = (RecyclerView)rootView.findViewById(R.id.symptomRecyclerView);
+
+        databaseHelper = new DatabaseHelper(getActivity());
+        allSymptomsList = getAllSymptoms();
+
+        setAdapter();
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_second, container, false);
+        return rootView;
+
     }
 
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
@@ -42,4 +61,19 @@ public class FragmentSecond extends Fragment {
             }
         });
     }
+
+    private ArrayList<ModelSymptom> getAllSymptoms(){
+        ArrayList<ModelSymptom> arrayListToReturn = new ArrayList<ModelSymptom>();
+        arrayListToReturn.addAll(databaseHelper.getAllSymptoms());
+        return arrayListToReturn;
+    }
+
+    private void setAdapter() {
+        AdapterSymptomList adapter = new AdapterSymptomList(allSymptomsList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        symptomRecyclerView.setLayoutManager(layoutManager);
+        symptomRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        symptomRecyclerView.setAdapter(adapter);
+    }
+
 }

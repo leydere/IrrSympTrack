@@ -159,4 +159,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return compiledResults;
     }
+
+    // gets all symptoms records, to be used in populating the fragment 2 recycler view
+    public List<ModelSymptom> getAllSymptoms() {
+        List<ModelSymptom> compiledResults = new ArrayList();
+        String queryString = "SELECT * FROM " + TABLE_SYMPTOMS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int symId = cursor.getInt(0);
+                String symTitle = cursor.getString(1);
+                String symDateTime = cursor.getString(2);
+                String symSeverity = cursor.getString(3);
+
+                //TODO image path null will need changed upon addition of camera feature
+                ModelSymptom newSymptom = new ModelSymptom(symId, symTitle, symDateTime, symSeverity, null);
+                compiledResults.add(newSymptom);
+            } while (cursor.moveToNext());
+        } else {
+            // TODO tbd
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
 }

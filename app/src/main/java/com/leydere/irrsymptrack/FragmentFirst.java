@@ -24,7 +24,6 @@ import java.util.List;
 public class FragmentFirst extends Fragment {
 
     ArrayList<ModelIrritant> allIrritantsList;
-
     DatabaseHelper databaseHelper;
     RecyclerView irritantRecyclerView;
 

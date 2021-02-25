@@ -61,7 +61,11 @@ public class ActivityAddSymptom extends AppCompatActivity {
 
         fabAddSymptomRecord.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) { addSymptomRecordFAB(calendar); }
+            public void onClick(View view) {
+                addSymptomRecordFAB(calendar);
+                //TODO insert navigate back to mainactivity.secondfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature
+                // findViewById(R.id.)...
+            }
         });
 
         radioGroupSymptom.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
