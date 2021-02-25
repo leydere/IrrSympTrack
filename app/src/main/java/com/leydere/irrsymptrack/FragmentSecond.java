@@ -35,6 +35,8 @@ public class FragmentSecond extends Fragment {
 
         setAdapter();
 
+
+
         // Inflate the layout for this fragment
         return rootView;
 
@@ -60,6 +62,8 @@ public class FragmentSecond extends Fragment {
 
             }
         });
+
+
     }
 
     private ArrayList<ModelSymptom> getAllSymptoms(){

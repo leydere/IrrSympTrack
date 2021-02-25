@@ -3,6 +3,7 @@ package com.leydere.irrsymptrack;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
@@ -29,11 +30,14 @@ public class ActivityAddSymptom extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
     int radioSymIdSelected;
     RadioGroup radioGroupSymptom;
+    int idFromSymptomList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_symptom);
+
+        //presidentList = myApplication.getPresdientList(); //going to have to go back through series on RecyclerView to figure out where this links to
 
         dateButton = findViewById(R.id.dateButton);
         timeButton = findViewById(R.id.timeButton);
@@ -44,6 +48,28 @@ public class ActivityAddSymptom extends AppCompatActivity {
         radioSymIdSelected = -1;
         radioGroupSymptom = findViewById(R.id.radioGroupSymptom);
         addPictureButton = findViewById(R.id.addPictureButton);
+
+        Intent intent = getIntent(); // this is for intent sent from AdapterSymptomList
+        idFromSymptomList = intent.getIntExtra("id", -1); //Based on this if idFromSymptom list > -1 you can treat this as an edit.  Otherwise treat as create new.
+        //President president = null;  //not sure how this will translate to my purposes. leaving in for time being (ModelSymptom maybe)
+
+        if (idFromSymptomList > -1) {
+            //editing a record
+            /*
+            for (President p: presidentList) {
+                if (p.getId() == idFromSymptomList) {
+                    president = p;
+                }
+            }
+            et_presName.setText(president.getName());
+            et_presDate.setText(president.getDate());
+            et_presImageURL.setText(president.getImageURL());
+            
+             */
+        }
+        else{
+            //creating a record
+        }
 
         dateButton.setOnClickListener(new View.OnClickListener(){
             @Override

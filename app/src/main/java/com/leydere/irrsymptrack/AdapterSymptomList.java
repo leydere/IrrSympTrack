@@ -1,8 +1,11 @@
 package com.leydere.irrsymptrack;
 
+import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -11,18 +14,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.MyViewHolder> {
+    private final Context context;
     private ArrayList<ModelSymptom> symptomList;
 
-    public AdapterSymptomList(ArrayList<ModelSymptom> symptomList){
+    public AdapterSymptomList(ArrayList<ModelSymptom> symptomList, Context context){
         this.symptomList = symptomList;
+        this.context = context;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         private TextView symptomText;
+        LinearLayout symptomParentLayout;
 
         public MyViewHolder(final View view){
             super(view);
             symptomText = view.findViewById(R.id.symptom_text_display);
+            symptomParentLayout = view.findViewById(R.id.symptomParentLayout);
         }
     }
 
@@ -38,6 +45,15 @@ public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.
         //TODO can add more String details here
         String titleFound = symptomList.get(position).getSymTitle();
         holder.symptomText.setText(titleFound);
+        holder.symptomParentLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //send control to the add-edit symptom activity?
+                Intent intent = new Intent(context, ActivityAddSymptom.class);
+                intent.putExtra("id", symptomList.get(position).getId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
