@@ -2,10 +2,14 @@ package com.leydere.irrsymptrack;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -126,5 +130,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         long insert = db.insert(TABLE_SYMPTOMS, null, contentValues);
         if (insert == -1) { return false; } else { return true; }
+    }
+
+
+    // gets all irritant records, to be used in populating the fragment 1 recycler view
+    public List<ModelIrritant> getAllIrritants() {
+        List<ModelIrritant> compiledResults = new ArrayList();
+        String queryString = "SELECT * FROM " + TABLE_IRRITANTS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int irrId = cursor.getInt(0);
+                String irrTitle = cursor.getString(1);
+                String irrDateTime = cursor.getString(2);
+                String irrSeverity = cursor.getString(3);
+
+                ModelIrritant newIrritant = new ModelIrritant(irrId, irrTitle, irrDateTime, irrSeverity);
+                compiledResults.add(newIrritant);
+            } while (cursor.moveToNext());
+        } else {
+            // TODO tbd
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
     }
 }
