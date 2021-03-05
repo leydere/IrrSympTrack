@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -186,5 +187,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return compiledResults;
+    }
+
+    public ModelSymptom getSingleSymptomRecord(int id){
+        ModelSymptom newSymptom = new ModelSymptom(id, null, null, null, null);
+        String queryString = "SELECT * FROM " + TABLE_SYMPTOMS + " WHERE " + COLUMN_SYM_ID + "=" + id + ";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            String symTitle = cursor.getString(1);
+            String symDateTime = cursor.getString(2);
+            String symSeverity = cursor.getString(3);
+
+            //TODO image path null will need changed upon addition of camera feature
+            newSymptom = new ModelSymptom(id, symTitle, symDateTime, symSeverity, null);
+
+        } else  {
+            //
+        }
+        cursor.close();
+        db.close();
+        return newSymptom;
     }
 }

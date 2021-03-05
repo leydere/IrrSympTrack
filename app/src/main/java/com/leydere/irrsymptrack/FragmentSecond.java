@@ -67,13 +67,14 @@ public class FragmentSecond extends Fragment {
     }
 
     private ArrayList<ModelSymptom> getAllSymptoms(){
-        ArrayList<ModelSymptom> arrayListToReturn = new ArrayList<ModelSymptom>();
+        ArrayList<ModelSymptom> arrayListToReturn = new ArrayList<>();
         arrayListToReturn.addAll(databaseHelper.getAllSymptoms());
         return arrayListToReturn;
     }
 
     private void setAdapter() {
-        AdapterSymptomList adapter = new AdapterSymptomList(allSymptomsList);
+        //AdapterSymptomsList requires context argument.  After adding getContext() it seems to function.  Not sure if correct solution.  Possible monitoring point if issues present.
+        AdapterSymptomList adapter = new AdapterSymptomList(allSymptomsList, getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         symptomRecyclerView.setLayoutManager(layoutManager);
         symptomRecyclerView.setItemAnimator(new DefaultItemAnimator());

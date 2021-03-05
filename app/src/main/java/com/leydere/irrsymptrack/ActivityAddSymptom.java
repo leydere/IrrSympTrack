@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -19,7 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class ActivityAddSymptom extends AppCompatActivity {
 
@@ -30,7 +34,11 @@ public class ActivityAddSymptom extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
     int radioSymIdSelected;
     RadioGroup radioGroupSymptom;
+    RadioButton radioButtonSymLow;
+    RadioButton radioButtonSymMid;
+    RadioButton radioButtonSymHigh;
     int idFromSymptomList;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,28 +55,58 @@ public class ActivityAddSymptom extends AppCompatActivity {
         fabAddSymptomRecord = findViewById(R.id.fabAddSymptomRecord);
         radioSymIdSelected = -1;
         radioGroupSymptom = findViewById(R.id.radioGroupSymptom);
+        radioButtonSymLow = findViewById(R.id.radioButtonSymLow);
+        radioButtonSymMid = findViewById(R.id.radioButtonSymMid);
+        radioButtonSymHigh = findViewById(R.id.radioButtonSymHigh);
         addPictureButton = findViewById(R.id.addPictureButton);
+
+        databaseHelper = new DatabaseHelper(ActivityAddSymptom.this);
 
         Intent intent = getIntent(); // this is for intent sent from AdapterSymptomList
         idFromSymptomList = intent.getIntExtra("id", -1); //Based on this if idFromSymptom list > -1 you can treat this as an edit.  Otherwise treat as create new.
         //President president = null;  //not sure how this will translate to my purposes. leaving in for time being (ModelSymptom maybe)
+        //Toast.makeText(ActivityAddSymptom.this, "Id from pushed extra == " + idFromSymptomList, Toast.LENGTH_SHORT).show();
 
+        //TODO: handle logic of what to do if intent has id value or does not (ie. edit a record or create a new record)
+        // Maybe rather than doing it Shad's way I can just use that id to query the database and populate my object that way.  Alternate I could pass the object rather than the id number.
         if (idFromSymptomList > -1) {
             //editing a record
-            /*
-            for (President p: presidentList) {
-                if (p.getId() == idFromSymptomList) {
-                    president = p;
-                }
+            ModelSymptom symptomToEdit = databaseHelper.getSingleSymptomRecord(idFromSymptomList);
+            //Toast.makeText(ActivityAddSymptom.this, "TimeDate from pushed extra == " + symptomToEdit.getSymTimeDate(), Toast.LENGTH_SHORT).show();
+
+            //set title text
+            editTextSymptomTitle.setText(symptomToEdit.getSymTitle());
+            //get time-date and format for use
+            String symTimeDate = symptomToEdit.getSymTimeDate();
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(symTimeDate));
+            } catch (Exception e) {
+                Toast.makeText(ActivityAddSymptom.this, "input error from calendar", Toast.LENGTH_SHORT).show();
             }
-            et_presName.setText(president.getName());
-            et_presDate.setText(president.getDate());
-            et_presImageURL.setText(president.getImageURL());
-            
-             */
+            //set date text
+            CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
+            dateTextView.setText(dateCharSequence);
+            //set time text
+            CharSequence timeCharSequence = DateFormat.format("hh:mm a", calendar);
+            timeTextView.setText(timeCharSequence);
+            //set severity radio button
+            try{
+                int i = Integer.parseInt(symptomToEdit.getSymSeverity());
+                if (i == 0){
+                    radioButtonSymLow.setChecked(true);
+                } else if (i == 1){
+                    radioButtonSymMid.setChecked(true);
+                } else if (i == 2){
+                    radioButtonSymHigh.setChecked(true);
+                }
+            } catch (Exception e) {
+                Toast.makeText(ActivityAddSymptom.this, "input error from severity", Toast.LENGTH_SHORT).show();
+            }
+
         }
         else{
-            //creating a record
+            //creating a record. Not sure I even need an else statement here. This is the onCreate.  If intent id is passed do above, otherwise do not.
         }
 
         dateButton.setOnClickListener(new View.OnClickListener(){
@@ -88,9 +126,11 @@ public class ActivityAddSymptom extends AppCompatActivity {
         fabAddSymptomRecord.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+                //TODO create distinction between adding a new record and editing an existing record.
                 addSymptomRecordFAB(calendar);
                 //TODO insert navigate back to mainactivity.secondfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature
                 // findViewById(R.id.)...
+
             }
         });
 
