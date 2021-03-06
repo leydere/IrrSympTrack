@@ -28,7 +28,7 @@ import java.util.Locale;
 public class ActivityAddSymptom extends AppCompatActivity {
 
     Button dateButton, timeButton, addPictureButton;
-    TextView dateTextView, timeTextView;
+    TextView dateTextView, timeTextView, addSymptomToolbarText;
     EditText editTextSymptomTitle;
     FloatingActionButton fabAddSymptomRecord;
     Calendar calendar = Calendar.getInstance();  //TODO: potential pain point of clock issue, maybe get instance later or provide if statement to get instance if new and get old data if existing
@@ -51,6 +51,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         timeButton = findViewById(R.id.timeButton);
         dateTextView = findViewById(R.id.dateTextView);
         timeTextView = findViewById(R.id.timeTextView);
+        addSymptomToolbarText = findViewById(R.id.addSymptomToolbarText);
         editTextSymptomTitle = findViewById(R.id.editTextSymptomTitle);
         fabAddSymptomRecord = findViewById(R.id.fabAddSymptomRecord);
         radioSymIdSelected = -1;
@@ -69,6 +70,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
 
         //if statement that determines if to display a record or start with blank
         if (idFromSymptomList > -1) {
+            addSymptomToolbarText.setText("Edit Existing Symptom Record");
             //editing a record
             ModelSymptom symptomToEdit = databaseHelper.getSingleSymptomRecord(idFromSymptomList);
             //Toast.makeText(ActivityAddSymptom.this, "TimeDate from pushed extra == " + symptomToEdit.getSymTimeDate(), Toast.LENGTH_SHORT).show();
@@ -110,7 +112,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
 
         }
         else{
-            //creating a record. Not sure I even need an else statement here. This is the onCreate.  If intent id is passed do above, otherwise do not.
+            addSymptomToolbarText.setText("Add New Symptom Record");
         }
 
         dateButton.setOnClickListener(new View.OnClickListener(){

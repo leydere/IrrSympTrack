@@ -23,7 +23,7 @@ import java.util.Calendar;
 public class ActivityAddIrritant extends AppCompatActivity {
     
     Button dateButton, timeButton;
-    TextView dateTextView, timeTextView;
+    TextView dateTextView, timeTextView, addIrritantToolbarText;
     EditText editTextIrritantTitle;
     FloatingActionButton fabAddIrritantRecord;
     Calendar calendar = Calendar.getInstance();
@@ -39,6 +39,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
         timeButton = findViewById(R.id.timeButton);
         dateTextView = findViewById(R.id.dateTextView);
         timeTextView = findViewById(R.id.timeTextView);
+        addIrritantToolbarText = findViewById(R.id.addIrritantToolbarText);
         editTextIrritantTitle = findViewById(R.id.editTextIrritantTitle);
         fabAddIrritantRecord = findViewById(R.id.fabAddIrritantRecord);
         radioIrrIdSelected = -1;
