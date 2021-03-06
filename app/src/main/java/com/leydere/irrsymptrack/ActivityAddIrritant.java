@@ -54,7 +54,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
         timeButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                handleTimeButton();
+                handleTimeButton(calendar);
             }
         });
 
@@ -151,7 +151,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void handleTimeButton() {
+    private void handleTimeButton(Calendar calendar1) {
         Calendar calendar = Calendar.getInstance();
         int HOUR = calendar.get(Calendar.HOUR_OF_DAY);
         int MINUTE = calendar.get(Calendar.MINUTE);
@@ -162,7 +162,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                Calendar calendar1 = Calendar.getInstance();
+                //Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar1.set(Calendar.MINUTE, minute);
 

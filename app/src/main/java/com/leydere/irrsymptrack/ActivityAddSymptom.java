@@ -31,7 +31,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
     TextView dateTextView, timeTextView;
     EditText editTextSymptomTitle;
     FloatingActionButton fabAddSymptomRecord;
-    Calendar calendar = Calendar.getInstance();
+    Calendar calendar = Calendar.getInstance();  //TODO: potential pain point of clock issue, maybe get instance later or provide if statement to get instance if new and get old data if existing
     int radioSymIdSelected;
     RadioGroup radioGroupSymptom;
     RadioButton radioButtonSymLow;
@@ -118,7 +118,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         timeButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                handleTimeButton();
+                handleTimeButton(calendar);
             }
         });
 
@@ -263,7 +263,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    private void handleTimeButton() {
+    private void handleTimeButton(Calendar calendar1) {
         Calendar calendar = Calendar.getInstance();
         int HOUR = calendar.get(Calendar.HOUR_OF_DAY);
         int MINUTE = calendar.get(Calendar.MINUTE);
@@ -274,7 +274,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                Calendar calendar1 = Calendar.getInstance();
+                //Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar1.set(Calendar.MINUTE, minute);
 
