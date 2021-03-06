@@ -91,14 +91,19 @@ public class ActivityAddSymptom extends AppCompatActivity {
             timeTextView.setText(timeCharSequence);
             //set severity radio button
             try{
+                //Toast.makeText(ActivityAddSymptom.this, "Sev record is: " + symptomToEdit.getSymSeverity(), Toast.LENGTH_SHORT).show();
                 int i = Integer.parseInt(symptomToEdit.getSymSeverity());
                 if (i == 0){
                     radioButtonSymLow.setChecked(true);
+                    radioSymIdSelected = 0;
                 } else if (i == 1){
                     radioButtonSymMid.setChecked(true);
+                    radioSymIdSelected = 1;
                 } else if (i == 2){
                     radioButtonSymHigh.setChecked(true);
+                    radioSymIdSelected = 2;
                 }
+                //Toast.makeText(ActivityAddSymptom.this, "Radio selected is: " + radioSymIdSelected, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(ActivityAddSymptom.this, "input error from severity", Toast.LENGTH_SHORT).show();
             }
