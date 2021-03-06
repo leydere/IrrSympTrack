@@ -67,8 +67,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         //President president = null;  //not sure how this will translate to my purposes. leaving in for time being (ModelSymptom maybe)
         //Toast.makeText(ActivityAddSymptom.this, "Id from pushed extra == " + idFromSymptomList, Toast.LENGTH_SHORT).show();
 
-        //TODO: handle logic of what to do if intent has id value or does not (ie. edit a record or create a new record)
-        // Maybe rather than doing it Shad's way I can just use that id to query the database and populate my object that way.  Alternate I could pass the object rather than the id number.
+        //if statement that determines if to display a record or start with blank
         if (idFromSymptomList > -1) {
             //editing a record
             ModelSymptom symptomToEdit = databaseHelper.getSingleSymptomRecord(idFromSymptomList);
@@ -127,7 +126,13 @@ public class ActivityAddSymptom extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 //TODO create distinction between adding a new record and editing an existing record.
-                addSymptomRecordFAB(calendar);
+                if (idFromSymptomList > -1){
+                    updateExistingSymptomRecordFAB(calendar);
+                }else {
+                    addSymptomRecordFAB(calendar);
+                }
+
+
                 //TODO insert navigate back to mainactivity.secondfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature
                 // findViewById(R.id.)...
 
@@ -187,12 +192,41 @@ public class ActivityAddSymptom extends AppCompatActivity {
         }
 
         //tester Toast - can alter text value to my purposes
-        Context context = getApplicationContext();
         CharSequence toastText = "Toast = " + String.valueOf(radioSymIdSelected);
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, toastText, duration);
-        //toast.show();
+        //Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
     }
+
+    private void updateExistingSymptomRecordFAB(Calendar calendar) {
+
+        //format dateTime for DB
+        String dateTimeString = dateTimeFormatToDB(calendar).toString();
+
+        //TODO resolve image path for model constructor
+
+        //create model to go into DB
+        ModelSymptom modelSymptom;
+        try{
+            modelSymptom = new ModelSymptom(idFromSymptomList, editTextSymptomTitle.getText().toString(), dateTimeString, String.valueOf(radioSymIdSelected), "");
+        }
+        catch (Exception e) {
+            Toast.makeText(ActivityAddSymptom.this, "input error", Toast.LENGTH_SHORT).show();
+            modelSymptom = new ModelSymptom(-1,"error", "error", "error", "error");
+        }
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(ActivityAddSymptom.this);
+        boolean success = databaseHelper.updateExistingSymptomRecord(modelSymptom);
+
+        if (success == true) {
+            Toast.makeText(ActivityAddSymptom.this, "record updated successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ActivityAddSymptom.this, "record updated failure", Toast.LENGTH_SHORT).show();
+        }
+
+        //tester Toast - can alter text value to my purposes
+        CharSequence toastText = "Toast = " + String.valueOf(radioSymIdSelected);
+        //Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
+    }
+
 
     private CharSequence dateTimeFormatToDB(Calendar calendar) {
         CharSequence dateCharSequence = DateFormat.format("yyyy-MM-dd", calendar);
@@ -201,8 +235,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
     }
 
 
-    //Supporting time date methods
-
+    //region Supporting time date methods
     private void handleDateButton(Calendar calendar1) {
 
         Calendar calendar = Calendar.getInstance();
@@ -252,6 +285,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
 
         timePickerDialog.show();
     }
+    //endregion
 
 
 }

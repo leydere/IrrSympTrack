@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,6 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //region ADD RECORDS
     public boolean addIrritantRecord(ModelIrritant modelIrritant){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -117,6 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_IRR_SEVERITY, modelIrritant.getIrrSeverity());
 
         long insert = db.insert(TABLE_IRRITANTS, null, contentValues);
+        db.close();
         if (insert == -1) { return false; } else { return true; }
     }
 
@@ -130,10 +133,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_SYM_IMAGE_PATH, modelSymptom.getSymImagePath());
 
         long insert = db.insert(TABLE_SYMPTOMS, null, contentValues);
+        db.close();
         if (insert == -1) { return false; } else { return true; }
     }
+    //endregion
 
-
+    //region GET ALL RECORDS
     // gets all irritant records, to be used in populating the fragment 1 recycler view
     public List<ModelIrritant> getAllIrritants() {
         List<ModelIrritant> compiledResults = new ArrayList();
@@ -188,6 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         return compiledResults;
     }
+    //endregion
 
     public ModelSymptom getSingleSymptomRecord(int id){
         ModelSymptom newSymptom = new ModelSymptom(id, null, null, null, null);
@@ -210,4 +216,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return newSymptom;
     }
+
+    public boolean updateExistingSymptomRecord(ModelSymptom modelSymptom){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_SYM_ID, modelSymptom.getId());
+        contentValues.put(COLUMN_SYM_TITLE, modelSymptom.getSymTitle());
+        contentValues.put(COLUMN_SYM_TIMEDATE, modelSymptom.getSymTimeDate());
+        contentValues.put(COLUMN_SYM_SEVERITY, modelSymptom.getSymSeverity());
+        contentValues.put(COLUMN_SYM_IMAGE_PATH, modelSymptom.getSymImagePath());
+
+        long insert = db.update(TABLE_SYMPTOMS, contentValues, COLUMN_SYM_ID + " = ?", new String[] {String.valueOf(modelSymptom.getId())});
+        db.close();
+        if (insert == -1) { return false; } else { return true; }
+    }
 }
+
