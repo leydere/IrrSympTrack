@@ -5,12 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -18,7 +20,9 @@ import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class ActivityAddIrritant extends AppCompatActivity {
     
@@ -29,6 +33,11 @@ public class ActivityAddIrritant extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
     int radioIrrIdSelected;
     RadioGroup radioGroupIrritant;
+    RadioButton radioButtonIrrLow;
+    RadioButton radioButtonIrrMid;
+    RadioButton radioButtonIrrHigh;
+    int idFromIrritantList;
+    DatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,59 @@ public class ActivityAddIrritant extends AppCompatActivity {
         fabAddIrritantRecord = findViewById(R.id.fabAddIrritantRecord);
         radioIrrIdSelected = -1;
         radioGroupIrritant = findViewById(R.id.radioGroupIrritant);
+        radioButtonIrrLow = findViewById(R.id.radioButtonIrrLow);
+        radioButtonIrrMid = findViewById(R.id.radioButtonIrrMid);
+        radioButtonIrrHigh = findViewById(R.id.radioButtonIrrHigh);
+
+        databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
+
+        Intent intent = getIntent(); // this is for intent sent from AdapterIrritantList
+        idFromIrritantList = intent.getIntExtra("id", -1); //Based on this if idFromIrritant list > -1 you can treat this as an edit.  Otherwise treat as create new.
+
+        //if statement that determines if to display a record or start with blank
+        if (idFromIrritantList > -1) {
+            addIrritantToolbarText.setText("Edit Existing Irritant Record");
+            //editing a record
+            ModelIrritant irritantToEdit = databaseHelper.getSingleIrritantRecord(idFromIrritantList);
+
+            //set title text
+            editTextIrritantTitle.setText(irritantToEdit.getIrrTitle());
+            //get time-date and format for use
+            String irrTimeDate = irritantToEdit.getIrrTimeDate();
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(irrTimeDate));
+            } catch (Exception e) {
+                Toast.makeText(ActivityAddIrritant.this, "input error from calendar", Toast.LENGTH_SHORT).show();
+            }
+            //set date text
+            CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
+            dateTextView.setText(dateCharSequence);
+            //set time text
+            CharSequence timeCharSequence = DateFormat.format("hh:mm a", calendar);
+            timeTextView.setText(timeCharSequence);
+            //set severity radio button
+            try{
+                int i = Integer.parseInt(irritantToEdit.getIrrSeverity());
+                if (i == 0){
+                    radioButtonIrrLow.setChecked(true);
+                    radioIrrIdSelected = 0;
+                } else if (i == 1){
+                    radioButtonIrrMid.setChecked(true);
+                    radioIrrIdSelected = 1;
+                } else if (i == 2){
+                    radioButtonIrrHigh.setChecked(true);
+                    radioIrrIdSelected = 2;
+                }
+            } catch (Exception e) {
+                Toast.makeText(ActivityAddIrritant.this, "input error from severity", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+        else{
+            addIrritantToolbarText.setText("Add New Irritant Record");
+            //TODO: populate time-date textviews based on current time
+        }
         
         dateButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -61,7 +123,19 @@ public class ActivityAddIrritant extends AppCompatActivity {
 
         fabAddIrritantRecord.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View view) { addIrritantRecordFAB(calendar); }
+            public void onClick(View view) {
+
+                if (idFromIrritantList > -1){
+                    updateExistingIrritantRecordFAB(calendar);
+                }else {
+                    addIrritantRecordFAB(calendar);
+                }
+
+
+                //TODO insert navigate back to mainactivity.firstfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature
+                // findViewById(R.id.)...
+
+            }
         });
 
         radioGroupIrritant.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -108,12 +182,34 @@ public class ActivityAddIrritant extends AppCompatActivity {
             Toast.makeText(ActivityAddIrritant.this, "record added failure", Toast.LENGTH_SHORT).show();
         }
 
-        //tester Toast - can alter text value to my purposes
-        Context context = getApplicationContext();
-        CharSequence toastText = "Toast = " + String.valueOf(radioIrrIdSelected);
-        int duration = Toast.LENGTH_SHORT;
-        Toast toast = Toast.makeText(context, toastText, duration);
-        //toast.show();
+    }
+
+    private void updateExistingIrritantRecordFAB(Calendar calendar) {
+
+        //format dateTime for DB
+        String dateTimeString = dateTimeFormatToDB(calendar).toString();
+
+        //TODO resolve image path for model constructor
+
+        //create model to go into DB
+        ModelIrritant modelIrritant;
+        try{
+            modelIrritant = new ModelIrritant(idFromIrritantList, editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIrrIdSelected));
+        }
+        catch (Exception e) {
+            Toast.makeText(ActivityAddIrritant.this, "input error", Toast.LENGTH_SHORT).show();
+            modelIrritant = new ModelIrritant(-1,"error", "error", "error");
+        }
+
+        DatabaseHelper databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
+        boolean success = databaseHelper.updateExistingIrritantRecord(modelIrritant);
+
+        if (success == true) {
+            Toast.makeText(ActivityAddIrritant.this, "record updated successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ActivityAddIrritant.this, "record updated failure", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private CharSequence dateTimeFormatToDB(Calendar calendar) {

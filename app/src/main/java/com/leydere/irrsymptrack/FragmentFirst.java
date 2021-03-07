@@ -78,7 +78,7 @@ public class FragmentFirst extends Fragment {
     }
 
     private void setAdapter() {
-        AdapterIrritantList adapter = new AdapterIrritantList(allIrritantsList);
+        AdapterIrritantList adapter = new AdapterIrritantList(allIrritantsList, getContext());
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
         irritantRecyclerView.setLayoutManager(layoutManager);
         irritantRecyclerView.setItemAnimator(new DefaultItemAnimator());

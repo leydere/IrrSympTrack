@@ -113,6 +113,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         }
         else{
             addSymptomToolbarText.setText("Add New Symptom Record");
+            //TODO: populate time-date textviews based on current time
         }
 
         dateButton.setOnClickListener(new View.OnClickListener(){
@@ -132,7 +133,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         fabAddSymptomRecord.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                //TODO create distinction between adding a new record and editing an existing record.
+
                 if (idFromSymptomList > -1){
                     updateExistingSymptomRecordFAB(calendar);
                 }else {
@@ -142,6 +143,12 @@ public class ActivityAddSymptom extends AppCompatActivity {
 
                 //TODO insert navigate back to mainactivity.secondfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature
                 // findViewById(R.id.)...
+
+                /*
+                //intent and extra sent back but ran into issue of how to navigate to specific fragment from an activity.
+                Intent goBackToMainFragment2 = new Intent(ActivityAddSymptom.this, MainActivity.class);
+                goBackToMainFragment2.putExtra("goToFragment2", true);
+                startActivity(goBackToMainFragment2);*/
 
             }
         });
@@ -198,9 +205,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
             Toast.makeText(ActivityAddSymptom.this, "record added failure", Toast.LENGTH_SHORT).show();
         }
 
-        //tester Toast - can alter text value to my purposes
-        CharSequence toastText = "Toast = " + String.valueOf(radioSymIdSelected);
-        //Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 
     private void updateExistingSymptomRecordFAB(Calendar calendar) {
@@ -228,10 +232,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
         } else {
             Toast.makeText(ActivityAddSymptom.this, "record updated failure", Toast.LENGTH_SHORT).show();
         }
-
-        //tester Toast - can alter text value to my purposes
-        CharSequence toastText = "Toast = " + String.valueOf(radioSymIdSelected);
-        //Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 
 
@@ -245,8 +245,14 @@ public class ActivityAddSymptom extends AppCompatActivity {
     //region Supporting time date methods
     private void handleDateButton(Calendar calendar1) {
 
-        Calendar calendar = Calendar.getInstance();
+        if(idFromSymptomList > -1){
+            //if id is > -1 have existing time data I wish to use
+        }else{
+            //if id is -1 want fresh calendar with current time data
+        }
+        Calendar calendar = Calendar.getInstance(); //this is where I am resetting the calendar
 
+        //setting values to new calendar data
         int YEAR = calendar.get(Calendar.YEAR);
         int MONTH = calendar.get(Calendar.MONTH);
         int DATE = calendar.get(Calendar.DATE);
@@ -255,8 +261,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                // below is Youtuber's format date; formats the string; not certain it is useful for DB though
-                //Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(Calendar.YEAR, year);
                 calendar1.set(Calendar.MONTH, month);
                 calendar1.set(Calendar.DATE, dayOfMonth);

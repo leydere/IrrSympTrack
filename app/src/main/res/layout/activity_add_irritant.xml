@@ -34,9 +34,10 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="#FFFFFFFF"
-                            android:textSize="24dp"
                             android:text=""
+                            android:textColor="#FFFFFFFF"
+                            android:textSize="18dp"
+                            android:textStyle="bold"
                             android:id="@+id/addIrritantToolbarText"/>
 
 

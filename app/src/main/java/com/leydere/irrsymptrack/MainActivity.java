@@ -1,5 +1,6 @@
 package com.leydere.irrsymptrack;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -7,6 +8,8 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.view.View;
 
@@ -16,12 +19,28 @@ import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
 
+    boolean goToFragment2;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+
+        /*
+        //Trying to get intent from add symptom activity to navigate to fragment 2 when loaded
+        try {
+            Intent intent = getIntent();
+            goToFragment2 = intent.getBooleanExtra("goToFragment2", false);
+            Toast.makeText(MainActivity.this, "Intent Extra = " + goToFragment2, Toast.LENGTH_SHORT).show();
+            //Navigation.findNavController(FragmentFirst.this).navigate(R.id.action_FirstFragment_to_SecondFragment);
+            Intent i = new Intent(MainActivity.this, FragmentSecond.class);
+            startActivity(i);
+        } catch (Exception e) {
+
+        }*/
 
         /*
         FloatingActionButton fab = findViewById(R.id.fab);

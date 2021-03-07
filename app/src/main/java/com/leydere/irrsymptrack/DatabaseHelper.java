@@ -233,5 +233,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         if (insert == -1) { return false; } else { return true; }
     }
+
+    public ModelIrritant getSingleIrritantRecord(int id){
+        ModelIrritant newIrritant = new ModelIrritant(id, null, null, null);
+        String queryString = "SELECT * FROM " + TABLE_IRRITANTS + " WHERE " + COLUMN_IRR_ID + "=" + id + ";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            String irrTitle = cursor.getString(1);
+            String irrDateTime = cursor.getString(2);
+            String irrSeverity = cursor.getString(3);
+
+            newIrritant = new ModelIrritant(id, irrTitle, irrDateTime, irrSeverity);
+
+        } else  {
+            //
+        }
+        cursor.close();
+        db.close();
+        return newIrritant;
+    }
+
+    public boolean updateExistingIrritantRecord(ModelIrritant modelIrritant){
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_IRR_ID, modelIrritant.getId());
+        contentValues.put(COLUMN_IRR_TITLE, modelIrritant.getIrrTitle());
+        contentValues.put(COLUMN_IRR_TIMEDATE, modelIrritant.getIrrTimeDate());
+        contentValues.put(COLUMN_IRR_SEVERITY, modelIrritant.getIrrSeverity());
+
+        long insert = db.update(TABLE_IRRITANTS, contentValues, COLUMN_IRR_ID + " = ?", new String[] {String.valueOf(modelIrritant.getId())});
+        db.close();
+        if (insert == -1) { return false; } else { return true; }
+    }
 }
 
