@@ -245,17 +245,9 @@ public class ActivityAddSymptom extends AppCompatActivity {
     //region Supporting time date methods
     private void handleDateButton(Calendar calendar1) {
 
-        if(idFromSymptomList > -1){
-            //if id is > -1 have existing time data I wish to use
-        }else{
-            //if id is -1 want fresh calendar with current time data
-        }
-        Calendar calendar = Calendar.getInstance(); //this is where I am resetting the calendar
-
-        //setting values to new calendar data
-        int YEAR = calendar.get(Calendar.YEAR);
-        int MONTH = calendar.get(Calendar.MONTH);
-        int DATE = calendar.get(Calendar.DATE);
+        int YEAR = calendar1.get(Calendar.YEAR);
+        int MONTH = calendar1.get(Calendar.MONTH);
+        int DATE = calendar1.get(Calendar.DATE);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -275,9 +267,8 @@ public class ActivityAddSymptom extends AppCompatActivity {
     }
 
     private void handleTimeButton(Calendar calendar1) {
-        Calendar calendar = Calendar.getInstance();
-        int HOUR = calendar.get(Calendar.HOUR_OF_DAY);
-        int MINUTE = calendar.get(Calendar.MINUTE);
+        int HOUR = calendar1.get(Calendar.HOUR_OF_DAY);
+        int MINUTE = calendar1.get(Calendar.MINUTE);
 
         boolean is24HourFormat = DateFormat.is24HourFormat(this);
 
@@ -285,7 +276,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                //Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar1.set(Calendar.MINUTE, minute);
 

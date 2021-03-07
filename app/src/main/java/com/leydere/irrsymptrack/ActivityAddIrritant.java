@@ -223,18 +223,14 @@ public class ActivityAddIrritant extends AppCompatActivity {
 
     private void handleDateButton(Calendar calendar1) {
 
-        Calendar calendar = Calendar.getInstance();
-
-        int YEAR = calendar.get(Calendar.YEAR);
-        int MONTH = calendar.get(Calendar.MONTH);
-        int DATE = calendar.get(Calendar.DATE);
+        int YEAR = calendar1.get(Calendar.YEAR);
+        int MONTH = calendar1.get(Calendar.MONTH);
+        int DATE = calendar1.get(Calendar.DATE);
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
 
-                // below is Youtuber's format date; formats the string; not certain it is useful for DB though
-                //Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(Calendar.YEAR, year);
                 calendar1.set(Calendar.MONTH, month);
                 calendar1.set(Calendar.DATE, dayOfMonth);
@@ -249,9 +245,8 @@ public class ActivityAddIrritant extends AppCompatActivity {
     }
 
     private void handleTimeButton(Calendar calendar1) {
-        Calendar calendar = Calendar.getInstance();
-        int HOUR = calendar.get(Calendar.HOUR_OF_DAY);
-        int MINUTE = calendar.get(Calendar.MINUTE);
+        int HOUR = calendar1.get(Calendar.HOUR_OF_DAY);
+        int MINUTE = calendar1.get(Calendar.MINUTE);
 
         boolean is24HourFormat = DateFormat.is24HourFormat(this);
 
@@ -259,7 +254,6 @@ public class ActivityAddIrritant extends AppCompatActivity {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 
-                //Calendar calendar1 = Calendar.getInstance();
                 calendar1.set(Calendar.HOUR_OF_DAY, hourOfDay);
                 calendar1.set(Calendar.MINUTE, minute);
 
