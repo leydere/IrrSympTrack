@@ -37,6 +37,20 @@
         android:layout_height="wrap_content"
         android:id="@+id/exampleText"
         android:text="This is the graph view activity"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="56dp"
         app:layout_constraintTop_toBottomOf="@+id/graphViewAppBarLayout"/>
+
+    <com.jjoe64.graphview.GraphView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:id="@+id/graph"
+        android:layout_marginTop="56dp"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="56dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/exampleText"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
