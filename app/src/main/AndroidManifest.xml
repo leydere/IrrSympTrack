@@ -23,6 +23,8 @@
             android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
         <activity android:name=".ActivityAddSymptom"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
+        <activity android:name=".ActivityGraphView"
+            android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
     </application>
 
 </manifest>
