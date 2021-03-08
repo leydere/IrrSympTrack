@@ -105,6 +105,12 @@ public class ActivityAddIrritant extends AppCompatActivity {
         else{
             addIrritantToolbarText.setText("Add New Irritant Record");
             //TODO: populate time-date textviews based on current time
+            //set date text
+            CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
+            dateTextView.setText(dateCharSequence);
+            //set time text
+            CharSequence timeCharSequence = DateFormat.format("hh:mm a", calendar);
+            timeTextView.setText(timeCharSequence);
         }
         
         dateButton.setOnClickListener(new View.OnClickListener(){

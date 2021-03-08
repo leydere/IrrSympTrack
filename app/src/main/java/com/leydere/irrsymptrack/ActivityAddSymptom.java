@@ -114,6 +114,12 @@ public class ActivityAddSymptom extends AppCompatActivity {
         else{
             addSymptomToolbarText.setText("Add New Symptom Record");
             //TODO: populate time-date textviews based on current time
+            //set date text
+            CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
+            dateTextView.setText(dateCharSequence);
+            //set time text
+            CharSequence timeCharSequence = DateFormat.format("hh:mm a", calendar);
+            timeTextView.setText(timeCharSequence);
         }
 
         dateButton.setOnClickListener(new View.OnClickListener(){
