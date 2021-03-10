@@ -270,5 +270,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         if (insert == -1) { return false; } else { return true; }
     }
+
+    //region Dummy data
+    //create dummy symptom tag associative data
+    public boolean createDummySymptomAssociativeData(){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            //value pairs go (sym ID. tag ID)
+            String insertQuery =  "INSERT INTO " + TABLE_SYM_TAG_ASSOC + "(" + COLUMN_A_SYM_ID + ", " + COLUMN_A_SYM_TAG_ID + ") " +
+                    "VALUES (1, 1), (2, 1), (3, 1), (4, 1), (2, 2), (4, 3), (5, 3), (6, 3);";
+            db.execSQL(insertQuery);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    //create dummy symptom tag data
+    public boolean createDummySymptomTagData(){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            String insertQuery =  "INSERT INTO " + TABLE_SYM_TAGS + "(" + COLUMN_SYM_TAG_TITLE + ") " +
+                    "VALUES ('Itchy'), ('Swelling'), ('Dry');";
+            db.execSQL(insertQuery);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    //endregion
 }
 

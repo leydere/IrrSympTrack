@@ -97,4 +97,28 @@ public class ActivityGraphView extends AppCompatActivity {
         arrayListToReturn.addAll(databaseHelper.getAllSymptoms());
         return arrayListToReturn;
     }
+
+    //region Dummy data functions
+    //remnant function - Was used to add data to Symptom tag table
+    private void addDummySymTagData() {
+        boolean success = databaseHelper.createDummySymptomTagData();
+
+        if (success == true) {
+            Toast.makeText(ActivityGraphView.this, "dummy data added successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ActivityGraphView.this, "dummy data added failure", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //remnant function - Was used to add data to Symptom Tag Associative table
+    private void addDummySymAssociativeData() {
+        boolean success = databaseHelper.createDummySymptomAssociativeData();
+
+        if (success == true) {
+            Toast.makeText(ActivityGraphView.this, "dummy data added successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ActivityGraphView.this, "dummy data added failure", Toast.LENGTH_SHORT).show();
+        }
+    }
+    //endregion
 }
