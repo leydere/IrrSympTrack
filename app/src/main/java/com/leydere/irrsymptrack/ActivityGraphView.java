@@ -1,5 +1,6 @@
 package com.leydere.irrsymptrack;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.widget.Toast;
@@ -44,21 +45,26 @@ public class ActivityGraphView extends AppCompatActivity {
         graph.getViewport().setMinX(20210301);
         graph.getViewport().setMaxX(20210308);
         //graph title
-        graph.setTitle("Symptom Sev v. Date");
+        graph.setTitle("Irr-Sym Sev v. Date");
 
         databaseHelper = new DatabaseHelper(ActivityGraphView.this);
 
         //Toast.makeText(ActivityGraphView.this, "Title of second symptom = " + allSymptomsList.get(1).getSymTitle(), Toast.LENGTH_SHORT).show(); //WORKS!!
 
         series1 = testPointSymptomSeries(3);
-        series2 = testPointIrritantSeries(3);
-
         graph.addSeries(series1);
+        series1.setShape(PointsGraphSeries.Shape.POINT);
+        series1.setColor(Color.BLUE);
+
+        //So the second series cannot be created until the first series is plotted.
+        series2 = testPointIrritantSeries(3);
         graph.addSeries(series2);
+        series2.setShape(PointsGraphSeries.Shape.POINT);
+        series2.setColor(Color.RED);
 
     }
 
-    //TODO: point graph series for irritants.  Model after symtoms analog.
+    //Returns selected irritant records.  Modeled after symptom function of the same purpose.
     public PointsGraphSeries<DataPoint> testPointIrritantSeries(int tagId) {
         int y,x;
         x = 0;
