@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.jjoe64.graphview.series.PointsGraphSeries;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ import java.util.Locale;
 
 public class ActivityGraphView extends AppCompatActivity {
 
-    LineGraphSeries<DataPoint> series;
+    PointsGraphSeries<DataPoint> series;
     GraphView graph;
     Calendar calendar;
 
@@ -30,29 +31,77 @@ public class ActivityGraphView extends AppCompatActivity {
         setContentView(R.layout.activity_graph_view);
 
         graph = findViewById(R.id.graph);
-        series = new LineGraphSeries<DataPoint>();
+        series = new PointsGraphSeries<DataPoint>();
         calendar = Calendar.getInstance();
 
+        // Locks the y window to 0 - 5
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(0);
+        graph.getViewport().setMaxY(5);
+
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(20210304);
+        graph.getViewport().setMaxX(20210308);
+        //graph title
+        graph.setTitle("Symptom Sev v. Date");
+
         databaseHelper = new DatabaseHelper(ActivityGraphView.this);
-        allSymptomsList = getAllSymptoms();
+
         //Toast.makeText(ActivityGraphView.this, "Title of second symptom = " + allSymptomsList.get(1).getSymTitle(), Toast.LENGTH_SHORT).show(); //WORKS!!
 
-        //series = createLinearSeries();
-        series = testLineSeries1();
+        series = testLineSeries2(3);
 
         graph.addSeries(series);
 
+    }
+
+    //This test function should be close to the final function needed.  Severity = y-axis, date = x-axis, filtered by selected tag.
+    //TODO: Almost there.  This functions does what is needed for pulling the correct records.  Time data is still unusable.  Graph still needs improvement.
+    public PointsGraphSeries<DataPoint> testLineSeries2(int tagId) {
+        int y,x;
+        x = 0;
+        series = new PointsGraphSeries<DataPoint>();
+        ArrayList<ModelSymptom> selectedSymptomsList = new ArrayList<>();
+        selectedSymptomsList.addAll(databaseHelper.getSelectedSymptoms(tagId));
+        //Believe I have created a functional query that returns the desired subset of results.
+
+        for (int i = 0; i < selectedSymptomsList.size(); i++) {
+            ModelSymptom modelSymptom = selectedSymptomsList.get(i);
+
+            //Toast.makeText(ActivityGraphView.this, modelSymptom.getSymTitle(), Toast.LENGTH_SHORT).show();
+
+            //y = sev
+            int severity = 1 + Integer.valueOf(modelSymptom.getSymSeverity());
+            y = severity;
+            //x = date
+            String date = modelSymptom.getSymTimeDate();
+            //set time data to calendar - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(date));
+                //Toast.makeText(ActivityGraphView.this, "HERE!", Toast.LENGTH_SHORT).show(); //resolved reaching here with Calendar get instance
+                CharSequence dateCharSequence = DateFormat.format("yyyyMMdd", calendar);
+                int formattedDate = Integer.parseInt(dateCharSequence.toString());
+                x = formattedDate;
+                Toast.makeText(ActivityGraphView.this, dateCharSequence, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
+            }
+            series.appendData(new DataPoint(x, y), true, selectedSymptomsList.size());
+        }
+
+        return series;
     }
 
     // In this test series the goal is to have dates along the x-axis of the graph and severity along the y-axis of the graph.
     public LineGraphSeries<DataPoint> testLineSeries1() {
         int y,x;
         x = 0;
-        series = new LineGraphSeries<DataPoint>();
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<DataPoint>();
 
         //Let's try going through each DB item one by one, setting the data to ints, and appending to series.
         //In the final version I am likely to do some of the date grouping on the DB side.
-
+        allSymptomsList.addAll(databaseHelper.getAllSymptoms()); //shortcut around redundant getAllSymptoms method
         for (int i = 0; i < allSymptomsList.size(); i++) {
             ModelSymptom modelSymptom = allSymptomsList.get(i);
 
@@ -74,14 +123,14 @@ public class ActivityGraphView extends AppCompatActivity {
             }
             series.appendData(new DataPoint(x, y), true, allSymptomsList.size());
         }
-        return series;
+        return series1;
     }
 
     //First graph series function.  Testing graph population using linear function.
     private LineGraphSeries<DataPoint> createLinearSeries(){
         int y,x;
         x = 0;
-        series = new LineGraphSeries<DataPoint>();
+        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<DataPoint>();
         // This is were the math happens. x & y is set and then appended as data points to the line graph series.
         for (int i = 0; i<5; i++){
             x = x + 1;
@@ -89,14 +138,9 @@ public class ActivityGraphView extends AppCompatActivity {
 
             series.appendData(new DataPoint(x, y), true, 5); //Youtuber says maxDataPoints attribute must equal number of data points in series
         }
-        return series;
+        return series1;
     }
 
-    private ArrayList<ModelSymptom> getAllSymptoms(){
-        ArrayList<ModelSymptom> arrayListToReturn = new ArrayList<>();
-        arrayListToReturn.addAll(databaseHelper.getAllSymptoms());
-        return arrayListToReturn;
-    }
 
     //region Dummy data functions
     //remnant function - Was used to add data to Symptom tag table

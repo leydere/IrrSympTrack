@@ -271,6 +271,41 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (insert == -1) { return false; } else { return true; }
     }
 
+    //TODO: create a database helper function that returns a selection of data that has the requested tag - model after getAllSymptoms()
+    public List<ModelSymptom> getSelectedSymptoms(int tagId) {
+        List<ModelSymptom> compiledResults = new ArrayList();
+        //String queryString = "SELECT " + TABLE_SYMPTOMS + "." + COLUMN_SYM_TITLE + ", " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_TITLE +
+        String queryString = "SELECT * FROM " + TABLE_SYMPTOMS +
+        " INNER JOIN " + TABLE_SYM_TAG_ASSOC +
+        " ON " + TABLE_SYMPTOMS + "." + COLUMN_SYM_ID + " = " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_ID +
+        " INNER JOIN " + TABLE_SYM_TAGS +
+        " ON " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_TAG_ID + " = " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_ID +
+        " WHERE " + COLUMN_SYM_TAG_ID + " = " + tagId + ";";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int symId = cursor.getInt(0);
+                String symTitle = cursor.getString(1);
+                String symDateTime = cursor.getString(2);
+                String symSeverity = cursor.getString(3);
+
+                //TODO image path null will need changed upon addition of camera feature
+                ModelSymptom newSymptom = new ModelSymptom(symId, symTitle, symDateTime, symSeverity, null);
+                compiledResults.add(newSymptom);
+            } while (cursor.moveToNext());
+        } else {
+            // TODO tbd
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
+
     //region Dummy data
     //create dummy symptom tag associative data
     public boolean createDummySymptomAssociativeData(){
