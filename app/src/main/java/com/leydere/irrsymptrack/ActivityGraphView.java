@@ -18,7 +18,7 @@ import java.util.Locale;
 
 public class ActivityGraphView extends AppCompatActivity {
 
-    PointsGraphSeries<DataPoint> series;
+    PointsGraphSeries<DataPoint> series1, series2;
     GraphView graph;
     Calendar calendar;
 
@@ -31,7 +31,8 @@ public class ActivityGraphView extends AppCompatActivity {
         setContentView(R.layout.activity_graph_view);
 
         graph = findViewById(R.id.graph);
-        series = new PointsGraphSeries<DataPoint>();
+        series1 = new PointsGraphSeries<DataPoint>();
+        series2 = new PointsGraphSeries<DataPoint>();
         calendar = Calendar.getInstance();
 
         // Locks the y window to 0 - 5
@@ -40,7 +41,7 @@ public class ActivityGraphView extends AppCompatActivity {
         graph.getViewport().setMaxY(5);
         // Lock x window range.  Still in useless date data format.
         graph.getViewport().setXAxisBoundsManual(true);
-        graph.getViewport().setMinX(20210304);
+        graph.getViewport().setMinX(20210301);
         graph.getViewport().setMaxX(20210308);
         //graph title
         graph.setTitle("Symptom Sev v. Date");
@@ -49,18 +50,57 @@ public class ActivityGraphView extends AppCompatActivity {
 
         //Toast.makeText(ActivityGraphView.this, "Title of second symptom = " + allSymptomsList.get(1).getSymTitle(), Toast.LENGTH_SHORT).show(); //WORKS!!
 
-        series = testLineSeries2(3);
+        series1 = testPointSymptomSeries(3);
+        series2 = testPointIrritantSeries(3);
 
-        graph.addSeries(series);
+        graph.addSeries(series1);
+        graph.addSeries(series2);
 
+    }
+
+    //TODO: point graph series for irritants.  Model after symtoms analog.
+    public PointsGraphSeries<DataPoint> testPointIrritantSeries(int tagId) {
+        int y,x;
+        x = 0;
+        series1 = new PointsGraphSeries<DataPoint>();
+        ArrayList<ModelIrritant> selectedIrritantsList = new ArrayList<>();
+        selectedIrritantsList.addAll(databaseHelper.getSelectedIrritants(tagId));
+        //Believe I have created a functional query that returns the desired subset of results.
+
+        for (int i = 0; i < selectedIrritantsList.size(); i++) {
+            ModelIrritant modelIrritant = selectedIrritantsList.get(i);
+
+            //Toast.makeText(ActivityGraphView.this, modelSymptom.getSymTitle(), Toast.LENGTH_SHORT).show();
+
+            //y = sev
+            int severity = 1 + Integer.valueOf(modelIrritant.getIrrSeverity());
+            y = severity;
+            //x = date
+            String date = modelIrritant.getIrrTimeDate();
+            //set time data to calendar - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(date));
+                //Toast.makeText(ActivityGraphView.this, "HERE!", Toast.LENGTH_SHORT).show(); //resolved reaching here with Calendar get instance
+                CharSequence dateCharSequence = DateFormat.format("yyyyMMdd", calendar);
+                int formattedDate = Integer.parseInt(dateCharSequence.toString());
+                x = formattedDate;
+                //Toast.makeText(ActivityGraphView.this, dateCharSequence, Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
+            }
+            series1.appendData(new DataPoint(x, y), true, selectedIrritantsList.size());
+        }
+
+        return series1;
     }
 
     //This test function should be close to the final function needed.  Severity = y-axis, date = x-axis, filtered by selected tag.
     //TODO: Almost there.  This functions does what is needed for pulling the correct records.  Time data is still unusable.  Graph still needs improvement.
-    public PointsGraphSeries<DataPoint> testLineSeries2(int tagId) {
+    public PointsGraphSeries<DataPoint> testPointSymptomSeries(int tagId) {
         int y,x;
         x = 0;
-        series = new PointsGraphSeries<DataPoint>();
+        series1 = new PointsGraphSeries<DataPoint>();
         ArrayList<ModelSymptom> selectedSymptomsList = new ArrayList<>();
         selectedSymptomsList.addAll(databaseHelper.getSelectedSymptoms(tagId));
         //Believe I have created a functional query that returns the desired subset of results.
@@ -87,10 +127,10 @@ public class ActivityGraphView extends AppCompatActivity {
             } catch (Exception e) {
                 Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
             }
-            series.appendData(new DataPoint(x, y), true, selectedSymptomsList.size());
+            series1.appendData(new DataPoint(x, y), true, selectedSymptomsList.size());
         }
 
-        return series;
+        return series1;
     }
 
     // In this test series the goal is to have dates along the x-axis of the graph and severity along the y-axis of the graph.
@@ -121,7 +161,7 @@ public class ActivityGraphView extends AppCompatActivity {
             } catch (Exception e) {
                 Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
             }
-            series.appendData(new DataPoint(x, y), true, allSymptomsList.size());
+            this.series1.appendData(new DataPoint(x, y), true, allSymptomsList.size());
         }
         return series1;
     }
@@ -136,7 +176,7 @@ public class ActivityGraphView extends AppCompatActivity {
             x = x + 1;
             y = x * 2 + 1;
 
-            series.appendData(new DataPoint(x, y), true, 5); //Youtuber says maxDataPoints attribute must equal number of data points in series
+            this.series1.appendData(new DataPoint(x, y), true, 5); //Youtuber says maxDataPoints attribute must equal number of data points in series
         }
         return series1;
     }

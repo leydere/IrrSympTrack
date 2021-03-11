@@ -271,7 +271,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (insert == -1) { return false; } else { return true; }
     }
 
-    //TODO: create a database helper function that returns a selection of data that has the requested tag - model after getAllSymptoms()
+    //returns list of symptom models that meet the tag association requirement - list is used to populate graph
     public List<ModelSymptom> getSelectedSymptoms(int tagId) {
         List<ModelSymptom> compiledResults = new ArrayList();
         //String queryString = "SELECT " + TABLE_SYMPTOMS + "." + COLUMN_SYM_TITLE + ", " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_TITLE +
@@ -295,6 +295,39 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 //TODO image path null will need changed upon addition of camera feature
                 ModelSymptom newSymptom = new ModelSymptom(symId, symTitle, symDateTime, symSeverity, null);
                 compiledResults.add(newSymptom);
+            } while (cursor.moveToNext());
+        } else {
+            // TODO tbd
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
+
+    //returns list of irritant models that meet the tag association requirement - list is used to populate graph
+    public List<ModelIrritant> getSelectedIrritants(int tagId) {
+        List<ModelIrritant> compiledResults = new ArrayList();
+        String queryString = "SELECT * FROM " + TABLE_IRRITANTS +
+                " INNER JOIN " + TABLE_IRR_TAG_ASSOC +
+                " ON " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID +
+                " INNER JOIN " + TABLE_IRR_TAGS +
+                " ON " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_TAG_ID + " = " + TABLE_IRR_TAGS + "." + COLUMN_IRR_TAG_ID +
+                " WHERE " + COLUMN_IRR_TAG_ID + " = " + tagId + ";";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int irrId = cursor.getInt(0);
+                String irrTitle = cursor.getString(1);
+                String irrDateTime = cursor.getString(2);
+                String irrSeverity = cursor.getString(3);
+
+                ModelIrritant newIrritant = new ModelIrritant(irrId, irrTitle, irrDateTime, irrSeverity);
+                compiledResults.add(newIrritant);
             } while (cursor.moveToNext());
         } else {
             // TODO tbd
