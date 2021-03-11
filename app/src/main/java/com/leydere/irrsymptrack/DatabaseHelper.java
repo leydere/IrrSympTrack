@@ -334,6 +334,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return false;
         }
     }
+    //create dummy irritant tag associative data
+    public boolean createDummyIrritantAssociativeData(){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            //value pairs go (sym ID. tag ID)
+            String insertQuery =  "INSERT INTO " + TABLE_IRR_TAG_ASSOC + "(" + COLUMN_A_IRR_ID + ", " + COLUMN_A_IRR_TAG_ID + ") " +
+                    "VALUES (1, 1), (2, 2), (3, 3), (4, 3);";
+            db.execSQL(insertQuery);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    //create dummy irritant tag data
+    public boolean createDummyIrritantTagData(){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            String insertQuery =  "INSERT INTO " + TABLE_IRR_TAGS + "(" + COLUMN_IRR_TAG_TITLE + ") " +
+                    "VALUES ('Eggs'), ('Dairy'), ('Citrus');";
+            db.execSQL(insertQuery);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
     //endregion
 }
 

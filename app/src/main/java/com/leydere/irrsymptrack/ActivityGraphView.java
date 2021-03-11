@@ -83,7 +83,7 @@ public class ActivityGraphView extends AppCompatActivity {
                 CharSequence dateCharSequence = DateFormat.format("yyyyMMdd", calendar);
                 int formattedDate = Integer.parseInt(dateCharSequence.toString());
                 x = formattedDate;
-                Toast.makeText(ActivityGraphView.this, dateCharSequence, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(ActivityGraphView.this, dateCharSequence, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
             }
