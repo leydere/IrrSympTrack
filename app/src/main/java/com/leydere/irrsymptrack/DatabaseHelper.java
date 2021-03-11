@@ -280,7 +280,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         " ON " + TABLE_SYMPTOMS + "." + COLUMN_SYM_ID + " = " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_ID +
         " INNER JOIN " + TABLE_SYM_TAGS +
         " ON " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_TAG_ID + " = " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_ID +
-        " WHERE " + COLUMN_SYM_TAG_ID + " = " + tagId + ";";
+        " WHERE " + COLUMN_SYM_TAG_ID + " = " + tagId +
+        " ORDER BY " + COLUMN_SYM_TIMEDATE + ";";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, null);
@@ -314,7 +315,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " ON " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID +
                 " INNER JOIN " + TABLE_IRR_TAGS +
                 " ON " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_TAG_ID + " = " + TABLE_IRR_TAGS + "." + COLUMN_IRR_TAG_ID +
-                " WHERE " + COLUMN_IRR_TAG_ID + " = " + tagId + ";";
+                " WHERE " + COLUMN_IRR_TAG_ID + " = " + tagId +
+                " ORDER BY " + COLUMN_IRR_TIMEDATE + ";";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, null);
