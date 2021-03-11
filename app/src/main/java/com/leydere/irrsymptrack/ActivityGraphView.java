@@ -38,7 +38,7 @@ public class ActivityGraphView extends AppCompatActivity {
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(0);
         graph.getViewport().setMaxY(5);
-
+        // Lock x window range.  Still in useless date data format.
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(20210304);
         graph.getViewport().setMaxX(20210308);
