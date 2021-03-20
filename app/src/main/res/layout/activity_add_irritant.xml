@@ -68,7 +68,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="8dp"
                         android:text="Irritant Title"
                         android:textSize="18dp"/>
 
@@ -78,7 +78,7 @@
                         android:layout_height="wrap_content"
                         android:hint="TITLE"
                         android:layout_gravity="center"
-                        android:layout_marginBottom="32dp"
+                        android:layout_marginBottom="24dp"
                         app:boxCornerRadiusBottomEnd="8dp"
                         app:boxCornerRadiusTopEnd="8dp"
                         app:boxCornerRadiusBottomStart="8dp"
@@ -87,8 +87,7 @@
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/editTextIrritantTitle"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            />
+                            android:layout_height="wrap_content"/>
 
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -96,7 +95,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
+                        android:layout_marginBottom="8dp"
                         android:text="Irritant Time &amp; Date"
                         android:textSize="18dp"/>
                     <RelativeLayout
@@ -104,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginRight="16dp"
                         android:layout_marginLeft="16dp"
-                        android:layout_marginBottom="32dp">
+                        android:layout_marginBottom="24dp">
                         <RelativeLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -159,77 +158,64 @@
 
 
                     <!-- start of severity & tags layout -->
+
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_weight="1">
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="16dp"
-                                    android:text="Irritant Severity"
-                                    android:textSize="18dp"/>
-
-                                <RadioGroup
-                                    android:id="@+id/radioGroupIrritant"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="16dp">
-
-                                    <RadioButton
-                                        android:id="@+id/radioButtonIrrLow"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="LOW" />
-
-                                    <RadioButton
-                                        android:id="@+id/radioButtonIrrMid"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="MID" />
-
-                                    <RadioButton
-                                        android:id="@+id/radioButtonIrrHigh"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="HIGH" />
-                                </RadioGroup>
-
-                            </LinearLayout>
-
-
-
-
-                        <LinearLayout
+                        android:orientation="vertical"
+                        android:layout_marginBottom="24dp">
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="1">
+                            android:layout_marginBottom="8dp"
+                            android:text="Irritant Severity"
+                            android:textSize="18dp"/>
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="16dp"
-                                android:text="Add Tags"
-                                android:textSize="18dp"/>
+                        <RadioGroup
+                            android:id="@+id/radioGroupIrritant"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
-                            <Button
-                                android:id="@+id/newtag"
+                            <RadioButton
+                                android:id="@+id/radioButtonIrrLow"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:padding="10dp"
-                                android:text="New Tag" />
+                                android:text="LOW" />
+
+                            <RadioButton
+                                android:id="@+id/radioButtonIrrMid"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="MID" />
+
+                            <RadioButton
+                                android:id="@+id/radioButtonIrrHigh"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="HIGH" />
+                        </RadioGroup>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginBottom="24dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="Add Tags"
+                            android:textSize="18dp"/>
+
+                        <!-- recycler view(s) go here -->
 
 
 
-                        </LinearLayout>
+
                     </LinearLayout>
 
                     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -238,14 +224,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="bottom|end"
                         app:srcCompat="@drawable/ic_baseline_check_24" />
-
-
-
-
-
-
-
-
 
                 </LinearLayout> <!--end of linear layout internal to main relative layout-->
             </RelativeLayout>
