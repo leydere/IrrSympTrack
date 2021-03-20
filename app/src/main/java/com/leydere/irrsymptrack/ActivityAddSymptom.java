@@ -27,7 +27,7 @@ import java.util.Locale;
 
 public class ActivityAddSymptom extends AppCompatActivity {
 
-    Button dateButton, timeButton, addPictureButton;
+    Button dateButton, timeButton;
     TextView dateTextView, timeTextView, addSymptomToolbarText;
     EditText editTextSymptomTitle;
     FloatingActionButton fabAddSymptomRecord;
@@ -59,7 +59,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
         radioButtonSymLow = findViewById(R.id.radioButtonSymLow);
         radioButtonSymMid = findViewById(R.id.radioButtonSymMid);
         radioButtonSymHigh = findViewById(R.id.radioButtonSymHigh);
-        addPictureButton = findViewById(R.id.addPictureButton);
 
         databaseHelper = new DatabaseHelper(ActivityAddSymptom.this);
 
@@ -171,13 +170,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
                 else if (checkedId==R.id.radioButtonSymHigh){
                     radioSymIdSelected = 2;
                 }
-            }
-        });
-
-        addPictureButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO camera functionality goes here
             }
         });
 

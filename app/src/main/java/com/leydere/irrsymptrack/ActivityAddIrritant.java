@@ -1,6 +1,10 @@
 package com.leydere.irrsymptrack;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -21,11 +25,13 @@ import android.widget.Toast;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 public class ActivityAddIrritant extends AppCompatActivity {
-    
+
+    ArrayList<ModelIrritantTag> allIrritantTagsList;
     Button dateButton, timeButton;
     TextView dateTextView, timeTextView, addIrritantToolbarText;
     EditText editTextIrritantTitle;
@@ -38,6 +44,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
     RadioButton radioButtonIrrHigh;
     int idFromIrritantList;
     DatabaseHelper databaseHelper;
+    RecyclerView irritantTagSelectedRecyclerView, irritantTagAvailableRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +63,14 @@ public class ActivityAddIrritant extends AppCompatActivity {
         radioButtonIrrLow = findViewById(R.id.radioButtonIrrLow);
         radioButtonIrrMid = findViewById(R.id.radioButtonIrrMid);
         radioButtonIrrHigh = findViewById(R.id.radioButtonIrrHigh);
+        irritantTagSelectedRecyclerView = findViewById(R.id.irritantTagSelectedRecyclerView);
+        irritantTagAvailableRecyclerView = findViewById(R.id.irritantTagAvailableRecyclerView);
 
         databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
+
+        //following 2 lines populates the tags available recycler view
+        allIrritantTagsList = getAllIrritantTags();
+        setIrritantTagsAvailableAdapter();
 
         Intent intent = getIntent(); // this is for intent sent from AdapterIrritantList
         idFromIrritantList = intent.getIntExtra("id", -1); //Based on this if idFromIrritant list > -1 you can treat this as an edit.  Otherwise treat as create new.
@@ -269,6 +282,21 @@ public class ActivityAddIrritant extends AppCompatActivity {
         }, HOUR, MINUTE, is24HourFormat);
 
         timePickerDialog.show();
+    }
+
+    //TODO: get all irr tags available
+    private ArrayList<ModelIrritantTag> getAllIrritantTags(){
+        ArrayList<ModelIrritantTag> arrayListToReturn = new ArrayList<ModelIrritantTag>();
+        arrayListToReturn.addAll(databaseHelper.getAllIrritantTags());
+        return arrayListToReturn;
+    }
+
+    private void setIrritantTagsAvailableAdapter() {
+        AdapterTagIrritantAvailable adapter = new AdapterTagIrritantAvailable(allIrritantTagsList, this);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        irritantTagAvailableRecyclerView.setLayoutManager(layoutManager);
+        irritantTagAvailableRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        irritantTagAvailableRecyclerView.setAdapter(adapter);
     }
 
 

@@ -397,5 +397,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
     //endregion
+
+    //region Supporting Tag Recycler Views
+    public List<ModelIrritantTag> getAllIrritantTags() {
+        List<ModelIrritantTag> compiledResults = new ArrayList();
+        String queryString = "SELECT * FROM " + TABLE_IRR_TAGS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int irrTagId = cursor.getInt(0);
+                String irrTagTitle = cursor.getString(1);
+
+                ModelIrritantTag newIrritantTag = new ModelIrritantTag(irrTagId, irrTagTitle);
+                compiledResults.add(newIrritantTag);
+            } while (cursor.moveToNext());
+        } else {
+            // TODO tbd
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
+
+    //endregion
 }
 
