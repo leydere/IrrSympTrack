@@ -24,7 +24,7 @@
                 android:id="@+id/irrTagToolbarText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
+                android:text="Create New and/or Select Irritant Tags"
                 android:textColor="#FFFFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
