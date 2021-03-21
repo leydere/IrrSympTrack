@@ -21,19 +21,19 @@ public class ActivitySelectIrritantTags extends AppCompatActivity {
         setContentView(R.layout.activity_select_irritant_tags);
 
         databaseHelper = new DatabaseHelper(ActivitySelectIrritantTags.this);
+        irritantTagAvailableRecyclerView = findViewById(R.id.irrTagAvailableRecyclerView);
 
+        availableIrritantTagsList = getAllIrritantTags();
         setIrritantTagsAvailableAdapter();
 
     }
 
-    //TODO: resuse in new select tags activity
     private ArrayList<ModelIrritantTag> getAllIrritantTags(){
         ArrayList<ModelIrritantTag> arrayListToReturn = new ArrayList<ModelIrritantTag>();
         arrayListToReturn.addAll(databaseHelper.getAllIrritantTags());
         return arrayListToReturn;
     }
 
-    //TODO: resuse in new select tags activity
     private void setIrritantTagsAvailableAdapter() {
         AdapterTagIrritantAvailable adapter = new AdapterTagIrritantAvailable(availableIrritantTagsList, this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);

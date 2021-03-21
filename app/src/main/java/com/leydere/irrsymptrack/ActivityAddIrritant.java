@@ -32,7 +32,7 @@ import java.util.Locale;
 public class ActivityAddIrritant extends AppCompatActivity {
 
     ArrayList<ModelIrritantTag> selectedIrritantTagsList;
-    Button dateButton, timeButton;
+    Button dateButton, timeButton, selectIrritantTagsButton;
     TextView dateTextView, timeTextView, addIrritantToolbarText;
     EditText editTextIrritantTitle;
     FloatingActionButton fabAddIrritantRecord;
@@ -44,7 +44,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
     RadioButton radioButtonIrrHigh;
     int idFromIrritantList, idFromAvailableIrrTag;
     DatabaseHelper databaseHelper;
-    RecyclerView irritantTagSelectedRecyclerView, irritantTagAvailableRecyclerView;
+    RecyclerView irritantTagSelectedRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +53,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
         
         dateButton = findViewById(R.id.dateButton);
         timeButton = findViewById(R.id.timeButton);
+        selectIrritantTagsButton = findViewById(R.id.selectIrritantTagsButton);
         dateTextView = findViewById(R.id.dateTextView);
         timeTextView = findViewById(R.id.timeTextView);
         addIrritantToolbarText = findViewById(R.id.addIrritantToolbarText);
@@ -64,7 +65,6 @@ public class ActivityAddIrritant extends AppCompatActivity {
         radioButtonIrrMid = findViewById(R.id.radioButtonIrrMid);
         radioButtonIrrHigh = findViewById(R.id.radioButtonIrrHigh);
         irritantTagSelectedRecyclerView = findViewById(R.id.irritantTagSelectedRecyclerView);
-        irritantTagAvailableRecyclerView = findViewById(R.id.irritantTagAvailableRecyclerView);
 
         databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
 
@@ -143,6 +143,14 @@ public class ActivityAddIrritant extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 handleTimeButton(calendar);
+            }
+        });
+
+        selectIrritantTagsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityAddIrritant.this, ActivitySelectIrritantTags.class);
+                startActivity(intent);
             }
         });
 
