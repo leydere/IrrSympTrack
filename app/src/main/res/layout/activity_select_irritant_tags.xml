@@ -61,7 +61,7 @@
         android:layout_marginRight="8dp"
         app:layout_constraintHorizontal_weight="7"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/addNewTagRecordButton"
+        app:layout_constraintRight_toLeftOf="@+id/addNewIrrTagRecordButton"
         app:layout_constraintTop_toBottomOf="@+id/irrTagUpperText">
 
         <com.google.android.material.textfield.TextInputEditText
@@ -72,7 +72,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
-        android:id="@+id/addNewTagRecordButton"
+        android:id="@+id/addNewIrrTagRecordButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"

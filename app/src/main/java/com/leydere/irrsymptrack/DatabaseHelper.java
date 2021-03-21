@@ -439,6 +439,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return newIrritantTag;
     }
 
+    //Returns true if the input text matches the title of an existing irritant tag record. Used to prevent duplicate tag records when creating new tag records.
+    public boolean doesIrritantTagRecordAlreadyExist(String inputText){
+        List<ModelIrritantTag> allIrritantTagsList = getAllIrritantTags();
+        for (ModelIrritantTag var : allIrritantTagsList) {
+            String titleFound = var.getIrrTagTitle();
+            if (titleFound.equals(inputText)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     //endregion
 }
 
