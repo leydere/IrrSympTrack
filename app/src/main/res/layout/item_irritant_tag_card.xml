@@ -14,7 +14,8 @@
         android:layout_marginRight="5dp"
         android:padding="10dp"
         app:cardCornerRadius="5dp"
-        app:cardElevation="3dp" >
+        app:cardElevation="3dp"
+        app:cardBackgroundColor="@color/purple_500">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -27,14 +28,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
-                tools:text="tag title here"/>
+                tools:text="tag title here"
+                android:textColor="@color/white"/>
 
             <TextView
                 android:id="@+id/irritant_tag_text_display2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                tools:text="symbol here"/>
+                tools:text="symbol here"
+                android:textColor="@color/white"/>
 
 
         </LinearLayout>
