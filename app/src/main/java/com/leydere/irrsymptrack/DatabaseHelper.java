@@ -157,7 +157,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 compiledResults.add(newIrritant);
             } while (cursor.moveToNext());
         } else {
-            // TODO tbd
+
         }
 
         cursor.close();
@@ -180,12 +180,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String symDateTime = cursor.getString(2);
                 String symSeverity = cursor.getString(3);
 
-                //TODO image path null will need changed upon addition of camera feature
                 ModelSymptom newSymptom = new ModelSymptom(symId, symTitle, symDateTime, symSeverity, null);
                 compiledResults.add(newSymptom);
             } while (cursor.moveToNext());
         } else {
-            // TODO tbd
+
         }
 
         cursor.close();
@@ -206,7 +205,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             String symDateTime = cursor.getString(2);
             String symSeverity = cursor.getString(3);
 
-            //TODO image path null will need changed upon addition of camera feature
             newSymptom = new ModelSymptom(id, symTitle, symDateTime, symSeverity, null);
 
         } else  {
@@ -293,12 +291,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 String symDateTime = cursor.getString(2);
                 String symSeverity = cursor.getString(3);
 
-                //TODO image path null will need changed upon addition of camera feature
                 ModelSymptom newSymptom = new ModelSymptom(symId, symTitle, symDateTime, symSeverity, null);
                 compiledResults.add(newSymptom);
             } while (cursor.moveToNext());
         } else {
-            // TODO tbd
+
         }
 
         cursor.close();
@@ -332,7 +329,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 compiledResults.add(newIrritant);
             } while (cursor.moveToNext());
         } else {
-            // TODO tbd
+
         }
 
         cursor.close();
@@ -414,13 +411,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 compiledResults.add(newIrritantTag);
             } while (cursor.moveToNext());
         } else {
-            // TODO tbd
+
         }
 
         cursor.close();
         db.close();
 
         return compiledResults;
+    }
+
+    public ModelIrritantTag getSingleIrritantTagRecord(int id){
+        ModelIrritantTag newIrritantTag = new ModelIrritantTag(id, null);
+        String queryString = "SELECT * FROM " + TABLE_IRR_TAGS + " WHERE " + COLUMN_IRR_TAG_ID + "=" + id + ";";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            String irrTagTitle = cursor.getString(1);
+
+            newIrritantTag = new ModelIrritantTag(id, irrTagTitle);
+
+        } else  {
+            //
+        }
+        cursor.close();
+        db.close();
+        return newIrritantTag;
     }
 
     //endregion

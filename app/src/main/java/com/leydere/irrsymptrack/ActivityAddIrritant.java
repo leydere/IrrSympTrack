@@ -31,7 +31,7 @@ import java.util.Locale;
 
 public class ActivityAddIrritant extends AppCompatActivity {
 
-    ArrayList<ModelIrritantTag> allIrritantTagsList;
+    ArrayList<ModelIrritantTag> selectedIrritantTagsList;
     Button dateButton, timeButton;
     TextView dateTextView, timeTextView, addIrritantToolbarText;
     EditText editTextIrritantTitle;
@@ -42,7 +42,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
     RadioButton radioButtonIrrLow;
     RadioButton radioButtonIrrMid;
     RadioButton radioButtonIrrHigh;
-    int idFromIrritantList;
+    int idFromIrritantList, idFromAvailableIrrTag;
     DatabaseHelper databaseHelper;
     RecyclerView irritantTagSelectedRecyclerView, irritantTagAvailableRecyclerView;
 
@@ -68,12 +68,19 @@ public class ActivityAddIrritant extends AppCompatActivity {
 
         databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
 
-        //following 2 lines populates the tags available recycler view
-        allIrritantTagsList = getAllIrritantTags();
-        setIrritantTagsAvailableAdapter();
-
         Intent intent = getIntent(); // this is for intent sent from AdapterIrritantList
         idFromIrritantList = intent.getIntExtra("id", -1); //Based on this if idFromIrritant list > -1 you can treat this as an edit.  Otherwise treat as create new.
+        idFromAvailableIrrTag = intent.getIntExtra("idFromAvailableIrrTag", -1);
+
+
+
+        //list to support recycler view 1 ie. tags selected
+        selectedIrritantTagsList = new ArrayList<>();
+        if (idFromAvailableIrrTag > -1) {
+            selectedIrritantTagsList.add(databaseHelper.getSingleIrritantTagRecord(idFromAvailableIrrTag));
+        }
+
+
 
         //if statement that determines if to display a record or start with blank
         if (idFromIrritantList > -1) {
@@ -117,7 +124,6 @@ public class ActivityAddIrritant extends AppCompatActivity {
         }
         else{
             addIrritantToolbarText.setText("Add New Irritant Record");
-            //TODO: populate time-date textviews based on current time
             //set date text
             CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
             dateTextView.setText(dateCharSequence);
@@ -172,9 +178,6 @@ public class ActivityAddIrritant extends AppCompatActivity {
             }
         });
 
-
-        
-
     } //end of OnCreate
 
     private void addIrritantRecordFAB(Calendar calendar) {
@@ -207,8 +210,6 @@ public class ActivityAddIrritant extends AppCompatActivity {
 
         //format dateTime for DB
         String dateTimeString = dateTimeFormatToDB(calendar).toString();
-
-        //TODO resolve image path for model constructor
 
         //create model to go into DB
         ModelIrritant modelIrritant;
@@ -284,20 +285,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
         timePickerDialog.show();
     }
 
-    //TODO: get all irr tags available
-    private ArrayList<ModelIrritantTag> getAllIrritantTags(){
-        ArrayList<ModelIrritantTag> arrayListToReturn = new ArrayList<ModelIrritantTag>();
-        arrayListToReturn.addAll(databaseHelper.getAllIrritantTags());
-        return arrayListToReturn;
-    }
 
-    private void setIrritantTagsAvailableAdapter() {
-        AdapterTagIrritantAvailable adapter = new AdapterTagIrritantAvailable(allIrritantTagsList, this);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        irritantTagAvailableRecyclerView.setLayoutManager(layoutManager);
-        irritantTagAvailableRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        irritantTagAvailableRecyclerView.setAdapter(adapter);
-    }
 
 
 }

@@ -108,8 +108,5 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //TODO create function that populates RecyclerView list
-    private void populateIrritantList(){
 
-    }
 }

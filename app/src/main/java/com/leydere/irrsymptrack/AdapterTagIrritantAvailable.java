@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,14 +45,31 @@ public class AdapterTagIrritantAvailable extends RecyclerView.Adapter<AdapterTag
 
     @Override
     public void onBindViewHolder(@NonNull AdapterTagIrritantAvailable.MyViewHolder holder, int position) {
-        //TODO can add more String details here
         String titleFound = irritantTagList.get(position).getIrrTagTitle();
         holder.titleText.setText(titleFound);
         holder.symbolText.setText("+");
         holder.irritantTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: this all needs redone after refactor (changing streams)
                 //TODO: onclick add to list of selected tags
+                //create item based off clicked tag
+                ModelIrritantTag modelIrritantTag;
+                try{
+                    modelIrritantTag = new ModelIrritantTag(irritantTagList.get(position).getId(), irritantTagList.get(position).getIrrTagTitle());
+                }
+                catch (Exception e) {
+                    Toast.makeText(context, "input error", Toast.LENGTH_SHORT).show();
+                    modelIrritantTag = new ModelIrritantTag(-1, "error");
+                }
+                //TODO: 2. move to other list
+
+                //TODO: 3. update lists
+
+                //TODO: alt attempt - feed id to intent and restart activity ???
+                Intent intent = new Intent(context, ActivityAddIrritant.class);
+                intent.putExtra("idFromAvailableIrrTag", irritantTagList.get(position).getId());
+                context.startActivity(intent);
 
             }
         });

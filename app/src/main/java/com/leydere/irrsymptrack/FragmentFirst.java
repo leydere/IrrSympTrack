@@ -32,7 +32,7 @@ public class FragmentFirst extends Fragment {
             Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.fragment_first, container, false);
-        //TODO how to I findViewById for the irritantRecyclerView? *solved?*
+
         irritantRecyclerView = (RecyclerView)rootView.findViewById(R.id.irritantRecyclerView);
 
         databaseHelper = new DatabaseHelper(getActivity());

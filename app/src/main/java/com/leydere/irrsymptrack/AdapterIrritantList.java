@@ -45,7 +45,7 @@ public class AdapterIrritantList extends RecyclerView.Adapter<AdapterIrritantLis
 
     @Override
     public void onBindViewHolder(@NonNull AdapterIrritantList.MyViewHolder holder, int position) {
-        //TODO can add more String details here
+        //TODO improvements to card UI object data can be made here
         String titleFound = irritantList.get(position).getIrrTitle();
         holder.irritantText.setText(titleFound);
         holder.irritantParentLayout.setOnClickListener(new View.OnClickListener() {

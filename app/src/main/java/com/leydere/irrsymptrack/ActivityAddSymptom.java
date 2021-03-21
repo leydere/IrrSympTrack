@@ -31,7 +31,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
     TextView dateTextView, timeTextView, addSymptomToolbarText;
     EditText editTextSymptomTitle;
     FloatingActionButton fabAddSymptomRecord;
-    Calendar calendar = Calendar.getInstance();  //TODO: potential pain point of clock issue, maybe get instance later or provide if statement to get instance if new and get old data if existing
+    Calendar calendar = Calendar.getInstance();
     int radioSymIdSelected;
     RadioGroup radioGroupSymptom;
     RadioButton radioButtonSymLow;
@@ -112,7 +112,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
         }
         else{
             addSymptomToolbarText.setText("Add New Symptom Record");
-            //TODO: populate time-date textviews based on current time
             //set date text
             CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
             dateTextView.setText(dateCharSequence);
@@ -182,8 +181,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
         //format dateTime for DB
         String dateTimeString = dateTimeFormatToDB(calendar).toString();
 
-        //TODO resolve image path for model constructor
-
         //create model to go into DB
         ModelSymptom modelSymptom;
         try{
@@ -209,8 +206,6 @@ public class ActivityAddSymptom extends AppCompatActivity {
 
         //format dateTime for DB
         String dateTimeString = dateTimeFormatToDB(calendar).toString();
-
-        //TODO resolve image path for model constructor
 
         //create model to go into DB
         ModelSymptom modelSymptom;

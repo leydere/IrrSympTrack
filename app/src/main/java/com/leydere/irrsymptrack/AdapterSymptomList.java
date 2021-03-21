@@ -42,7 +42,7 @@ public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.
 
     @Override
     public void onBindViewHolder(@NonNull AdapterSymptomList.MyViewHolder holder, int position) {
-        //TODO can add more String details here
+        //TODO improvements to card UI object data can be made here
         String titleFound = symptomList.get(position).getSymTitle();
         holder.symptomText.setText(titleFound);
         holder.symptomParentLayout.setOnClickListener(new View.OnClickListener() {
