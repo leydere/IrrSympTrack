@@ -24,6 +24,7 @@ public class ActivitySelectIrritantTags extends AppCompatActivity {
     EditText irritantTagTitleEditText;
     Button addNewIrritantTagRecordButton;
     FloatingActionButton fabReturnSelectedIrrTagRecord;
+    ArrayList<Integer> selectedIrritantTagIdsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +37,7 @@ public class ActivitySelectIrritantTags extends AppCompatActivity {
         addNewIrritantTagRecordButton = findViewById(R.id.addNewIrrTagRecordButton);
         fabReturnSelectedIrrTagRecord = findViewById(R.id.fabReturnSelectedIrrTagRecord);
 
+        selectedIrritantTagIdsList = new ArrayList<>();
         availableIrritantTagsList = getAllIrritantTags();
         setIrritantTagsAvailableAdapter();
 
@@ -96,6 +98,13 @@ public class ActivitySelectIrritantTags extends AppCompatActivity {
             }
         });
 
+        irritantTagAvailableRecyclerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //TODO: can I make the card click functions work through here rather than in the adapter class.
+            }
+        });
+
     }
 
     public boolean doesIrritantTagRecordAlreadyExist(String inputText){
@@ -121,5 +130,11 @@ public class ActivitySelectIrritantTags extends AppCompatActivity {
         irritantTagAvailableRecyclerView.setLayoutManager(layoutManager);
         irritantTagAvailableRecyclerView.setItemAnimator(new DefaultItemAnimator());
         irritantTagAvailableRecyclerView.setAdapter(adapter);
+    }
+
+    //Thing I was trying to call from adapter class.  Kept running into static v. non-static issues.
+    public void onIrritantTagClick(int id){
+        selectedIrritantTagIdsList.add(id);
+        Toast.makeText(getApplicationContext(), "exception catch", Toast.LENGTH_SHORT).show();
     }
 }
