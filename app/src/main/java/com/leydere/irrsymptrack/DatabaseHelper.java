@@ -136,6 +136,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         if (insert == -1) { return false; } else { return true; }
     }
+
+    public boolean addIrritantTagRecord(ModelIrritantTag modelIrritantTag){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_IRR_TAG_TITLE, modelIrritantTag.getIrrTagTitle());
+
+        long insert = db.insert(TABLE_IRR_TAGS, null, contentValues);
+        db.close();
+        if (insert == -1) { return false; } else { return true; }
+    }
     //endregion
 
     //region GET ALL RECORDS
@@ -437,18 +448,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return newIrritantTag;
-    }
-
-    //Returns true if the input text matches the title of an existing irritant tag record. Used to prevent duplicate tag records when creating new tag records.
-    public boolean doesIrritantTagRecordAlreadyExist(String inputText){
-        List<ModelIrritantTag> allIrritantTagsList = getAllIrritantTags();
-        for (ModelIrritantTag var : allIrritantTagsList) {
-            String titleFound = var.getIrrTagTitle();
-            if (titleFound.equals(inputText)){
-                return true;
-            }
-        }
-        return false;
     }
 
     //endregion

@@ -203,7 +203,6 @@ public class ActivityAddIrritant extends AppCompatActivity {
             modelIrritant = new ModelIrritant("error", "error", "error");
         }
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
         boolean success = databaseHelper.addIrritantRecord(modelIrritant);
 
         if (success == true) {
@@ -229,7 +228,6 @@ public class ActivityAddIrritant extends AppCompatActivity {
             modelIrritant = new ModelIrritant(-1,"error", "error", "error");
         }
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
         boolean success = databaseHelper.updateExistingIrritantRecord(modelIrritant);
 
         if (success == true) {

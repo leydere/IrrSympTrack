@@ -42,35 +42,57 @@ public class ActivitySelectIrritantTags extends AppCompatActivity {
         addNewIrritantTagRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: on click check to see if record exists already, if not create new record, update recycler view, and clear contents of text edit field.
+                //on click check to see if record exists already, if not create new record, update recycler view, and clear contents of text edit field.
+
                 //check for blank text edit field
                 boolean textFieldIsBlank;
                 if (irritantTagTitleEditText.getText().toString().isEmpty()){
                     Toast.makeText(ActivitySelectIrritantTags.this, "text field is blank", Toast.LENGTH_SHORT).show();
                     textFieldIsBlank = true;
                 } else {
-                    Toast.makeText(ActivitySelectIrritantTags.this, irritantTagTitleEditText.getText().toString(), Toast.LENGTH_SHORT).show();
                     textFieldIsBlank = false;
                 }
 
                 //if field is not blank check to see if record exists
                 boolean recordExists;
                 if (!textFieldIsBlank){
-                    recordExists = databaseHelper.doesIrritantTagRecordAlreadyExist(irritantTagTitleEditText.getText().toString());
+                    recordExists = doesIrritantTagRecordAlreadyExist(irritantTagTitleEditText.getText().toString());
+                    if(recordExists){
+                        Toast.makeText(ActivitySelectIrritantTags.this, "record exists, please enter unique tag", Toast.LENGTH_SHORT).show();
+                        irritantTagTitleEditText.getText().clear();
+                    }
                 }
                 else{recordExists = true;}
 
-                //if text field is not blank and record does not exist create new record
+                //if text field is not blank and record does not exist create new record, clear text field, and update recycler view
                 try{
                     if (!textFieldIsBlank && !recordExists){
-                        Toast.makeText(ActivitySelectIrritantTags.this, "reached top try if", Toast.LENGTH_SHORT).show();
-                        //TODO: This is where the add new irr-tag record will go.  Probably a dbhelper method.
+                        //create model to go into DB
+                        ModelIrritantTag modelIrritantTag;
+                        try{
+                            modelIrritantTag = new ModelIrritantTag(irritantTagTitleEditText.getText().toString());
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(ActivitySelectIrritantTags.this, "input error", Toast.LENGTH_SHORT).show();
+                            modelIrritantTag = new ModelIrritantTag("error");
+                        }
+
+                        boolean success = databaseHelper.addIrritantTagRecord(modelIrritantTag);
+
+                        if (success == true) {
+                            Toast.makeText(ActivitySelectIrritantTags.this, "record added successfully", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ActivitySelectIrritantTags.this, "record added failure", Toast.LENGTH_SHORT).show();
+                        }
+                        // clear text view and update recycler view
+                        irritantTagTitleEditText.getText().clear();
+                        availableIrritantTagsList = getAllIrritantTags();
+                        setIrritantTagsAvailableAdapter();
+
                     }
                 }catch (Exception e){
                     Toast.makeText(ActivitySelectIrritantTags.this, "exception catch", Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
 
@@ -80,11 +102,8 @@ public class ActivitySelectIrritantTags extends AppCompatActivity {
         List<ModelIrritantTag> allIrritantTagsList = getAllIrritantTags();
         for (ModelIrritantTag var : allIrritantTagsList) {
             String titleFound = var.getIrrTagTitle();
-            Toast.makeText(ActivitySelectIrritantTags.this, "|" + titleFound + "| =? |" + inputText + "|", Toast.LENGTH_SHORT).show();
             if (titleFound.equals(inputText)){
-                Toast.makeText(ActivitySelectIrritantTags.this, "reached pre-return", Toast.LENGTH_SHORT).show();
                 return true;
-
             }
         }
         return false;
