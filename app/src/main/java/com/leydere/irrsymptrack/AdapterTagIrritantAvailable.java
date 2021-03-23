@@ -2,6 +2,7 @@ package com.leydere.irrsymptrack;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,14 +20,16 @@ import java.util.ArrayList;
 public class AdapterTagIrritantAvailable extends RecyclerView.Adapter<AdapterTagIrritantAvailable.MyViewHolder> {
     private final Context context;
     private ArrayList<ModelIrritantTag> irritantTagList;
+    private OnItemClickListener onItemClickListener;
     CardView cardView; //unused?
     int row_index = -1; //unused?
 
 
 
-    public AdapterTagIrritantAvailable(ArrayList<ModelIrritantTag> irritantTagList, Context context){
+    public AdapterTagIrritantAvailable(ArrayList<ModelIrritantTag> irritantTagList, Context context, OnItemClickListener onItemClickListener){
         this.irritantTagList = irritantTagList;
         this.context = context;
+        this.onItemClickListener = onItemClickListener;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
@@ -45,7 +48,7 @@ public class AdapterTagIrritantAvailable extends RecyclerView.Adapter<AdapterTag
     }
 
     //unused?
-    public interface IrrTagAvailableClickListener {
+    public interface OnItemClickListener {
         void onItemClick(int position);
     }
 
@@ -65,7 +68,8 @@ public class AdapterTagIrritantAvailable extends RecyclerView.Adapter<AdapterTag
         holder.irritantTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: color should update to indicate has been selected, id should be added to list which will be passed back upon return
+                //TODO: id should be added to list which will be passed back upon return
+                onItemClickListener.onItemClick(position);
 
                 //currently this just changes the color of the last card in the list
                 //cardView.setCardBackgroundColor(Color.RED);
@@ -79,8 +83,18 @@ public class AdapterTagIrritantAvailable extends RecyclerView.Adapter<AdapterTag
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
+            //TODO: set correct color to indicate having been selected
             public void onClick(View v) {
-                holder.cardView.setCardBackgroundColor(Color.RED);
+                ColorStateList c = holder.cardView.getCardBackgroundColor();
+                int i = c.getDefaultColor();
+                int lightPurple = Color.parseColor("#FFBB86FC");
+                int standardPurple = Color.parseColor("#FF6200EE");
+
+                if (i == lightPurple){
+                    holder.cardView.setCardBackgroundColor(standardPurple);
+                }else if (i == standardPurple){
+                    holder.cardView.setCardBackgroundColor(lightPurple);
+                }
             }
         });
 

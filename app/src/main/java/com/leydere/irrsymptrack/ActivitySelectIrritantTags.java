@@ -16,7 +16,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivitySelectIrritantTags extends AppCompatActivity {
+public class ActivitySelectIrritantTags extends AppCompatActivity implements AdapterTagIrritantAvailable.OnItemClickListener {
 
     DatabaseHelper databaseHelper;
     ArrayList<ModelIrritantTag> availableIrritantTagsList;
@@ -125,11 +125,16 @@ public class ActivitySelectIrritantTags extends AppCompatActivity {
     }
 
     private void setIrritantTagsAvailableAdapter() {
-        AdapterTagIrritantAvailable adapter = new AdapterTagIrritantAvailable(availableIrritantTagsList, this);
+        AdapterTagIrritantAvailable adapter = new AdapterTagIrritantAvailable(availableIrritantTagsList, this, this::onItemClick);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         irritantTagAvailableRecyclerView.setLayoutManager(layoutManager);
         irritantTagAvailableRecyclerView.setItemAnimator(new DefaultItemAnimator());
         irritantTagAvailableRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemClick(int position) {
+        //TODO: item position is passed from adapter to activity; used to add to list???
     }
 
     //Thing I was trying to call from adapter class.  Kept running into static v. non-static issues.
