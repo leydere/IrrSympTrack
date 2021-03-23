@@ -25,7 +25,7 @@
             android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
         <activity android:name=".ActivityGraphView"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
-        <activity android:name=".ActivitySelectIrritantTags"
+        <activity android:name=".ActivityNewIrritantTags"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
 
     </application>

@@ -4,11 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -29,9 +27,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class ActivityAddIrritant extends AppCompatActivity {
+public class ActivityAddIrritant extends AppCompatActivity implements AdapterTagIrritantSelection.OnItemClickListener {
 
-    ArrayList<ModelIrritantTag> selectedIrritantTagsList;
+    ArrayList<ModelIrritantTag> irritantTagsList;
     Button dateButton, timeButton, selectIrritantTagsButton;
     TextView dateTextView, timeTextView, addIrritantToolbarText;
     EditText editTextIrritantTitle;
@@ -44,7 +42,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
     RadioButton radioButtonIrrHigh;
     int idFromIrritantList, idFromAvailableIrrTag;
     DatabaseHelper databaseHelper;
-    RecyclerView irritantTagSelectedRecyclerView;
+    RecyclerView irritantTagSelectionRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,21 +62,28 @@ public class ActivityAddIrritant extends AppCompatActivity {
         radioButtonIrrLow = findViewById(R.id.radioButtonIrrLow);
         radioButtonIrrMid = findViewById(R.id.radioButtonIrrMid);
         radioButtonIrrHigh = findViewById(R.id.radioButtonIrrHigh);
-        irritantTagSelectedRecyclerView = findViewById(R.id.irritantTagSelectedRecyclerView);
+        irritantTagSelectionRecyclerView = findViewById(R.id.irritantTagSelectionRecyclerView);
 
         databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
 
         Intent intent = getIntent(); // this is for intent sent from AdapterIrritantList
         idFromIrritantList = intent.getIntExtra("id", -1); //Based on this if idFromIrritant list > -1 you can treat this as an edit.  Otherwise treat as create new.
+        //TODO: where did this IrrTag intent come from?  Starting to look like I created it here but never implemented a source.
         idFromAvailableIrrTag = intent.getIntExtra("idFromAvailableIrrTag", -1);
 
 
 
         //list to support recycler view 1 ie. tags selected
-        selectedIrritantTagsList = new ArrayList<>();
+        irritantTagsList = new ArrayList<>();
+        irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
+        setIrritantTagsSelectionAdapter();
+        //TODO: populate irritant tag list, the color accordingly if existing record and has associated tag data
+
+        /*
         if (idFromAvailableIrrTag > -1) {
-            selectedIrritantTagsList.add(databaseHelper.getSingleIrritantTagRecord(idFromAvailableIrrTag));
+            irritantTagsList.add(databaseHelper.getSingleIrritantTagRecord(idFromAvailableIrrTag));
         }
+         */
 
 
 
@@ -131,7 +136,8 @@ public class ActivityAddIrritant extends AppCompatActivity {
             CharSequence timeCharSequence = DateFormat.format("hh:mm a", calendar);
             timeTextView.setText(timeCharSequence);
         }
-        
+
+        //region on click listeners
         dateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -149,7 +155,7 @@ public class ActivityAddIrritant extends AppCompatActivity {
         selectIrritantTagsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ActivityAddIrritant.this, ActivitySelectIrritantTags.class);
+                Intent intent = new Intent(ActivityAddIrritant.this, ActivityNewIrritantTags.class);
                 startActivity(intent);
             }
         });
@@ -185,9 +191,19 @@ public class ActivityAddIrritant extends AppCompatActivity {
                 }
             }
         });
+        //endregion
 
     } //end of OnCreate
 
+    private void setIrritantTagsSelectionAdapter() {
+        AdapterTagIrritantSelection adapter = new AdapterTagIrritantSelection(irritantTagsList, this, this::onItemClick);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        irritantTagSelectionRecyclerView.setLayoutManager(layoutManager);
+        irritantTagSelectionRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        irritantTagSelectionRecyclerView.setAdapter(adapter);
+    }
+
+    //region FAB supporting functions
     private void addIrritantRecordFAB(Calendar calendar) {
 
         //format dateTime for DB
@@ -244,9 +260,9 @@ public class ActivityAddIrritant extends AppCompatActivity {
         return dateCharSequence + " " + timeCharSequence;
     }
 
+    //endregion
 
-    //Supporting time date methods
-
+    //region Supporting time date methods
     private void handleDateButton(Calendar calendar1) {
 
         int YEAR = calendar1.get(Calendar.YEAR);
@@ -290,8 +306,12 @@ public class ActivityAddIrritant extends AppCompatActivity {
 
         timePickerDialog.show();
     }
+    //endregion
 
-
+    @Override
+    public void onItemClick(int position) {
+        //TODO: item position is passed from adapter to activity; used to add to list that tracks what will be tags once submitted???
+    }
 
 
 }

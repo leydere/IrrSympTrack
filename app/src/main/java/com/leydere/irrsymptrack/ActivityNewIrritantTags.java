@@ -16,30 +16,32 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActivitySelectIrritantTags extends AppCompatActivity implements AdapterTagIrritantAvailable.OnItemClickListener {
+public class ActivityNewIrritantTags extends AppCompatActivity implements AdapterTagIrritantList.OnItemClickListener {
 
     DatabaseHelper databaseHelper;
-    ArrayList<ModelIrritantTag> availableIrritantTagsList;
-    RecyclerView irritantTagAvailableRecyclerView;
+    ArrayList<ModelIrritantTag> irritantTagsList;
+    RecyclerView irritantTagListRecyclerView;
     EditText irritantTagTitleEditText;
     Button addNewIrritantTagRecordButton;
     FloatingActionButton fabReturnSelectedIrrTagRecord;
-    ArrayList<Integer> selectedIrritantTagIdsList;
+    ArrayList<Integer> selectedIrritantTagIdsList; //so far no use I believe
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_irritant_tags);
+        setContentView(R.layout.activity_new_irritant_tags);
 
-        databaseHelper = new DatabaseHelper(ActivitySelectIrritantTags.this);
-        irritantTagAvailableRecyclerView = findViewById(R.id.irrTagAvailableRecyclerView);
+        databaseHelper = new DatabaseHelper(ActivityNewIrritantTags.this);
+        irritantTagListRecyclerView = findViewById(R.id.irrTagListRecyclerView);
         irritantTagTitleEditText = findViewById(R.id.irrTagTitleEditText);
         addNewIrritantTagRecordButton = findViewById(R.id.addNewIrrTagRecordButton);
         fabReturnSelectedIrrTagRecord = findViewById(R.id.fabReturnSelectedIrrTagRecord);
 
-        selectedIrritantTagIdsList = new ArrayList<>();
-        availableIrritantTagsList = getAllIrritantTags();
-        setIrritantTagsAvailableAdapter();
+        selectedIrritantTagIdsList = new ArrayList<>(); //so far no use I believe, this was meant to be part of a larger solution of passing selected data back a forth between adapter and activity
+        //irritantTagsList = getAllIrritantTags();
+        irritantTagsList = new ArrayList<>();
+        irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
+        setIrritantTagsListAdapter();
 
         addNewIrritantTagRecordButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,7 +51,7 @@ public class ActivitySelectIrritantTags extends AppCompatActivity implements Ada
                 //check for blank text edit field
                 boolean textFieldIsBlank;
                 if (irritantTagTitleEditText.getText().toString().isEmpty()){
-                    Toast.makeText(ActivitySelectIrritantTags.this, "text field is blank", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityNewIrritantTags.this, "text field is blank", Toast.LENGTH_SHORT).show();
                     textFieldIsBlank = true;
                 } else {
                     textFieldIsBlank = false;
@@ -60,7 +62,7 @@ public class ActivitySelectIrritantTags extends AppCompatActivity implements Ada
                 if (!textFieldIsBlank){
                     recordExists = doesIrritantTagRecordAlreadyExist(irritantTagTitleEditText.getText().toString());
                     if(recordExists){
-                        Toast.makeText(ActivitySelectIrritantTags.this, "record exists, please enter unique tag", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityNewIrritantTags.this, "record exists, please enter unique tag", Toast.LENGTH_SHORT).show();
                         irritantTagTitleEditText.getText().clear();
                     }
                 }
@@ -75,33 +77,33 @@ public class ActivitySelectIrritantTags extends AppCompatActivity implements Ada
                             modelIrritantTag = new ModelIrritantTag(irritantTagTitleEditText.getText().toString());
                         }
                         catch (Exception e) {
-                            Toast.makeText(ActivitySelectIrritantTags.this, "input error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivityNewIrritantTags.this, "input error", Toast.LENGTH_SHORT).show();
                             modelIrritantTag = new ModelIrritantTag("error");
                         }
 
                         boolean success = databaseHelper.addIrritantTagRecord(modelIrritantTag);
 
                         if (success == true) {
-                            Toast.makeText(ActivitySelectIrritantTags.this, "record added successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivityNewIrritantTags.this, "record added successfully", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(ActivitySelectIrritantTags.this, "record added failure", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivityNewIrritantTags.this, "record added failure", Toast.LENGTH_SHORT).show();
                         }
                         // clear text view and update recycler view
                         irritantTagTitleEditText.getText().clear();
-                        availableIrritantTagsList = getAllIrritantTags();
-                        setIrritantTagsAvailableAdapter();
+                        irritantTagsList = getAllIrritantTags();
+                        setIrritantTagsListAdapter();
 
                     }
                 }catch (Exception e){
-                    Toast.makeText(ActivitySelectIrritantTags.this, "exception catch", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityNewIrritantTags.this, "exception catch", Toast.LENGTH_SHORT).show();
                 }
             }
         });
 
-        irritantTagAvailableRecyclerView.setOnClickListener(new View.OnClickListener() {
+        irritantTagListRecyclerView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: can I make the card click functions work through here rather than in the adapter class.
+                //TODO: can I make the card click functions work through here rather than in the adapter class. **probably just delete this function, dead-end**
             }
         });
 
@@ -118,18 +120,19 @@ public class ActivitySelectIrritantTags extends AppCompatActivity implements Ada
         return false;
     }
 
+    //redundant as only second line in function serves a purpose.  Creates a new list to return a list.
     private ArrayList<ModelIrritantTag> getAllIrritantTags(){
         ArrayList<ModelIrritantTag> arrayListToReturn = new ArrayList<ModelIrritantTag>();
         arrayListToReturn.addAll(databaseHelper.getAllIrritantTags());
         return arrayListToReturn;
     }
 
-    private void setIrritantTagsAvailableAdapter() {
-        AdapterTagIrritantAvailable adapter = new AdapterTagIrritantAvailable(availableIrritantTagsList, this, this::onItemClick);
+    private void setIrritantTagsListAdapter() {
+        AdapterTagIrritantList adapter = new AdapterTagIrritantList(irritantTagsList, this, this::onItemClick);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        irritantTagAvailableRecyclerView.setLayoutManager(layoutManager);
-        irritantTagAvailableRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        irritantTagAvailableRecyclerView.setAdapter(adapter);
+        irritantTagListRecyclerView.setLayoutManager(layoutManager);
+        irritantTagListRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        irritantTagListRecyclerView.setAdapter(adapter);
     }
 
     @Override
@@ -137,9 +140,4 @@ public class ActivitySelectIrritantTags extends AppCompatActivity implements Ada
         //TODO: item position is passed from adapter to activity; used to add to list???
     }
 
-    //Thing I was trying to call from adapter class.  Kept running into static v. non-static issues.
-    public void onIrritantTagClick(int id){
-        selectedIrritantTagIdsList.add(id);
-        Toast.makeText(getApplicationContext(), "exception catch", Toast.LENGTH_SHORT).show();
-    }
 }

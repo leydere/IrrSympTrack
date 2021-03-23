@@ -214,11 +214,11 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="8dp"
-                                    android:text="Selected Tags"
+                                    android:text="Irritant Tags"
                                     android:textSize="18dp"/>
 
                                 <androidx.recyclerview.widget.RecyclerView
-                                    android:id="@+id/irritantTagSelectedRecyclerView"
+                                    android:id="@+id/irritantTagSelectionRecyclerView"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"/>
                             </LinearLayout>
@@ -231,19 +231,13 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:orientation="vertical">
-                                <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_marginBottom="8dp"
-                                    android:text="Available Tags"
-                                    android:textSize="18dp"/>
 
                                 <Button
                                     android:id="@+id/selectIrritantTagsButton"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:padding="10dp"
-                                    android:text="Select Tags" />
+                                    android:text="Create New Tag" />
 
                             </LinearLayout>
                         </RelativeLayout>
