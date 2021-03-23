@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -197,7 +198,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
     private void setIrritantTagsSelectionAdapter() {
         AdapterTagIrritantSelection adapter = new AdapterTagIrritantSelection(irritantTagsList, this, this::onItemClick);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL);
         irritantTagSelectionRecyclerView.setLayoutManager(layoutManager);
         irritantTagSelectionRecyclerView.setItemAnimator(new DefaultItemAnimator());
         irritantTagSelectionRecyclerView.setAdapter(adapter);

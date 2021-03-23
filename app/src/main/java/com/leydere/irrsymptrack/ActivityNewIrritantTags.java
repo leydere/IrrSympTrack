@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -129,7 +130,7 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
 
     private void setIrritantTagsListAdapter() {
         AdapterTagIrritantList adapter = new AdapterTagIrritantList(irritantTagsList, this, this::onItemClick);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(10, StaggeredGridLayoutManager.HORIZONTAL);
         irritantTagListRecyclerView.setLayoutManager(layoutManager);
         irritantTagListRecyclerView.setItemAnimator(new DefaultItemAnimator());
         irritantTagListRecyclerView.setAdapter(adapter);
