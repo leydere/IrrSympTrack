@@ -31,6 +31,7 @@ import java.util.Locale;
 public class ActivityAddIrritant extends AppCompatActivity implements AdapterTagIrritantSelection.OnItemClickListener {
 
     ArrayList<ModelIrritantTag> irritantTagsList;
+    ArrayList<Integer> selectedIrritantTagIDsList;
     Button dateButton, timeButton, selectIrritantTagsButton;
     TextView dateTextView, timeTextView, addIrritantToolbarText;
     EditText editTextIrritantTitle;
@@ -72,23 +73,17 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         //TODO: where did this IrrTag intent come from?  Starting to look like I created it here but never implemented a source.
         idFromAvailableIrrTag = intent.getIntExtra("idFromAvailableIrrTag", -1);
 
+        //TODO: after get intent, but before set adapter - create the new list (set with data inside the if record exists statement)
+        selectedIrritantTagIDsList = new ArrayList<>();
 
-
-        //list to support recycler view 1 ie. tags selected
+        //list to support recycler view
         irritantTagsList = new ArrayList<>();
         irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
         setIrritantTagsSelectionAdapter();
-        //TODO: populate irritant tag list, the color accordingly if existing record and has associated tag data
+        //TODO: color irritant tag list accordingly if existing record and has associated tag data
 
-        /*
-        if (idFromAvailableIrrTag > -1) {
-            irritantTagsList.add(databaseHelper.getSingleIrritantTagRecord(idFromAvailableIrrTag));
-        }
-         */
-
-
-
-        //if statement that determines if to display a record or start with blank
+        // if else statement that determines if to display a record or start with blank
+        // if > -1 edit existing record
         if (idFromIrritantList > -1) {
             addIrritantToolbarText.setText("Edit Existing Irritant Record");
             //editing a record
@@ -128,6 +123,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             }
 
         }
+        // else create a new record
         else{
             addIrritantToolbarText.setText("Add New Irritant Record");
             //set date text
@@ -310,8 +306,17 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     //endregion
 
     @Override
-    public void onItemClick(int position) {
-        //TODO: item position is passed from adapter to activity; used to add to list that tracks what will be tags once submitted???
+    public void onItemClick(int irrTagModelID, boolean tagRecordSelected) {
+        //TODO: irr-tag model ID - if true and list does not contain add to list, if false and list does contain remove from list *solved?*
+        boolean listContains = selectedIrritantTagIDsList.contains(irrTagModelID);
+        if (tagRecordSelected && !listContains){
+            selectedIrritantTagIDsList.add(irrTagModelID);
+        }else if(!tagRecordSelected && listContains){
+            selectedIrritantTagIDsList.remove(selectedIrritantTagIDsList.indexOf(irrTagModelID));
+        }
+
+        Toast.makeText(ActivityAddIrritant.this, "ID = " + irrTagModelID + ", isSelected = " + tagRecordSelected, Toast.LENGTH_SHORT).show();
+
     }
 
 

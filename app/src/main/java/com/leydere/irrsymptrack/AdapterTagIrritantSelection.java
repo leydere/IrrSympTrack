@@ -44,7 +44,7 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int position);
+        void onItemClick(int irrTagModelID, boolean tagRecordSelected);
     }
 
     @NonNull
@@ -64,13 +64,13 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
             @Override
             public void onClick(View v) {
                 //not sure if I have any use for this on click listener after having implemented card view listener
-                onItemClickListener.onItemClick(position);
+
             }
         });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
-            //TODO: send data to activity regarding the clicked or not clicked status of the cards
+            //TODO: send data to activity regarding the clicked or not clicked status of the cards *done via onItemClick below?*
             public void onClick(View v) {
                 ColorStateList c = holder.cardView.getCardBackgroundColor();
                 int i = c.getDefaultColor();
@@ -79,8 +79,10 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
 
                 if (i == lightPurple){
                     holder.cardView.setCardBackgroundColor(standardPurple);
+                    onItemClickListener.onItemClick(irritantTagList.get(position).getId(), true);
                 }else if (i == standardPurple){
                     holder.cardView.setCardBackgroundColor(lightPurple);
+                    onItemClickListener.onItemClick(irritantTagList.get(position).getId(), false);
                 }
             }
         });

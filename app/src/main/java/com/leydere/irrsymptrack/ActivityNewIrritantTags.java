@@ -100,14 +100,6 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
                 }
             }
         });
-
-        irritantTagListRecyclerView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: can I make the card click functions work through here rather than in the adapter class. **probably just delete this function, dead-end**
-            }
-        });
-
     }
 
     public boolean doesIrritantTagRecordAlreadyExist(String inputText){
@@ -138,7 +130,7 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
 
     @Override
     public void onItemClick(int position) {
-        //TODO: item position is passed from adapter to activity; used to add to list???
+        //TODO: pretty sure I can do away with the on click interface in the new tags activity
     }
 
 }
