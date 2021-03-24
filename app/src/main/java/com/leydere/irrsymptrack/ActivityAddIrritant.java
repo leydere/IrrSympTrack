@@ -162,9 +162,9 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             public void onClick(View view) {
 
                 if (idFromIrritantList > -1){
-                    updateExistingIrritantRecordFAB(calendar);
+                    updateExistingIrritantRecordFAB(calendar, selectedIrritantTagIDsList);
                 }else {
-                    addIrritantRecordFAB(calendar);
+                    addIrritantRecordFAB(calendar, selectedIrritantTagIDsList);
                 }
 
 
@@ -201,7 +201,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     }
 
     //region FAB supporting functions
-    private void addIrritantRecordFAB(Calendar calendar) {
+    private void addIrritantRecordFAB(Calendar calendar, ArrayList<Integer> selectedIrritantTagIDsList) {
 
         //format dateTime for DB
         String dateTimeString = dateTimeFormatToDB(calendar).toString();
@@ -216,6 +216,16 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             modelIrritant = new ModelIrritant("error", "error", "error");
         }
 
+        //adding record now returns the new modelID instead of boolean & a -1 if it fails
+        int returnedID = databaseHelper.addIrritantRecord(modelIrritant);
+        Toast.makeText(ActivityAddIrritant.this, "returned ID " + returnedID, Toast.LENGTH_SHORT).show();
+        if (returnedID != -1) {
+            Toast.makeText(ActivityAddIrritant.this, "record added successfully", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(ActivityAddIrritant.this, "record added failure", Toast.LENGTH_SHORT).show();
+        }
+
+        /*
         boolean success = databaseHelper.addIrritantRecord(modelIrritant);
 
         if (success == true) {
@@ -224,9 +234,21 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             Toast.makeText(ActivityAddIrritant.this, "record added failure", Toast.LENGTH_SHORT).show();
         }
 
+         */
+        //TODO: create associative data for new records here !!!NEED RECORD ID OF NEWLY CREATED RECORD!!!
+        int numberOfTagsIDs = selectedIrritantTagIDsList.size();
+        if (numberOfTagsIDs > 0 && returnedID != -1){
+            boolean associativeSuccess = databaseHelper.createIrritantTagAssociativeRecord(returnedID, selectedIrritantTagIDsList);
+            if (associativeSuccess == true) {
+                Toast.makeText(ActivityAddIrritant.this, "associative records added successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ActivityAddIrritant.this, "associative records failure", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
-    private void updateExistingIrritantRecordFAB(Calendar calendar) {
+    private void updateExistingIrritantRecordFAB(Calendar calendar, ArrayList<Integer> selectedIrritantTagIDsList) {
 
         //format dateTime for DB
         String dateTimeString = dateTimeFormatToDB(calendar).toString();
@@ -248,6 +270,8 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         } else {
             Toast.makeText(ActivityAddIrritant.this, "record updated failure", Toast.LENGTH_SHORT).show();
         }
+
+        //TODO: create associative data for existing records here
 
     }
 
@@ -307,7 +331,6 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
     @Override
     public void onItemClick(int irrTagModelID, boolean tagRecordSelected) {
-        //TODO: irr-tag model ID - if true and list does not contain add to list, if false and list does contain remove from list *solved?*
         boolean listContains = selectedIrritantTagIDsList.contains(irrTagModelID);
         if (tagRecordSelected && !listContains){
             selectedIrritantTagIDsList.add(irrTagModelID);
@@ -315,7 +338,16 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             selectedIrritantTagIDsList.remove(selectedIrritantTagIDsList.indexOf(irrTagModelID));
         }
 
+        /*
         Toast.makeText(ActivityAddIrritant.this, "ID = " + irrTagModelID + ", isSelected = " + tagRecordSelected, Toast.LENGTH_SHORT).show();
+
+        try{
+            int i = selectedIrritantTagIDsList.size() - 1;
+            Toast.makeText(ActivityAddIrritant.this, "list ends with =  " + selectedIrritantTagIDsList.get(i), Toast.LENGTH_SHORT).show();
+        } catch (Exception e){
+            Toast.makeText(ActivityAddIrritant.this, "failed", Toast.LENGTH_SHORT).show();
+        }
+        */
 
     }
 

@@ -77,6 +77,8 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
                 int lightPurple = Color.parseColor("#FFBB86FC");
                 int standardPurple = Color.parseColor("#FF6200EE");
 
+                //onItemClickListener.onItemClick(-1, true);
+
                 if (i == lightPurple){
                     holder.cardView.setCardBackgroundColor(standardPurple);
                     onItemClickListener.onItemClick(irritantTagList.get(position).getId(), true);

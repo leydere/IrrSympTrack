@@ -110,7 +110,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //region ADD RECORDS
-    public boolean addIrritantRecord(ModelIrritant modelIrritant){
+    public int addIrritantRecord(ModelIrritant modelIrritant){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -119,8 +119,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_IRR_SEVERITY, modelIrritant.getIrrSeverity());
 
         long insert = db.insert(TABLE_IRRITANTS, null, contentValues);
+        //TODO: attempt to get primary key of newly added record
+        Cursor returnedCursor = db.rawQuery("SELECT LAST_INSERT_ROWID();", null);
+        int returnedID = -1;
+        if (returnedCursor != null){
+            try {
+                if (returnedCursor.moveToFirst()) {
+                    returnedID = returnedCursor.getInt(0);
+                }
+            } finally {
+                returnedCursor.close();
+            }
+        }
+        //end attempt
         db.close();
-        if (insert == -1) { return false; } else { return true; }
+        return returnedID;
+        //if (insert == -1) { return false; } else { return true; }
     }
 
     public boolean addSymptomRecord(ModelSymptom modelSymptom){
@@ -347,6 +361,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
 
         return compiledResults;
+    }
+
+    //TODO: create function for new associative data here
+    public boolean createIrritantTagAssociativeRecord(int recordID, ArrayList<Integer> selectedIrritantTagIDsList){
+        SQLiteDatabase db = this.getWritableDatabase();
+        try{
+            //TODO: remove existing db associative records; probably redundant for new records but possible fragments could remain from database manipulation
+            String deleteQuery = "DELETE FROM " + TABLE_IRR_TAG_ASSOC +
+                    " WHERE " + COLUMN_A_IRR_ID + " = " + recordID + ";";
+            db.execSQL(deleteQuery);
+        } catch (Exception e) {
+            //nothing?
+        }
+        try{
+            for (int irrID : selectedIrritantTagIDsList){
+                    String insertQuery =  "INSERT INTO " + TABLE_IRR_TAG_ASSOC + "(" + COLUMN_A_IRR_ID + ", " + COLUMN_A_IRR_TAG_ID + ") " +
+                            "VALUES (" + recordID + ", " + irrID + ");";
+                    db.execSQL(insertQuery);
+            }
+        } catch (Exception e) {
+            db.close();
+            return false;
+        }
+        db.close();
+        return true;
     }
 
     //region Dummy data
