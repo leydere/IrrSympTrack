@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:id="@+id/symTagAppBarLayout"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/symTagUpperText">
+
+        <androidx.appcompat.widget.Toolbar
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/symTagToolbarTop">
+
+            <TextView
+                android:id="@+id/symTagToolbarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Create New and/or Select Symptom Tags"
+                android:textColor="#FFFFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+
+        </androidx.appcompat.widget.Toolbar>
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/symTagUpperText"
+        android:text="Type new Symptom Tag title here"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="56dp"
+        app:layout_constraintTop_toBottomOf="@+id/symTagAppBarLayout"
+        app:layout_constraintBottom_toTopOf="@+id/symTagTitleTextField"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/symTagTitleTextField"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="TITLE"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintHorizontal_weight="7"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/addNewSymTagRecordButton"
+        app:layout_constraintTop_toBottomOf="@+id/symTagUpperText">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/symTagTitleEditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <Button
+        android:id="@+id/addNewSymTagRecordButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Add"
+        android:layout_marginRight="56dp"
+        app:layout_constraintHorizontal_weight="3"
+        app:layout_constraintLeft_toRightOf="@+id/symTagTitleTextField"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/symTagTitleTextField"
+        app:layout_constraintBottom_toBottomOf="@+id/symTagTitleTextField"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabReturnSelectedSymTagRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        app:srcCompat="@drawable/ic_baseline_arrow_back_24"
+        android:layout_marginRight="56dp"
+        android:layout_marginBottom="56dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/symTagListRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="56dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/symTagTitleTextField" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+

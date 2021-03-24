@@ -41,7 +41,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     RadioButton radioButtonIrrLow;
     RadioButton radioButtonIrrMid;
     RadioButton radioButtonIrrHigh;
-    int idOfExistingIrritantRecord, idFromAvailableIrrTag;
+    int idOfExistingIrritantRecord;
     DatabaseHelper databaseHelper;
     RecyclerView irritantTagSelectionRecyclerView;
 
@@ -70,8 +70,6 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
         Intent intent = getIntent(); // this is for intent sent from AdapterIrritantList
         idOfExistingIrritantRecord = intent.getIntExtra("id", -1); //Based on this if idFromIrritant list > -1 you can treat this as an edit.  Otherwise treat as create new.
-        //TODO: where did this IrrTag intent come from?  Starting to look like I created it here but never implemented a source.
-        idFromAvailableIrrTag = intent.getIntExtra("idFromAvailableIrrTag", -1);
 
         // if else statement that determines if to display a record or start with blank
         // if > -1 edit existing record
@@ -164,11 +162,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
                 }else {
                     addIrritantRecordFAB(calendar, selectedIrritantTagIDsList);
                 }
-
-
                 //TODO insert navigate back to mainactivity.firstfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature
-                // findViewById(R.id.)...
-
             }
         });
 
@@ -234,16 +228,6 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             Toast.makeText(ActivityAddIrritant.this, "record added failure", Toast.LENGTH_SHORT).show();
         }
 
-        /*
-        boolean success = databaseHelper.addIrritantRecord(modelIrritant);
-
-        if (success == true) {
-            Toast.makeText(ActivityAddIrritant.this, "record added successfully", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(ActivityAddIrritant.this, "record added failure", Toast.LENGTH_SHORT).show();
-        }
-
-         */
         // create associative data for new records here - uses irritant ID of newly created record & list of selected tag IDs
         int numberOfTagsIDs = selectedIrritantTagIDsList.size();
         if (numberOfTagsIDs > 0 && returnedID != -1){

@@ -3,15 +3,15 @@ package com.leydere.irrsymptrack;
 public class ModelSymptomTag {
 
     private int id;
-    private String irrSymTitle;
+    private String symTagTitle;
 
-    public ModelSymptomTag(int id, String irrSymTitle){
+    public ModelSymptomTag(int id, String symTagTitle){
         this.id = id;
-        this.irrSymTitle = irrSymTitle;
+        this.symTagTitle = symTagTitle;
     }
 
-    public ModelSymptomTag(String irrTagTitle){
-        this.irrSymTitle = irrSymTitle;
+    public ModelSymptomTag(String symTagTitle){
+        this.symTagTitle = symTagTitle;
     }
 
     //Getters & Setters
@@ -24,11 +24,11 @@ public class ModelSymptomTag {
         this.id = id;
     }
 
-    public String getIrrSymTitle() {
-        return irrSymTitle;
+    public String getSymTagTitle() {
+        return symTagTitle;
     }
 
-    public void setIrrSymTitle(String irrSymTitle) {
-        this.irrSymTitle = irrSymTitle;
+    public void setSymTagTitle(String symTagTitle) {
+        this.symTagTitle = symTagTitle;
     }
 }

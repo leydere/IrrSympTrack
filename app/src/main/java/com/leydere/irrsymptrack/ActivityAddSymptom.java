@@ -2,7 +2,6 @@ package com.leydere.irrsymptrack;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
@@ -17,6 +16,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -25,9 +27,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class ActivityAddSymptom extends AppCompatActivity {
+public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagIrritantSelection.OnItemClickListener{
 
-    Button dateButton, timeButton;
+    ArrayList<ModelSymptomTag> symptomTagsList;
+    ArrayList<Integer> selectedSymptomTagIDsList;
+    Button dateButton, timeButton, newSymptomTagsButton;
     TextView dateTextView, timeTextView, addSymptomToolbarText;
     EditText editTextSymptomTitle;
     FloatingActionButton fabAddSymptomRecord;
@@ -37,18 +41,18 @@ public class ActivityAddSymptom extends AppCompatActivity {
     RadioButton radioButtonSymLow;
     RadioButton radioButtonSymMid;
     RadioButton radioButtonSymHigh;
-    int idFromSymptomList;
+    int idOfExistingSymptomRecord;
     DatabaseHelper databaseHelper;
+    RecyclerView symptomTagSelectionRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_symptom);
 
-        //presidentList = myApplication.getPresdientList(); //going to have to go back through series on RecyclerView to figure out where this links to
-
         dateButton = findViewById(R.id.dateButton);
         timeButton = findViewById(R.id.timeButton);
+        newSymptomTagsButton = findViewById(R.id.newSymptomTagsButton);
         dateTextView = findViewById(R.id.dateTextView);
         timeTextView = findViewById(R.id.timeTextView);
         addSymptomToolbarText = findViewById(R.id.addSymptomToolbarText);
@@ -59,19 +63,20 @@ public class ActivityAddSymptom extends AppCompatActivity {
         radioButtonSymLow = findViewById(R.id.radioButtonSymLow);
         radioButtonSymMid = findViewById(R.id.radioButtonSymMid);
         radioButtonSymHigh = findViewById(R.id.radioButtonSymHigh);
+        symptomTagSelectionRecyclerView = findViewById(R.id.symptomTagSelectionRecyclerView);
 
         databaseHelper = new DatabaseHelper(ActivityAddSymptom.this);
+        selectedSymptomTagIDsList = new ArrayList<>();
 
         Intent intent = getIntent(); // this is for intent sent from AdapterSymptomList
-        idFromSymptomList = intent.getIntExtra("id", -1); //Based on this if idFromSymptom list > -1 you can treat this as an edit.  Otherwise treat as create new.
-        //President president = null;  //not sure how this will translate to my purposes. leaving in for time being (ModelSymptom maybe)
-        //Toast.makeText(ActivityAddSymptom.this, "Id from pushed extra == " + idFromSymptomList, Toast.LENGTH_SHORT).show();
+        idOfExistingSymptomRecord = intent.getIntExtra("id", -1); //Based on this if idFromSymptom list > -1 you can treat this as an edit.  Otherwise treat as create new.
 
-        //if statement that determines if to display a record or start with blank
-        if (idFromSymptomList > -1) {
+        // if else statement that determines if to display a record or start with blank
+        // if statement that determines if to display a record or start with blank
+        if (idOfExistingSymptomRecord > -1) {
             addSymptomToolbarText.setText("Edit Existing Symptom Record");
             //editing a record
-            ModelSymptom symptomToEdit = databaseHelper.getSingleSymptomRecord(idFromSymptomList);
+            ModelSymptom symptomToEdit = databaseHelper.getSingleSymptomRecord(idOfExistingSymptomRecord);
             //Toast.makeText(ActivityAddSymptom.this, "TimeDate from pushed extra == " + symptomToEdit.getSymTimeDate(), Toast.LENGTH_SHORT).show();
 
             //set title text
@@ -108,8 +113,10 @@ public class ActivityAddSymptom extends AppCompatActivity {
             } catch (Exception e) {
                 Toast.makeText(ActivityAddSymptom.this, "input error from severity", Toast.LENGTH_SHORT).show();
             }
-
+            //populates selected tags id list with associated symptom tag Id's here
+            selectedSymptomTagIDsList = databaseHelper.getTagIDsAssociatedToThisSymptomRecord(idOfExistingSymptomRecord);
         }
+        // else create a new record
         else{
             addSymptomToolbarText.setText("Add New Symptom Record");
             //set date text
@@ -120,6 +127,12 @@ public class ActivityAddSymptom extends AppCompatActivity {
             timeTextView.setText(timeCharSequence);
         }
 
+        //list to support recycler view
+        symptomTagsList = new ArrayList<>();
+        symptomTagsList.addAll(databaseHelper.getAllSymptomTags());
+        setSymptomTagsSelectionAdapter();
+
+        //region on click listeners
         dateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -134,26 +147,25 @@ public class ActivityAddSymptom extends AppCompatActivity {
             }
         });
 
+        newSymptomTagsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityAddSymptom.this, ActivityNewSymptomTags.class);
+                intent.putExtra("id", idOfExistingSymptomRecord);
+                startActivity(intent);
+            }
+        });
+
         fabAddSymptomRecord.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
 
-                if (idFromSymptomList > -1){
-                    updateExistingSymptomRecordFAB(calendar);
+                if (idOfExistingSymptomRecord > -1){
+                    updateExistingSymptomRecordFAB(calendar, selectedSymptomTagIDsList);
                 }else {
-                    addSymptomRecordFAB(calendar);
+                    addSymptomRecordFAB(calendar, selectedSymptomTagIDsList);
                 }
-
-
                 //TODO insert navigate back to mainactivity.secondfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature
-                // findViewById(R.id.)...
-
-                /*
-                //intent and extra sent back but ran into issue of how to navigate to specific fragment from an activity.
-                Intent goBackToMainFragment2 = new Intent(ActivityAddSymptom.this, MainActivity.class);
-                goBackToMainFragment2.putExtra("goToFragment2", true);
-                startActivity(goBackToMainFragment2);*/
-
             }
         });
 
@@ -171,12 +183,31 @@ public class ActivityAddSymptom extends AppCompatActivity {
                 }
             }
         });
-
+        //endregion
 
     } //end of OnCreate
 
-    //when floating action button is clicked this method is called from the OnClickListener; functionality to create symptom model and feed to database helper add record method is included
-    private void addSymptomRecordFAB(Calendar calendar) {
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        //list to support recycler view
+        symptomTagsList = new ArrayList<>();
+        symptomTagsList.addAll(databaseHelper.getAllSymptomTags());
+        setSymptomTagsSelectionAdapter();
+
+    }
+
+    private void setSymptomTagsSelectionAdapter() {
+        AdapterTagSymptomSelection adapter = new AdapterTagSymptomSelection(selectedSymptomTagIDsList, symptomTagsList, this, this::onItemClick);
+        RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL);
+        symptomTagSelectionRecyclerView.setLayoutManager(layoutManager);
+        symptomTagSelectionRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        symptomTagSelectionRecyclerView.setAdapter(adapter);
+    }
+
+    //region FAB supporting functions
+    private void addSymptomRecordFAB(Calendar calendar, ArrayList<Integer> selectedSymptomTagIDsList) {
 
         //format dateTime for DB
         String dateTimeString = dateTimeFormatToDB(calendar).toString();
@@ -191,18 +222,29 @@ public class ActivityAddSymptom extends AppCompatActivity {
             modelSymptom = new ModelSymptom("error", "error", "error", "error");
         }
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(ActivityAddSymptom.this);
-        boolean success = databaseHelper.addSymptomRecord(modelSymptom);
-
-        if (success == true) {
+        //adding record now returns the new modelID instead of boolean & a -1 if it fails
+        int returnedID = databaseHelper.addSymptomRecord(modelSymptom);
+        Toast.makeText(ActivityAddSymptom.this, "returned ID " + returnedID, Toast.LENGTH_SHORT).show();
+        if (returnedID != -1) {
             Toast.makeText(ActivityAddSymptom.this, "record added successfully", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(ActivityAddSymptom.this, "record added failure", Toast.LENGTH_SHORT).show();
         }
 
+        // create associative data for new records here - uses irritant ID of newly created record & list of selected tag IDs
+        int numberOfTagsIDs = selectedSymptomTagIDsList.size();
+        if (numberOfTagsIDs > 0 && returnedID != -1){
+            boolean associativeSuccess = databaseHelper.createSymptomTagAssociativeRecord(returnedID, selectedSymptomTagIDsList);
+            if (associativeSuccess == true) {
+                Toast.makeText(ActivityAddSymptom.this, "associative records added successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ActivityAddSymptom.this, "associative records failure", Toast.LENGTH_SHORT).show();
+            }
+        }
+
     }
 
-    private void updateExistingSymptomRecordFAB(Calendar calendar) {
+    private void updateExistingSymptomRecordFAB(Calendar calendar, ArrayList<Integer> selectedSymptomTagIDsList) {
 
         //format dateTime for DB
         String dateTimeString = dateTimeFormatToDB(calendar).toString();
@@ -210,20 +252,30 @@ public class ActivityAddSymptom extends AppCompatActivity {
         //create model to go into DB
         ModelSymptom modelSymptom;
         try{
-            modelSymptom = new ModelSymptom(idFromSymptomList, editTextSymptomTitle.getText().toString(), dateTimeString, String.valueOf(radioSymIdSelected), "");
+            modelSymptom = new ModelSymptom(idOfExistingSymptomRecord, editTextSymptomTitle.getText().toString(), dateTimeString, String.valueOf(radioSymIdSelected), "");
         }
         catch (Exception e) {
             Toast.makeText(ActivityAddSymptom.this, "input error", Toast.LENGTH_SHORT).show();
             modelSymptom = new ModelSymptom(-1,"error", "error", "error", "error");
         }
 
-        DatabaseHelper databaseHelper = new DatabaseHelper(ActivityAddSymptom.this);
         boolean success = databaseHelper.updateExistingSymptomRecord(modelSymptom);
 
         if (success == true) {
             Toast.makeText(ActivityAddSymptom.this, "record updated successfully", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(ActivityAddSymptom.this, "record updated failure", Toast.LENGTH_SHORT).show();
+        }
+
+        // create associative data for existing records here
+        int numberOfTagsIDs = selectedSymptomTagIDsList.size();
+        if (numberOfTagsIDs > 0){
+            boolean associativeSuccess = databaseHelper.createSymptomTagAssociativeRecord(idOfExistingSymptomRecord, selectedSymptomTagIDsList);
+            if (associativeSuccess == true) {
+                Toast.makeText(ActivityAddSymptom.this, "associative records added successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ActivityAddSymptom.this, "associative records failure", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -234,6 +286,7 @@ public class ActivityAddSymptom extends AppCompatActivity {
         return dateCharSequence + " " + timeCharSequence;
     }
 
+    //endregion
 
     //region Supporting time date methods
     private void handleDateButton(Calendar calendar1) {
@@ -281,5 +334,14 @@ public class ActivityAddSymptom extends AppCompatActivity {
     }
     //endregion
 
+    @Override
+    public void onItemClick(int symTagModelID, boolean tagRecordSelected) {
+        boolean listContains = selectedSymptomTagIDsList.contains(symTagModelID);
+        if (tagRecordSelected && !listContains){
+            selectedSymptomTagIDsList.add(symTagModelID);
+        }else if(!tagRecordSelected && listContains){
+            selectedSymptomTagIDsList.remove(selectedSymptomTagIDsList.indexOf(symTagModelID));
+        }
+    }
 
 }

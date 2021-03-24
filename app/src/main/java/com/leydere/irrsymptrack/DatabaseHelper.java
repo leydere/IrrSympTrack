@@ -137,7 +137,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //if (insert == -1) { return false; } else { return true; }
     }
 
-    public boolean addSymptomRecord(ModelSymptom modelSymptom){
+    public int addSymptomRecord(ModelSymptom modelSymptom){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
 
@@ -147,8 +147,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_SYM_IMAGE_PATH, modelSymptom.getSymImagePath());
 
         long insert = db.insert(TABLE_SYMPTOMS, null, contentValues);
+        // get primary key of newly added record - return instead of original boolean value
+        Cursor returnedCursor = db.rawQuery("SELECT LAST_INSERT_ROWID();", null);
+        int returnedID = -1;
+        if (returnedCursor != null){
+            try {
+                if (returnedCursor.moveToFirst()) {
+                    returnedID = returnedCursor.getInt(0);
+                }
+            } finally {
+                returnedCursor.close();
+            }
+        }
+        //end attempt
         db.close();
-        if (insert == -1) { return false; } else { return true; }
+        return returnedID;
+        //if (insert == -1) { return false; } else { return true; }
     }
 
     public boolean addIrritantTagRecord(ModelIrritantTag modelIrritantTag){
@@ -158,6 +172,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_IRR_TAG_TITLE, modelIrritantTag.getIrrTagTitle());
 
         long insert = db.insert(TABLE_IRR_TAGS, null, contentValues);
+        db.close();
+        if (insert == -1) { return false; } else { return true; }
+    }
+
+    public boolean addSymptomTagRecord(ModelSymptomTag modelSymptomTag){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(COLUMN_SYM_TAG_TITLE, modelSymptomTag.getSymTagTitle());
+
+        long insert = db.insert(TABLE_SYM_TAGS, null, contentValues);
         db.close();
         if (insert == -1) { return false; } else { return true; }
     }
@@ -388,6 +413,31 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    // function for updating/creating associative data - works for both new and existing symptom records
+    public boolean createSymptomTagAssociativeRecord(int recordID, ArrayList<Integer> selectedSymptomTagIDsList){
+        SQLiteDatabase db = this.getWritableDatabase();
+        try{
+            //remove existing db associative records; probably redundant for new records but possible fragments could remain from database manipulation
+            String deleteQuery = "DELETE FROM " + TABLE_SYM_TAG_ASSOC +
+                    " WHERE " + COLUMN_A_SYM_ID + " = " + recordID + ";";
+            db.execSQL(deleteQuery);
+        } catch (Exception e) {
+            //nothing?
+        }
+        try{
+            for (int symID : selectedSymptomTagIDsList){
+                String insertQuery =  "INSERT INTO " + TABLE_SYM_TAG_ASSOC + "(" + COLUMN_A_SYM_ID + ", " + COLUMN_A_SYM_TAG_ID + ") " +
+                        "VALUES (" + recordID + ", " + symID + ");";
+                db.execSQL(insertQuery);
+            }
+        } catch (Exception e) {
+            db.close();
+            return false;
+        }
+        db.close();
+        return true;
+    }
+
     //region Dummy data
     //create dummy symptom tag associative data
     public boolean createDummySymptomAssociativeData(){
@@ -470,6 +520,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
+    public List<ModelSymptomTag> getAllSymptomTags() {
+        List<ModelSymptomTag> compiledResults = new ArrayList();
+        String queryString = "SELECT * FROM " + TABLE_SYM_TAGS;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int symTagId = cursor.getInt(0);
+                String symTagTitle = cursor.getString(1);
+
+                ModelSymptomTag newSymptomTag = new ModelSymptomTag(symTagId, symTagTitle);
+                compiledResults.add(newSymptomTag);
+            } while (cursor.moveToNext());
+        } else {
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
+
     public ModelIrritantTag getSingleIrritantTagRecord(int id){
         ModelIrritantTag newIrritantTag = new ModelIrritantTag(id, null);
         String queryString = "SELECT * FROM " + TABLE_IRR_TAGS + " WHERE " + COLUMN_IRR_TAG_ID + "=" + id + ";";
@@ -507,6 +581,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int foundIrrTagId = cursor.getInt(0);
 
                 compiledResults.add(foundIrrTagId);
+            } while (cursor.moveToNext());
+        } else {
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
+
+    // return list of tag IDs associated to the given symptom ID - used to support toggling tag selection recycler view for existing records
+    public ArrayList<Integer> getTagIDsAssociatedToThisSymptomRecord(int idOfExistingSymptomRecord) {
+        ArrayList<Integer> compiledResults = new ArrayList();
+        String queryString = "SELECT " + COLUMN_SYM_TAG_ID + " FROM " + TABLE_SYM_TAGS +
+                " INNER JOIN " + TABLE_SYM_TAG_ASSOC +
+                " ON " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_ID + " = " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_TAG_ID +
+                " INNER JOIN " + TABLE_SYMPTOMS +
+                " ON " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_ID + " = " + TABLE_SYMPTOMS + "." + COLUMN_SYM_ID +
+                " WHERE " + COLUMN_SYM_ID + " = " + idOfExistingSymptomRecord +  ";";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int foundSymTagId = cursor.getInt(0);
+
+                compiledResults.add(foundSymTagId);
             } while (cursor.moveToNext());
         } else {
 

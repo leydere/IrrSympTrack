@@ -197,25 +197,43 @@
                     </RadioGroup>
 
                 </LinearLayout>
-                <LinearLayout
-                    android:layout_width="wrap_content"
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
                     android:layout_marginBottom="24dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Add Tags"
-                        android:textSize="18dp"/>
+                        android:layout_alignParentLeft="true">
 
-                    <!-- recycler view(s) go here -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="8dp"
+                            android:text="Symptom Tags"
+                            android:textSize="18dp"/>
 
+                    </RelativeLayout>
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true">
 
+                        <Button
+                            android:id="@+id/newSymptomTagsButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="Create New Tag" />
 
+                    </RelativeLayout>
+                </RelativeLayout>
 
-                </LinearLayout>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/symptomTagSelectionRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
                 <com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/fabAddSymptomRecord"
