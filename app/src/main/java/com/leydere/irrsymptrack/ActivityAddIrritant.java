@@ -31,7 +31,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
     ArrayList<ModelIrritantTag> irritantTagsList;
     ArrayList<Integer> selectedIrritantTagIDsList;
-    Button dateButton, timeButton, selectIrritantTagsButton;
+    Button dateButton, timeButton, newIrritantTagsButton;
     TextView dateTextView, timeTextView, addIrritantToolbarText;
     EditText editTextIrritantTitle;
     FloatingActionButton fabAddIrritantRecord;
@@ -52,7 +52,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         
         dateButton = findViewById(R.id.dateButton);
         timeButton = findViewById(R.id.timeButton);
-        selectIrritantTagsButton = findViewById(R.id.selectIrritantTagsButton);
+        newIrritantTagsButton = findViewById(R.id.newIrritantTagsButton);
         dateTextView = findViewById(R.id.dateTextView);
         timeTextView = findViewById(R.id.timeTextView);
         addIrritantToolbarText = findViewById(R.id.addIrritantToolbarText);
@@ -146,10 +146,11 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             }
         });
 
-        selectIrritantTagsButton.setOnClickListener(new View.OnClickListener() {
+        newIrritantTagsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ActivityAddIrritant.this, ActivityNewIrritantTags.class);
+                intent.putExtra("id", idOfExistingIrritantRecord);
                 startActivity(intent);
             }
         });

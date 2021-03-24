@@ -1,5 +1,6 @@
 package com.leydere.irrsymptrack;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
     Button addNewIrritantTagRecordButton;
     FloatingActionButton fabReturnSelectedIrrTagRecord;
     ArrayList<Integer> selectedIrritantTagIdsList; //so far no use I believe
+    int idOfExistingIrritantRecord;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +39,9 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
         irritantTagTitleEditText = findViewById(R.id.irrTagTitleEditText);
         addNewIrritantTagRecordButton = findViewById(R.id.addNewIrrTagRecordButton);
         fabReturnSelectedIrrTagRecord = findViewById(R.id.fabReturnSelectedIrrTagRecord);
+
+        Intent intent = getIntent();
+        idOfExistingIrritantRecord = intent.getIntExtra("id", -1); //record Id from add record activity - brought here to be passed back if using navigate button
 
         selectedIrritantTagIdsList = new ArrayList<>(); //so far no use I believe, this was meant to be part of a larger solution of passing selected data back a forth between adapter and activity
         //irritantTagsList = getAllIrritantTags();
@@ -98,6 +103,15 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
                 }catch (Exception e){
                     Toast.makeText(ActivityNewIrritantTags.this, "exception catch", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        fabReturnSelectedIrrTagRecord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityNewIrritantTags.this, ActivityAddIrritant.class);
+                intent.putExtra("id", idOfExistingIrritantRecord);
+                ActivityNewIrritantTags.this.startActivity(intent);
             }
         });
     }
