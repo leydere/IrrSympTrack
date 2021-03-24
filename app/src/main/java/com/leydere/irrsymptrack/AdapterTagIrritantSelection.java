@@ -17,12 +17,17 @@ import java.util.ArrayList;
 
 public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTagIrritantSelection.MyViewHolder> {
     private final Context context;
+    private ArrayList<Integer> selectedIrritantTagIDsList;
     private ArrayList<ModelIrritantTag> irritantTagList;
     private OnItemClickListener onItemClickListener;
 
+    int lightPurple = Color.parseColor("#FFBB86FC");
+    int standardPurple = Color.parseColor("#FF6200EE");
 
 
-    public AdapterTagIrritantSelection(ArrayList<ModelIrritantTag> irritantTagList, Context context, OnItemClickListener onItemClickListener){
+
+    public AdapterTagIrritantSelection(ArrayList<Integer> selectedIrritantTagIDsList, ArrayList<ModelIrritantTag> irritantTagList, Context context, OnItemClickListener onItemClickListener){
+        this.selectedIrritantTagIDsList = selectedIrritantTagIDsList;
         this.irritantTagList = irritantTagList;
         this.context = context;
         this.onItemClickListener = onItemClickListener;
@@ -60,6 +65,17 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
         holder.titleText.setText(titleFound);
         holder.symbolText.setText("+");
 
+        // this is where the color is set via comparison between position ID and ArrayList<int>
+        if (selectedIrritantTagIDsList.size() > 0){
+            for (int idOfAssociatedRecords : selectedIrritantTagIDsList) {
+                int idOfIrrTagModel = irritantTagList.get(position).getId();
+                if(idOfAssociatedRecords == idOfIrrTagModel) {
+                    holder.cardView.setCardBackgroundColor(standardPurple);
+                }
+
+            }
+        }
+
         holder.irritantTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,14 +86,10 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
-            //TODO: send data to activity regarding the clicked or not clicked status of the cards *done via onItemClick below?*
+            // id of model associated to clicked card is sent to activity along with toggle status - this supports creating the correct associative table data
             public void onClick(View v) {
                 ColorStateList c = holder.cardView.getCardBackgroundColor();
                 int i = c.getDefaultColor();
-                int lightPurple = Color.parseColor("#FFBB86FC");
-                int standardPurple = Color.parseColor("#FF6200EE");
-
-                //onItemClickListener.onItemClick(-1, true);
 
                 if (i == lightPurple){
                     holder.cardView.setCardBackgroundColor(standardPurple);

@@ -2,7 +2,6 @@ package com.leydere.irrsymptrack;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -42,7 +41,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     RadioButton radioButtonIrrLow;
     RadioButton radioButtonIrrMid;
     RadioButton radioButtonIrrHigh;
-    int idFromIrritantList, idFromAvailableIrrTag;
+    int idOfExistingIrritantRecord, idFromAvailableIrrTag;
     DatabaseHelper databaseHelper;
     RecyclerView irritantTagSelectionRecyclerView;
 
@@ -67,27 +66,19 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         irritantTagSelectionRecyclerView = findViewById(R.id.irritantTagSelectionRecyclerView);
 
         databaseHelper = new DatabaseHelper(ActivityAddIrritant.this);
+        selectedIrritantTagIDsList = new ArrayList<>();
 
         Intent intent = getIntent(); // this is for intent sent from AdapterIrritantList
-        idFromIrritantList = intent.getIntExtra("id", -1); //Based on this if idFromIrritant list > -1 you can treat this as an edit.  Otherwise treat as create new.
+        idOfExistingIrritantRecord = intent.getIntExtra("id", -1); //Based on this if idFromIrritant list > -1 you can treat this as an edit.  Otherwise treat as create new.
         //TODO: where did this IrrTag intent come from?  Starting to look like I created it here but never implemented a source.
         idFromAvailableIrrTag = intent.getIntExtra("idFromAvailableIrrTag", -1);
 
-        //TODO: after get intent, but before set adapter - create the new list (set with data inside the if record exists statement)
-        selectedIrritantTagIDsList = new ArrayList<>();
-
-        //list to support recycler view
-        irritantTagsList = new ArrayList<>();
-        irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
-        setIrritantTagsSelectionAdapter();
-        //TODO: color irritant tag list accordingly if existing record and has associated tag data
-
         // if else statement that determines if to display a record or start with blank
         // if > -1 edit existing record
-        if (idFromIrritantList > -1) {
+        if (idOfExistingIrritantRecord > -1) {
             addIrritantToolbarText.setText("Edit Existing Irritant Record");
             //editing a record
-            ModelIrritant irritantToEdit = databaseHelper.getSingleIrritantRecord(idFromIrritantList);
+            ModelIrritant irritantToEdit = databaseHelper.getSingleIrritantRecord(idOfExistingIrritantRecord);
 
             //set title text
             editTextIrritantTitle.setText(irritantToEdit.getIrrTitle());
@@ -121,7 +112,8 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             } catch (Exception e) {
                 Toast.makeText(ActivityAddIrritant.this, "input error from severity", Toast.LENGTH_SHORT).show();
             }
-
+            //populates selected tags id list with associated irritant tag Id's here
+            selectedIrritantTagIDsList = databaseHelper.getTagIDsAssociatedToThisIrritantRecord(idOfExistingIrritantRecord);
         }
         // else create a new record
         else{
@@ -133,6 +125,11 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             CharSequence timeCharSequence = DateFormat.format("hh:mm a", calendar);
             timeTextView.setText(timeCharSequence);
         }
+
+        //list to support recycler view
+        irritantTagsList = new ArrayList<>();
+        irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
+        setIrritantTagsSelectionAdapter();
 
         //region on click listeners
         dateButton.setOnClickListener(new View.OnClickListener(){
@@ -161,7 +158,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             @Override
             public void onClick(View view) {
 
-                if (idFromIrritantList > -1){
+                if (idOfExistingIrritantRecord > -1){
                     updateExistingIrritantRecordFAB(calendar, selectedIrritantTagIDsList);
                 }else {
                     addIrritantRecordFAB(calendar, selectedIrritantTagIDsList);
@@ -193,7 +190,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     } //end of OnCreate
 
     private void setIrritantTagsSelectionAdapter() {
-        AdapterTagIrritantSelection adapter = new AdapterTagIrritantSelection(irritantTagsList, this, this::onItemClick);
+        AdapterTagIrritantSelection adapter = new AdapterTagIrritantSelection(selectedIrritantTagIDsList,irritantTagsList, this, this::onItemClick);
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL);
         irritantTagSelectionRecyclerView.setLayoutManager(layoutManager);
         irritantTagSelectionRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -235,7 +232,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         }
 
          */
-        //TODO: create associative data for new records here !!!NEED RECORD ID OF NEWLY CREATED RECORD!!!
+        // create associative data for new records here - uses irritant ID of newly created record & list of selected tag IDs
         int numberOfTagsIDs = selectedIrritantTagIDsList.size();
         if (numberOfTagsIDs > 0 && returnedID != -1){
             boolean associativeSuccess = databaseHelper.createIrritantTagAssociativeRecord(returnedID, selectedIrritantTagIDsList);
@@ -256,7 +253,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         //create model to go into DB
         ModelIrritant modelIrritant;
         try{
-            modelIrritant = new ModelIrritant(idFromIrritantList, editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIrrIdSelected));
+            modelIrritant = new ModelIrritant(idOfExistingIrritantRecord, editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIrrIdSelected));
         }
         catch (Exception e) {
             Toast.makeText(ActivityAddIrritant.this, "input error", Toast.LENGTH_SHORT).show();
@@ -271,7 +268,16 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             Toast.makeText(ActivityAddIrritant.this, "record updated failure", Toast.LENGTH_SHORT).show();
         }
 
-        //TODO: create associative data for existing records here
+        // create associative data for existing records here
+        int numberOfTagsIDs = selectedIrritantTagIDsList.size();
+        if (numberOfTagsIDs > 0){
+            boolean associativeSuccess = databaseHelper.createIrritantTagAssociativeRecord(idOfExistingIrritantRecord, selectedIrritantTagIDsList);
+            if (associativeSuccess == true) {
+                Toast.makeText(ActivityAddIrritant.this, "associative records added successfully", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(ActivityAddIrritant.this, "associative records failure", Toast.LENGTH_SHORT).show();
+            }
+        }
 
     }
 
@@ -337,18 +343,6 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         }else if(!tagRecordSelected && listContains){
             selectedIrritantTagIDsList.remove(selectedIrritantTagIDsList.indexOf(irrTagModelID));
         }
-
-        /*
-        Toast.makeText(ActivityAddIrritant.this, "ID = " + irrTagModelID + ", isSelected = " + tagRecordSelected, Toast.LENGTH_SHORT).show();
-
-        try{
-            int i = selectedIrritantTagIDsList.size() - 1;
-            Toast.makeText(ActivityAddIrritant.this, "list ends with =  " + selectedIrritantTagIDsList.get(i), Toast.LENGTH_SHORT).show();
-        } catch (Exception e){
-            Toast.makeText(ActivityAddIrritant.this, "failed", Toast.LENGTH_SHORT).show();
-        }
-        */
-
     }
 
 

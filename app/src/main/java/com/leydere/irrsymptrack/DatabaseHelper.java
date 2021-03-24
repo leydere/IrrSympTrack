@@ -119,7 +119,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(COLUMN_IRR_SEVERITY, modelIrritant.getIrrSeverity());
 
         long insert = db.insert(TABLE_IRRITANTS, null, contentValues);
-        //TODO: attempt to get primary key of newly added record
+        // get primary key of newly added record - return instead of original boolean value
         Cursor returnedCursor = db.rawQuery("SELECT LAST_INSERT_ROWID();", null);
         int returnedID = -1;
         if (returnedCursor != null){
@@ -363,11 +363,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
-    //TODO: create function for new associative data here
+    // function for updating/creating associative data - works for both new and existing irritant records
     public boolean createIrritantTagAssociativeRecord(int recordID, ArrayList<Integer> selectedIrritantTagIDsList){
         SQLiteDatabase db = this.getWritableDatabase();
         try{
-            //TODO: remove existing db associative records; probably redundant for new records but possible fragments could remain from database manipulation
+            //remove existing db associative records; probably redundant for new records but possible fragments could remain from database manipulation
             String deleteQuery = "DELETE FROM " + TABLE_IRR_TAG_ASSOC +
                     " WHERE " + COLUMN_A_IRR_ID + " = " + recordID + ";";
             db.execSQL(deleteQuery);
@@ -487,6 +487,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return newIrritantTag;
+    }
+
+    // return list of tag IDs associated to the given irritant ID - used to support toggling tag selection recycler view for existing records
+    public ArrayList<Integer> getTagIDsAssociatedToThisIrritantRecord(int idOfExistingIrritantRecord) {
+        ArrayList<Integer> compiledResults = new ArrayList();
+        String queryString = "SELECT " + COLUMN_IRR_TAG_ID + " FROM " + TABLE_IRR_TAGS +
+                " INNER JOIN " + TABLE_IRR_TAG_ASSOC +
+                " ON " + TABLE_IRR_TAGS + "." + COLUMN_IRR_TAG_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_TAG_ID +
+                " INNER JOIN " + TABLE_IRRITANTS +
+                " ON " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID + " = " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID +
+                " WHERE " + COLUMN_IRR_ID + " = " + idOfExistingIrritantRecord +  ";";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int foundIrrTagId = cursor.getInt(0);
+
+                compiledResults.add(foundIrrTagId);
+            } while (cursor.moveToNext());
+        } else {
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
     }
 
     //endregion
