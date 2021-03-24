@@ -189,6 +189,17 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
     } //end of OnCreate
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        //list to support recycler view
+        irritantTagsList = new ArrayList<>();
+        irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
+        setIrritantTagsSelectionAdapter();
+
+    }
+
     private void setIrritantTagsSelectionAdapter() {
         AdapterTagIrritantSelection adapter = new AdapterTagIrritantSelection(selectedIrritantTagIDsList,irritantTagsList, this, this::onItemClick);
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL);
