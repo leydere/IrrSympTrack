@@ -11,33 +11,55 @@
         android:id="@+id/irritant_card_view_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginBottom="4dp"
         android:padding="10dp"
         app:cardCornerRadius="5dp"
-        app:cardElevation="3dp" >
+        app:cardElevation="3dp"
+        app:cardBackgroundColor="@color/teal_700">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal"
             tools:ignore="UseCompoundDrawables">
 
-            <ImageView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:contentDescription="@string/app_name"
-                android:src="@mipmap/ic_launcher" />
-
-            <TextView
-                android:id="@+id/irritant_text_display"
-                android:layout_width="match_parent"
+            <RelativeLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                tools:text="TempText"/>
+                android:layout_alignParentLeft="true">
+
+                <TextView
+                    android:id="@+id/irritant_text_display"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    tools:text="TempText"
+                    android:textSize="16dp"
+                    android:textColor="@color/white"/>
+
+            </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_baseline_edit_24"
+                    android:layout_margin="4dp"
+                    app:tint="@color/white"/>
+
+            </RelativeLayout>
 
 
-        </LinearLayout>
+
+
+
+        </RelativeLayout>
 
 
     </androidx.cardview.widget.CardView>
