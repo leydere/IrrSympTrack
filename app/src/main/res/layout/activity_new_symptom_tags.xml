@@ -24,7 +24,7 @@
                 android:id="@+id/symTagToolbarText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Create New and/or Select Symptom Tags"
+                android:text="Create New Symptom Tags"
                 android:textColor="#FFFFFFFF"
                 android:textSize="18dp"
                 android:textStyle="bold" />
