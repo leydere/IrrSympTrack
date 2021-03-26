@@ -3,6 +3,8 @@ package com.leydere.irrsymptrack;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +17,7 @@ import com.jjoe64.graphview.series.PointsGraphSeries;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class ActivityGraphView extends AppCompatActivity {
@@ -22,6 +25,7 @@ public class ActivityGraphView extends AppCompatActivity {
     PointsGraphSeries<DataPoint> series1, series2;
     GraphView graph;
     Calendar calendar;
+    Button testerButton;
 
     ArrayList<ModelSymptom> allSymptomsList;
     DatabaseHelper databaseHelper;
@@ -31,6 +35,7 @@ public class ActivityGraphView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_view);
 
+        testerButton = findViewById(R.id.testerButton);
         graph = findViewById(R.id.graph);
         series1 = new PointsGraphSeries<DataPoint>();
         series2 = new PointsGraphSeries<DataPoint>();
@@ -61,6 +66,15 @@ public class ActivityGraphView extends AppCompatActivity {
         graph.addSeries(series2);
         series2.setShape(PointsGraphSeries.Shape.POINT);
         series2.setColor(Color.RED);
+
+        testerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Date d1 = calendar.getInstance().getTime();
+
+                Toast.makeText(ActivityGraphView.this, d1.toString(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 
