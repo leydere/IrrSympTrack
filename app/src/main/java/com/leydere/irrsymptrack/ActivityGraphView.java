@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 import com.jjoe64.graphview.series.PointsGraphSeries;
@@ -41,18 +42,21 @@ public class ActivityGraphView extends AppCompatActivity {
         series2 = new PointsGraphSeries<DataPoint>();
         calendar = Calendar.getInstance();
 
+        databaseHelper = new DatabaseHelper(ActivityGraphView.this);
+
         // Locks the y window to 0 - 5
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(0);
         graph.getViewport().setMaxY(5);
         // Lock x window range.  Still in useless date data format.
+        /*
         graph.getViewport().setXAxisBoundsManual(true);
         graph.getViewport().setMinX(20210301);
         graph.getViewport().setMaxX(20210308);
+        */
         //graph title
         graph.setTitle("Irr-Sym Sev v. Date");
-
-        databaseHelper = new DatabaseHelper(ActivityGraphView.this);
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(ActivityGraphView.this));
 
         //Toast.makeText(ActivityGraphView.this, "Title of second symptom = " + allSymptomsList.get(1).getSymTitle(), Toast.LENGTH_SHORT).show(); //WORKS!!
 
@@ -80,77 +84,56 @@ public class ActivityGraphView extends AppCompatActivity {
 
     //Returns selected irritant records.  Modeled after symptom function of the same purpose.
     public PointsGraphSeries<DataPoint> testPointIrritantSeries(int tagId) {
-        int y,x;
-        x = 0;
-        series1 = new PointsGraphSeries<DataPoint>();
-        ArrayList<ModelIrritant> selectedIrritantsList = new ArrayList<>();
-        selectedIrritantsList.addAll(databaseHelper.getSelectedIrritants(tagId));
-        //Believe I have created a functional query that returns the desired subset of results.
+        int y;
+        Date x = new Date();
+        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
+        ArrayList<ModelIrritant> selectedIrritantsList = databaseHelper.getSelectedIrritants(tagId);
 
-        for (int i = 0; i < selectedIrritantsList.size(); i++) {
-            ModelIrritant modelIrritant = selectedIrritantsList.get(i);
-
-            //Toast.makeText(ActivityGraphView.this, modelSymptom.getSymTitle(), Toast.LENGTH_SHORT).show();
-
+        for (ModelIrritant modelIrritant : selectedIrritantsList) {
             //y = sev
             int severity = 1 + Integer.valueOf(modelIrritant.getIrrSeverity());
             y = severity;
             //x = date
-            String date = modelIrritant.getIrrTimeDate();
-            //set time data to calendar - took this from the load existing record to add symptom activity
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
             SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
             try{
-                calendar.setTime(dbStringToCalendar.parse(date));
-                //Toast.makeText(ActivityGraphView.this, "HERE!", Toast.LENGTH_SHORT).show(); //resolved reaching here with Calendar get instance
-                CharSequence dateCharSequence = DateFormat.format("yyyyMMdd", calendar);
-                int formattedDate = Integer.parseInt(dateCharSequence.toString());
-                x = formattedDate;
-                //Toast.makeText(ActivityGraphView.this, dateCharSequence, Toast.LENGTH_SHORT).show();
+                calendar.setTime(dbStringToCalendar.parse(modelIrritant.getIrrTimeDate()));
+                x = calendar.getTime();
             } catch (Exception e) {
                 Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
             }
-            series1.appendData(new DataPoint(x, y), true, selectedIrritantsList.size());
+            series.appendData(new DataPoint(x, y), true, selectedIrritantsList.size());
         }
 
-        return series1;
+        return series;
     }
 
     //This test function should be close to the final function needed.  Severity = y-axis, date = x-axis, filtered by selected tag.
     //TODO: Almost there.  This functions does what is needed for pulling the correct records.  Time data is still unusable.  Graph still needs improvement.
     public PointsGraphSeries<DataPoint> testPointSymptomSeries(int tagId) {
-        int y,x;
-        x = 0;
-        series1 = new PointsGraphSeries<DataPoint>();
-        ArrayList<ModelSymptom> selectedSymptomsList = new ArrayList<>();
-        selectedSymptomsList.addAll(databaseHelper.getSelectedSymptoms(tagId));
-        //Believe I have created a functional query that returns the desired subset of results.
+        int y;
+        Date x = new Date();
+        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
+        ArrayList<ModelSymptom> selectedSymptomsList = databaseHelper.getSelectedSymptoms(tagId);
 
-        for (int i = 0; i < selectedSymptomsList.size(); i++) {
-            ModelSymptom modelSymptom = selectedSymptomsList.get(i);
-
-            //Toast.makeText(ActivityGraphView.this, modelSymptom.getSymTitle(), Toast.LENGTH_SHORT).show();
-
+        for (ModelSymptom modelSymptom : selectedSymptomsList) {
             //y = sev
+            //TODO: change severity range in db from 0-2 to 1-3
             int severity = 1 + Integer.valueOf(modelSymptom.getSymSeverity());
             y = severity;
             //x = date
-            String date = modelSymptom.getSymTimeDate();
-            //set time data to calendar - took this from the load existing record to add symptom activity
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
             SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
             try{
-                calendar.setTime(dbStringToCalendar.parse(date));
-                //Toast.makeText(ActivityGraphView.this, "HERE!", Toast.LENGTH_SHORT).show(); //resolved reaching here with Calendar get instance
-                CharSequence dateCharSequence = DateFormat.format("yyyyMMdd", calendar);
-                int formattedDate = Integer.parseInt(dateCharSequence.toString());
-                x = formattedDate;
-                //Toast.makeText(ActivityGraphView.this, dateCharSequence, Toast.LENGTH_SHORT).show();
+                calendar.setTime(dbStringToCalendar.parse(modelSymptom.getSymTimeDate()));
+                x = calendar.getTime();
             } catch (Exception e) {
                 Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
             }
-            series1.appendData(new DataPoint(x, y), true, selectedSymptomsList.size());
+            series.appendData(new DataPoint(x, y), true, selectedSymptomsList.size());
         }
 
-        return series1;
+        return series;
     }
 
     // In this test series the goal is to have dates along the x-axis of the graph and severity along the y-axis of the graph.
@@ -200,29 +183,4 @@ public class ActivityGraphView extends AppCompatActivity {
         }
         return series1;
     }
-
-
-    //region Dummy data functions
-    //remnant function - Was used to add data to Symptom tag table
-    private void addDummySymTagData() {
-        boolean success = databaseHelper.createDummySymptomTagData();
-
-        if (success == true) {
-            Toast.makeText(ActivityGraphView.this, "dummy data added successfully", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(ActivityGraphView.this, "dummy data added failure", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    //remnant function - Was used to add data to Symptom Tag Associative table
-    private void addDummySymAssociativeData() {
-        boolean success = databaseHelper.createDummySymptomAssociativeData();
-
-        if (success == true) {
-            Toast.makeText(ActivityGraphView.this, "dummy data added successfully", Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(ActivityGraphView.this, "dummy data added failure", Toast.LENGTH_SHORT).show();
-        }
-    }
-    //endregion
 }

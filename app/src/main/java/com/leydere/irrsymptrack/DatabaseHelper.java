@@ -320,8 +320,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //returns list of symptom models that meet the tag association requirement - list is used to populate graph
-    public List<ModelSymptom> getSelectedSymptoms(int tagId) {
-        List<ModelSymptom> compiledResults = new ArrayList();
+    public ArrayList<ModelSymptom> getSelectedSymptoms(int tagId) {
+        ArrayList<ModelSymptom> compiledResults = new ArrayList();
         //String queryString = "SELECT " + TABLE_SYMPTOMS + "." + COLUMN_SYM_TITLE + ", " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_TITLE +
         String queryString = "SELECT * FROM " + TABLE_SYMPTOMS +
         " INNER JOIN " + TABLE_SYM_TAG_ASSOC +
@@ -355,8 +355,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //returns list of irritant models that meet the tag association requirement - list is used to populate graph
-    public List<ModelIrritant> getSelectedIrritants(int tagId) {
-        List<ModelIrritant> compiledResults = new ArrayList();
+    public ArrayList<ModelIrritant> getSelectedIrritants(int tagId) {
+        ArrayList<ModelIrritant> compiledResults = new ArrayList();
         String queryString = "SELECT * FROM " + TABLE_IRRITANTS +
                 " INNER JOIN " + TABLE_IRR_TAG_ASSOC +
                 " ON " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID +
