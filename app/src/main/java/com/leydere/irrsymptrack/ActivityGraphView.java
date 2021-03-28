@@ -45,9 +45,9 @@ public class ActivityGraphView extends AppCompatActivity {
         databaseHelper = new DatabaseHelper(ActivityGraphView.this);
 
         // Locks the y window to 0 - 5
-        graph.getViewport().setYAxisBoundsManual(true);
-        graph.getViewport().setMinY(0);
-        graph.getViewport().setMaxY(5);
+        //graph.getViewport().setYAxisBoundsManual(true);
+        //graph.getViewport().setMinY(0);
+        //graph.getViewport().setMaxY(5);
         // Lock x window range.  Still in useless date data format.
         /*
         graph.getViewport().setXAxisBoundsManual(true);
@@ -91,7 +91,7 @@ public class ActivityGraphView extends AppCompatActivity {
 
         for (ModelDataPoint modelDataPoint : selectedDataPointList) {
             //y = sev
-            int severity = 1 + Integer.valueOf(modelDataPoint.getDpSeverity());
+            int severity = Integer.valueOf(modelDataPoint.getDpSeverity());
             y = severity;
             //x = date
             //set db time data to calendar format - took this from the load existing record to add symptom activity
@@ -100,7 +100,7 @@ public class ActivityGraphView extends AppCompatActivity {
                 calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
                 x = calendar.getTime();
             } catch (Exception e) {
-                Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ActivityGraphView.this, "input error from irritant calendar", Toast.LENGTH_SHORT).show();
             }
             series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
         }
@@ -117,7 +117,7 @@ public class ActivityGraphView extends AppCompatActivity {
 
         for (ModelIrritant modelIrritant : selectedIrritantsList) {
             //y = sev
-            int severity = 1 + Integer.valueOf(modelIrritant.getIrrSeverity());
+            int severity = Integer.valueOf(modelIrritant.getIrrSeverity());
             y = severity;
             //x = date
             //set db time data to calendar format - took this from the load existing record to add symptom activity
@@ -144,8 +144,7 @@ public class ActivityGraphView extends AppCompatActivity {
 
         for (ModelSymptom modelSymptom : selectedSymptomsList) {
             //y = sev
-            //TODO: change severity range in db from 0-2 to 1-3
-            int severity = 1 + Integer.valueOf(modelSymptom.getSymSeverity());
+            int severity = Integer.valueOf(modelSymptom.getSymSeverity());
             y = severity;
             //x = date
             //set db time data to calendar format - took this from the load existing record to add symptom activity
@@ -175,7 +174,7 @@ public class ActivityGraphView extends AppCompatActivity {
             ModelSymptom modelSymptom = allSymptomsList.get(i);
 
             //y = sev
-            int severity = 1 + Integer.valueOf(modelSymptom.getSymSeverity());
+            int severity = Integer.valueOf(modelSymptom.getSymSeverity());
             y = severity;
             //x = date
             String date = modelSymptom.getSymTimeDate();

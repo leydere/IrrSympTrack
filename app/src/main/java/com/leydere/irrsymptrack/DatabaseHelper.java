@@ -400,13 +400,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //returns list of irritant models that meet the tag association requirement - list is used to populate graph
     public ArrayList<ModelDataPoint> getSelectedIrritantsDateSpecificNoClock(int tagId) {
         ArrayList<ModelDataPoint> compiledResults = new ArrayList();
-        String queryString = "SELECT " + COLUMN_IRR_SEVERITY + ", " + COLUMN_IRR_TIMEDATE + " FROM " + TABLE_IRRITANTS +
+        String queryString = "SELECT SUM(" + COLUMN_IRR_SEVERITY + ") AS \"SEVERITYSUM\", strftime('%Y-%m-%d', " + COLUMN_IRR_TIMEDATE + ") AS \"SHORTTIME\" FROM " + TABLE_IRRITANTS +
                 " INNER JOIN " + TABLE_IRR_TAG_ASSOC +
                 " ON " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID +
                 " INNER JOIN " + TABLE_IRR_TAGS +
                 " ON " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_TAG_ID + " = " + TABLE_IRR_TAGS + "." + COLUMN_IRR_TAG_ID +
                 " WHERE " + COLUMN_IRR_TAG_ID + " = " + tagId +
-                " ORDER BY " + COLUMN_IRR_TIMEDATE + ";";
+                " GROUP BY SHORTTIME" +
+                " ORDER BY SHORTTIME;";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, null);
@@ -414,7 +415,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){
             do {
                 int severity = cursor.getInt(0);
-                String date = cursor.getString(1);
+                String date = cursor.getString(1) + " 12:00:00.000";
 
                 ModelDataPoint newDataPoint = new ModelDataPoint(severity, date);
                 compiledResults.add(newDataPoint);
@@ -478,35 +479,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return true;
     }
-
-    //region Default Data
-    //create default symptom tag data
-    public boolean createDefaultSymptomTagData(){
-        try{
-            SQLiteDatabase db = this.getWritableDatabase();
-            String insertQuery =  "INSERT INTO " + TABLE_SYM_TAGS + "(" + COLUMN_SYM_TAG_TITLE + ") " +
-                    "VALUES ('Itchy'), ('Swelling'), ('Dry'), ('Nausea'), ('Rash'), ('Sneezing'), ('Congested');";
-            db.execSQL(insertQuery);
-            db.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    //create default irritant tag data
-    public boolean createDefaultIrritantTagData(){
-        try{
-            SQLiteDatabase db = this.getWritableDatabase();
-            String insertQuery =  "INSERT INTO " + TABLE_IRR_TAGS + "(" + COLUMN_IRR_TAG_TITLE + ") " +
-                    "VALUES ('Shellfish'), ('Peanuts'), ('Dairy'), ('Tree Nuts'), ('Eggs'), ('Wheat'), ('Fish'), ('Soy');";
-            db.execSQL(insertQuery);
-            db.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    //endregion
 
     //region Dummy data
     //create dummy symptom tag associative data
