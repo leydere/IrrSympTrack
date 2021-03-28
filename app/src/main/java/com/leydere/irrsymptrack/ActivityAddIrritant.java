@@ -76,6 +76,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         if (idOfExistingIrritantRecord > -1) {
             addIrritantToolbarText.setText("Edit Existing Irritant Record");
             //editing a record
+            //TODO: if returned record below is id -1 abort process
             ModelIrritant irritantToEdit = databaseHelper.getSingleIrritantRecord(idOfExistingIrritantRecord);
 
             //set title text
@@ -96,16 +97,16 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             timeTextView.setText(timeCharSequence);
             //set severity radio button
             try{
-                int i = Integer.parseInt(irritantToEdit.getIrrSeverity());
-                if (i == 0){
+                int i = irritantToEdit.getIrrSeverity();
+                if (i == 1){
                     radioButtonIrrLow.setChecked(true);
-                    radioIrrIdSelected = 0;
-                } else if (i == 1){
-                    radioButtonIrrMid.setChecked(true);
                     radioIrrIdSelected = 1;
                 } else if (i == 2){
-                    radioButtonIrrHigh.setChecked(true);
+                    radioButtonIrrMid.setChecked(true);
                     radioIrrIdSelected = 2;
+                } else if (i == 3){
+                    radioButtonIrrHigh.setChecked(true);
+                    radioIrrIdSelected = 3;
                 }
             } catch (Exception e) {
                 Toast.makeText(ActivityAddIrritant.this, "input error from severity", Toast.LENGTH_SHORT).show();
@@ -173,13 +174,13 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId==R.id.radioButtonIrrLow){
-                    radioIrrIdSelected = 0;
-                }
-                else if (checkedId==R.id.radioButtonIrrMid){
                     radioIrrIdSelected = 1;
                 }
-                else if (checkedId==R.id.radioButtonIrrHigh){
+                else if (checkedId==R.id.radioButtonIrrMid){
                     radioIrrIdSelected = 2;
+                }
+                else if (checkedId==R.id.radioButtonIrrHigh){
+                    radioIrrIdSelected = 3;
                 }
             }
         });
@@ -215,11 +216,11 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         //create model to go into DB
         ModelIrritant modelIrritant;
         try{
-            modelIrritant = new ModelIrritant(editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIrrIdSelected));
+            modelIrritant = new ModelIrritant(editTextIrritantTitle.getText().toString(), dateTimeString, radioIrrIdSelected);
         }
         catch (Exception e) {
             Toast.makeText(ActivityAddIrritant.this, "input error", Toast.LENGTH_SHORT).show();
-            modelIrritant = new ModelIrritant("error", "error", "error");
+            modelIrritant = new ModelIrritant("error", "error", -1);
         }
 
         //adding record now returns the new modelID instead of boolean & a -1 if it fails
@@ -252,11 +253,11 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         //create model to go into DB
         ModelIrritant modelIrritant;
         try{
-            modelIrritant = new ModelIrritant(idOfExistingIrritantRecord, editTextIrritantTitle.getText().toString(), dateTimeString, String.valueOf(radioIrrIdSelected));
+            modelIrritant = new ModelIrritant(idOfExistingIrritantRecord, editTextIrritantTitle.getText().toString(), dateTimeString, radioIrrIdSelected);
         }
         catch (Exception e) {
             Toast.makeText(ActivityAddIrritant.this, "input error", Toast.LENGTH_SHORT).show();
-            modelIrritant = new ModelIrritant(-1,"error", "error", "error");
+            modelIrritant = new ModelIrritant(-1,"error", "error", -1);
         }
 
         boolean success = databaseHelper.updateExistingIrritantRecord(modelIrritant);

@@ -76,6 +76,7 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
         if (idOfExistingSymptomRecord > -1) {
             addSymptomToolbarText.setText("Edit Existing Symptom Record");
             //editing a record
+            //TODO: if returned symptom record below is id -1 abort process
             ModelSymptom symptomToEdit = databaseHelper.getSingleSymptomRecord(idOfExistingSymptomRecord);
             //Toast.makeText(ActivityAddSymptom.this, "TimeDate from pushed extra == " + symptomToEdit.getSymTimeDate(), Toast.LENGTH_SHORT).show();
 
@@ -98,16 +99,16 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
             //set severity radio button
             try{
                 //Toast.makeText(ActivityAddSymptom.this, "Sev record is: " + symptomToEdit.getSymSeverity(), Toast.LENGTH_SHORT).show();
-                int i = Integer.parseInt(symptomToEdit.getSymSeverity());
-                if (i == 0){
+                int i = symptomToEdit.getSymSeverity();
+                if (i == 1){
                     radioButtonSymLow.setChecked(true);
-                    radioSymIdSelected = 0;
-                } else if (i == 1){
-                    radioButtonSymMid.setChecked(true);
                     radioSymIdSelected = 1;
                 } else if (i == 2){
-                    radioButtonSymHigh.setChecked(true);
+                    radioButtonSymMid.setChecked(true);
                     radioSymIdSelected = 2;
+                } else if (i == 3){
+                    radioButtonSymHigh.setChecked(true);
+                    radioSymIdSelected = 3;
                 }
                 //Toast.makeText(ActivityAddSymptom.this, "Radio selected is: " + radioSymIdSelected, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
@@ -173,13 +174,13 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if(checkedId==R.id.radioButtonSymLow){
-                    radioSymIdSelected = 0;
-                }
-                else if (checkedId==R.id.radioButtonSymMid){
                     radioSymIdSelected = 1;
                 }
-                else if (checkedId==R.id.radioButtonSymHigh){
+                else if (checkedId==R.id.radioButtonSymMid){
                     radioSymIdSelected = 2;
+                }
+                else if (checkedId==R.id.radioButtonSymHigh){
+                    radioSymIdSelected = 3;
                 }
             }
         });
@@ -215,11 +216,11 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
         //create model to go into DB
         ModelSymptom modelSymptom;
         try{
-            modelSymptom = new ModelSymptom(editTextSymptomTitle.getText().toString(), dateTimeString, String.valueOf(radioSymIdSelected), "");
+            modelSymptom = new ModelSymptom(editTextSymptomTitle.getText().toString(), dateTimeString, radioSymIdSelected, "");
         }
         catch (Exception e) {
             Toast.makeText(ActivityAddSymptom.this, "input error", Toast.LENGTH_SHORT).show();
-            modelSymptom = new ModelSymptom("error", "error", "error", "error");
+            modelSymptom = new ModelSymptom("error", "error", -1, "error");
         }
 
         //adding record now returns the new modelID instead of boolean & a -1 if it fails
@@ -252,11 +253,11 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
         //create model to go into DB
         ModelSymptom modelSymptom;
         try{
-            modelSymptom = new ModelSymptom(idOfExistingSymptomRecord, editTextSymptomTitle.getText().toString(), dateTimeString, String.valueOf(radioSymIdSelected), "");
+            modelSymptom = new ModelSymptom(idOfExistingSymptomRecord, editTextSymptomTitle.getText().toString(), dateTimeString, radioSymIdSelected, "");
         }
         catch (Exception e) {
             Toast.makeText(ActivityAddSymptom.this, "input error", Toast.LENGTH_SHORT).show();
-            modelSymptom = new ModelSymptom(-1,"error", "error", "error", "error");
+            modelSymptom = new ModelSymptom(-1,"error", "error", -1, "error");
         }
 
         boolean success = databaseHelper.updateExistingSymptomRecord(modelSymptom);

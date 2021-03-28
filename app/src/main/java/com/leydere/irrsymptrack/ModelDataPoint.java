@@ -2,19 +2,19 @@ package com.leydere.irrsymptrack;
 
 public class ModelDataPoint {
 
-    private String dpSeverity;
+    private int dpSeverity;
     private String dpDate;
 
-    public ModelDataPoint(String dpSeverity, String dpDate) {
+    public ModelDataPoint(int dpSeverity, String dpDate) {
         this.dpSeverity = dpSeverity;
         this.dpDate = dpDate;
     }
 
-    public String getDpSeverity() {
+    public int getDpSeverity() {
         return dpSeverity;
     }
 
-    public void setDpSeverity(String dpSeverity) {
+    public void setDpSeverity(int dpSeverity) {
         this.dpSeverity = dpSeverity;
     }
 

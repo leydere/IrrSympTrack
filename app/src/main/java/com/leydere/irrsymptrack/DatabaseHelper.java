@@ -65,13 +65,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " (" + COLUMN_IRR_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_IRR_TITLE + " TEXT, " +
                 COLUMN_IRR_TIMEDATE + " TEXT, " +
-                COLUMN_IRR_SEVERITY + " TEXT)";
+                COLUMN_IRR_SEVERITY + " INTEGER)";
 
         String createTableStatement2 = "CREATE TABLE " + TABLE_SYMPTOMS +
                 " (" + COLUMN_SYM_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 COLUMN_SYM_TITLE + " TEXT, " +
                 COLUMN_SYM_TIMEDATE + " TEXT, " +
-                COLUMN_SYM_SEVERITY + " TEXT, " +
+                COLUMN_SYM_SEVERITY + " INTEGER, " +
                 COLUMN_SYM_IMAGE_PATH + " TEXT)";
 
         String createTableStatement3 = "CREATE TABLE " + TABLE_IRR_TAGS +
@@ -96,12 +96,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 "FOREIGN KEY (" + COLUMN_A_SYM_TAG_ID + ") REFERENCES " + TABLE_SYM_TAGS + "(" + COLUMN_SYM_TAG_ID + "), " +
                 "CONSTRAINT " + PK_A_SYM_TAG + " PRIMARY KEY (" + COLUMN_A_SYM_ID + ", " + COLUMN_A_SYM_TAG_ID + "))";
 
+        //create default symptom tag data
+        String createDefaultSymptomTagDataQuery =  "INSERT INTO " + TABLE_SYM_TAGS + "(" + COLUMN_SYM_TAG_TITLE + ") " +
+                        "VALUES ('Itchy'), ('Swelling'), ('Dry'), ('Nausea'), ('Rash'), ('Sneezing'), ('Congested');";
+        //create default irritant tag data
+        String createDefaultIrritantTagDataQuery =  "INSERT INTO " + TABLE_IRR_TAGS + "(" + COLUMN_IRR_TAG_TITLE + ") " +
+                        "VALUES ('Shellfish'), ('Peanuts'), ('Dairy'), ('Tree Nuts'), ('Eggs'), ('Wheat'), ('Fish'), ('Soy');";
+
         db.execSQL(createTableStatement1);
         db.execSQL(createTableStatement2);
         db.execSQL(createTableStatement3);
         db.execSQL(createTableStatement4);
         db.execSQL(createTableStatement5);
         db.execSQL(createTableStatement6);
+        db.execSQL(createDefaultSymptomTagDataQuery);
+        db.execSQL(createDefaultIrritantTagDataQuery);
     }
 
     @Override
@@ -201,7 +210,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int irrId = cursor.getInt(0);
                 String irrTitle = cursor.getString(1);
                 String irrDateTime = cursor.getString(2);
-                String irrSeverity = cursor.getString(3);
+                int irrSeverity = cursor.getInt(3);
 
                 ModelIrritant newIrritant = new ModelIrritant(irrId, irrTitle, irrDateTime, irrSeverity);
                 compiledResults.add(newIrritant);
@@ -228,7 +237,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int symId = cursor.getInt(0);
                 String symTitle = cursor.getString(1);
                 String symDateTime = cursor.getString(2);
-                String symSeverity = cursor.getString(3);
+                int symSeverity = cursor.getInt(3);
 
                 ModelSymptom newSymptom = new ModelSymptom(symId, symTitle, symDateTime, symSeverity, null);
                 compiledResults.add(newSymptom);
@@ -245,7 +254,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //endregion
 
     public ModelSymptom getSingleSymptomRecord(int id){
-        ModelSymptom newSymptom = new ModelSymptom(id, null, null, null, null);
+        ModelSymptom newSymptom = new ModelSymptom(-1, null, null, -1, null);
         String queryString = "SELECT * FROM " + TABLE_SYMPTOMS + " WHERE " + COLUMN_SYM_ID + "=" + id + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, null);
@@ -253,7 +262,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){
             String symTitle = cursor.getString(1);
             String symDateTime = cursor.getString(2);
-            String symSeverity = cursor.getString(3);
+            int symSeverity = cursor.getInt(3);
 
             newSymptom = new ModelSymptom(id, symTitle, symDateTime, symSeverity, null);
 
@@ -283,7 +292,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public ModelIrritant getSingleIrritantRecord(int id){
-        ModelIrritant newIrritant = new ModelIrritant(id, null, null, null);
+        ModelIrritant newIrritant = new ModelIrritant(-1, null, null, -1);
         String queryString = "SELECT * FROM " + TABLE_IRRITANTS + " WHERE " + COLUMN_IRR_ID + "=" + id + ";";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, null);
@@ -291,7 +300,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()){
             String irrTitle = cursor.getString(1);
             String irrDateTime = cursor.getString(2);
-            String irrSeverity = cursor.getString(3);
+            int irrSeverity = cursor.getInt(3);
 
             newIrritant = new ModelIrritant(id, irrTitle, irrDateTime, irrSeverity);
 
@@ -339,7 +348,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int symId = cursor.getInt(0);
                 String symTitle = cursor.getString(1);
                 String symDateTime = cursor.getString(2);
-                String symSeverity = cursor.getString(3);
+                int symSeverity = cursor.getInt(3);
 
                 ModelSymptom newSymptom = new ModelSymptom(symId, symTitle, symDateTime, symSeverity, null);
                 compiledResults.add(newSymptom);
@@ -373,7 +382,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 int irrId = cursor.getInt(0);
                 String irrTitle = cursor.getString(1);
                 String irrDateTime = cursor.getString(2);
-                String irrSeverity = cursor.getString(3);
+                int irrSeverity = cursor.getInt(3);
 
                 ModelIrritant newIrritant = new ModelIrritant(irrId, irrTitle, irrDateTime, irrSeverity);
                 compiledResults.add(newIrritant);
@@ -404,7 +413,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         if (cursor.moveToFirst()){
             do {
-                String severity = cursor.getString(0);
+                int severity = cursor.getInt(0);
                 String date = cursor.getString(1);
 
                 ModelDataPoint newDataPoint = new ModelDataPoint(severity, date);
@@ -469,6 +478,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
         return true;
     }
+
+    //region Default Data
+    //create default symptom tag data
+    public boolean createDefaultSymptomTagData(){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            String insertQuery =  "INSERT INTO " + TABLE_SYM_TAGS + "(" + COLUMN_SYM_TAG_TITLE + ") " +
+                    "VALUES ('Itchy'), ('Swelling'), ('Dry'), ('Nausea'), ('Rash'), ('Sneezing'), ('Congested');";
+            db.execSQL(insertQuery);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    //create default irritant tag data
+    public boolean createDefaultIrritantTagData(){
+        try{
+            SQLiteDatabase db = this.getWritableDatabase();
+            String insertQuery =  "INSERT INTO " + TABLE_IRR_TAGS + "(" + COLUMN_IRR_TAG_TITLE + ") " +
+                    "VALUES ('Shellfish'), ('Peanuts'), ('Dairy'), ('Tree Nuts'), ('Eggs'), ('Wheat'), ('Fish'), ('Soy');";
+            db.execSQL(insertQuery);
+            db.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    //endregion
 
     //region Dummy data
     //create dummy symptom tag associative data

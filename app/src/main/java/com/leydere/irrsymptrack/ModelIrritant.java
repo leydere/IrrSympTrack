@@ -5,16 +5,16 @@ public class ModelIrritant {
     private int id;
     private String irrTitle;
     private String irrTimeDate;
-    private String irrSeverity;
+    private int irrSeverity;
 
-    public ModelIrritant(int id, String irrTitle, String irrTimeDate, String irrSeverity){
+    public ModelIrritant(int id, String irrTitle, String irrTimeDate, int irrSeverity){
         this.id = id;
         this.irrTitle = irrTitle;
         this.irrTimeDate = irrTimeDate;
         this.irrSeverity = irrSeverity;
     }
 
-    public ModelIrritant(String irrTitle, String irrTimeDate, String irrSeverity){
+    public ModelIrritant(String irrTitle, String irrTimeDate, int irrSeverity){
         this.irrTitle = irrTitle;
         this.irrTimeDate = irrTimeDate;
         this.irrSeverity = irrSeverity;
@@ -48,11 +48,11 @@ public class ModelIrritant {
         this.irrTimeDate = irrTimeDate;
     }
 
-    public String getIrrSeverity() {
+    public int getIrrSeverity() {
         return irrSeverity;
     }
 
-    public void setIrrSeverity(String irrSeverity) {
+    public void setIrrSeverity(int irrSeverity) {
         this.irrSeverity = irrSeverity;
     }
 }

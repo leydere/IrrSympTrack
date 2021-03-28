@@ -5,10 +5,10 @@ public class ModelSymptom {
     private int id;
     private String symTitle;
     private String symTimeDate;
-    private String symSeverity;
+    private int symSeverity;
     private String symImagePath;
 
-    public ModelSymptom(int id, String symTitle, String symTimeDate, String symSeverity, String symImagePath){
+    public ModelSymptom(int id, String symTitle, String symTimeDate, int symSeverity, String symImagePath){
         this.id = id;
         this.symTitle = symTitle;
         this.symTimeDate = symTimeDate;
@@ -16,7 +16,7 @@ public class ModelSymptom {
         this.symImagePath = symImagePath;
     }
 
-    public ModelSymptom(String symTitle, String symTimeDate, String symSeverity, String symImagePath){
+    public ModelSymptom(String symTitle, String symTimeDate, int symSeverity, String symImagePath){
         this.symTitle = symTitle;
         this.symTimeDate = symTimeDate;
         this.symSeverity = symSeverity;
@@ -51,11 +51,11 @@ public class ModelSymptom {
         this.symTimeDate = symTimeDate;
     }
 
-    public String getSymSeverity() {
+    public int getSymSeverity() {
         return symSeverity;
     }
 
-    public void setSymSeverity(String symSeverity) {
+    public void setSymSeverity(int symSeverity) {
         this.symSeverity = symSeverity;
     }
 
