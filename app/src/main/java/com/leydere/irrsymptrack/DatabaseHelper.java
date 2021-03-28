@@ -388,6 +388,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
+    //returns list of irritant models that meet the tag association requirement - list is used to populate graph
+    public ArrayList<ModelDataPoint> getSelectedIrritantsDateSpecificNoClock(int tagId) {
+        ArrayList<ModelDataPoint> compiledResults = new ArrayList();
+        String queryString = "SELECT " + COLUMN_IRR_SEVERITY + ", " + COLUMN_IRR_TIMEDATE + " FROM " + TABLE_IRRITANTS +
+                " INNER JOIN " + TABLE_IRR_TAG_ASSOC +
+                " ON " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID +
+                " INNER JOIN " + TABLE_IRR_TAGS +
+                " ON " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_TAG_ID + " = " + TABLE_IRR_TAGS + "." + COLUMN_IRR_TAG_ID +
+                " WHERE " + COLUMN_IRR_TAG_ID + " = " + tagId +
+                " ORDER BY " + COLUMN_IRR_TIMEDATE + ";";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                String severity = cursor.getString(0);
+                String date = cursor.getString(1);
+
+                ModelDataPoint newDataPoint = new ModelDataPoint(severity, date);
+                compiledResults.add(newDataPoint);
+            } while (cursor.moveToNext());
+        } else {
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
+
     // function for updating/creating associative data - works for both new and existing irritant records
     public boolean createIrritantTagAssociativeRecord(int recordID, ArrayList<Integer> selectedIrritantTagIDsList){
         SQLiteDatabase db = this.getWritableDatabase();

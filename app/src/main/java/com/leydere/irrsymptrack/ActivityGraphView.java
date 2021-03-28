@@ -66,7 +66,7 @@ public class ActivityGraphView extends AppCompatActivity {
         series1.setColor(Color.BLUE);
 
         //So the second series cannot be created until the first series is plotted.
-        series2 = testPointIrritantSeries(3);
+        series2 = testPointIrritantSeriesDpModel(3);
         graph.addSeries(series2);
         series2.setShape(PointsGraphSeries.Shape.POINT);
         series2.setColor(Color.RED);
@@ -80,6 +80,32 @@ public class ActivityGraphView extends AppCompatActivity {
             }
         });
 
+    }
+
+    // attempt at pulling the irritant series using the data point model and the associated db function
+    public PointsGraphSeries<DataPoint> testPointIrritantSeriesDpModel(int tagId) {
+        int y;
+        Date x = new Date();
+        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
+        ArrayList<ModelDataPoint> selectedDataPointList = databaseHelper.getSelectedIrritantsDateSpecificNoClock(tagId);
+
+        for (ModelDataPoint modelDataPoint : selectedDataPointList) {
+            //y = sev
+            int severity = 1 + Integer.valueOf(modelDataPoint.getDpSeverity());
+            y = severity;
+            //x = date
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
+                x = calendar.getTime();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
+            }
+            series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
+        }
+
+        return series;
     }
 
     //Returns selected irritant records.  Modeled after symptom function of the same purpose.
