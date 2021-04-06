@@ -60,7 +60,7 @@ public class ActivityGraphView extends AppCompatActivity {
 
         //Toast.makeText(ActivityGraphView.this, "Title of second symptom = " + allSymptomsList.get(1).getSymTitle(), Toast.LENGTH_SHORT).show(); //WORKS!!
 
-        series1 = testPointSymptomSeries(3);
+        series1 = testPointSymptomSeriesDpModel(3);
         graph.addSeries(series1);
         series1.setShape(PointsGraphSeries.Shape.POINT);
         series1.setColor(Color.BLUE);
@@ -80,6 +80,31 @@ public class ActivityGraphView extends AppCompatActivity {
             }
         });
 
+    }
+
+    public PointsGraphSeries<DataPoint> testPointSymptomSeriesDpModel(int tagId) {
+        int y;
+        Date x = new Date();
+        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
+        ArrayList<ModelDataPoint> selectedDataPointList = databaseHelper.getSelectedSymptomsDateSpecificNoClock(tagId);
+
+        for (ModelDataPoint modelDataPoint : selectedDataPointList) {
+            //y = sev
+            int severity = Integer.valueOf(modelDataPoint.getDpSeverity());
+            y = severity;
+            //x = date
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
+                x = calendar.getTime();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from irritant calendar", Toast.LENGTH_SHORT).show();
+            }
+            series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
+        }
+
+        return series;
     }
 
     // attempt at pulling the irritant series using the data point model and the associated db function
@@ -134,8 +159,9 @@ public class ActivityGraphView extends AppCompatActivity {
         return series;
     }
 
+    //region Unused experimental clutter functions
+
     //This test function should be close to the final function needed.  Severity = y-axis, date = x-axis, filtered by selected tag.
-    //TODO: Almost there.  This functions does what is needed for pulling the correct records.  Time data is still unusable.  Graph still needs improvement.
     public PointsGraphSeries<DataPoint> testPointSymptomSeries(int tagId) {
         int y;
         Date x = new Date();
@@ -208,4 +234,5 @@ public class ActivityGraphView extends AppCompatActivity {
         }
         return series1;
     }
+    //endregion
 }
