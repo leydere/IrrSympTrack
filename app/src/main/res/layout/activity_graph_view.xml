@@ -48,7 +48,7 @@
         android:layout_width="match_parent"
         android:layout_height="296dp"
         android:id="@+id/graph"
-        android:layout_marginTop="56dp"
+        android:layout_marginTop="16dp"
         android:layout_marginLeft="32dp"
         android:layout_marginRight="32dp"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -56,13 +56,90 @@
         app:layout_constraintTop_toBottomOf="@+id/exampleText"/>
 
     <Button
-        android:id="@+id/testerButton"
+        android:id="@+id/startDateButton"
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:text="Start Date"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/graph"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <Button
+        android:id="@+id/endDateButton"
+        android:layout_width="128dp"
+        android:layout_height="wrap_content"
+        android:text="End Date"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/startDateButton"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/startDateTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button"
+        android:text="startdate"
         android:layout_marginTop="16dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/graph" />
+        android:layout_marginLeft="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/graph"
+        app:layout_constraintLeft_toRightOf="@+id/startDateButton" />
+
+    <TextView
+        android:id="@+id/endDateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="enddate"
+        android:layout_marginTop="32dp"
+        android:layout_marginLeft="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/startDateTextView"
+        app:layout_constraintLeft_toRightOf="@+id/endDateButton"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabPopulateGraph"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:srcCompat="@drawable/ic_baseline_check_24"
+        android:layout_marginTop="28dp"
+        android:layout_marginRight="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/graph"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <TextView
+        android:id="@+id/irritantSelectedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginTop="16dp"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/endDateButton"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/symptomSelectedTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_marginLeft="120dp"
+        app:layout_constraintTop_toTopOf="@+id/irritantSelectedTextView"
+        app:layout_constraintLeft_toRightOf="@+id/irritantSelectedTextView"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/irritantGraphRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginLeft="32dp"
+        app:layout_constraintTop_toBottomOf="@+id/irritantSelectedTextView"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/symptomGraphRecyclerView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        app:layout_constraintTop_toTopOf="@+id/irritantGraphRecyclerView"
+        app:layout_constraintLeft_toLeftOf="@+id/symptomSelectedTextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

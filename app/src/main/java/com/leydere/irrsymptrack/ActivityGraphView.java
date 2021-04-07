@@ -5,10 +5,13 @@ import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
@@ -26,7 +29,10 @@ public class ActivityGraphView extends AppCompatActivity {
     PointsGraphSeries<DataPoint> series1, series2;
     GraphView graph;
     Calendar calendar;
-    Button testerButton;
+    Button startDateButton, endDateButton;
+    FloatingActionButton fabPopulateGraph;
+    TextView startDateTextView, endDateTextView, irritantSelectedTextView, symptomSelectedTextView;
+    RecyclerView irritantGraphRecyclerView, symptomGraphRecyclerView;
 
     ArrayList<ModelSymptom> allSymptomsList;
     DatabaseHelper databaseHelper;
@@ -36,7 +42,15 @@ public class ActivityGraphView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_view);
 
-        testerButton = findViewById(R.id.testerButton);
+        startDateButton = findViewById(R.id.startDateButton);
+        endDateButton = findViewById(R.id.endDateButton);
+        fabPopulateGraph = findViewById(R.id.fabPopulateGraph);
+        startDateTextView = findViewById(R.id.startDateTextView);
+        endDateTextView = findViewById(R.id.endDateTextView);
+        irritantSelectedTextView = findViewById(R.id.irritantSelectedTextView);
+        symptomSelectedTextView = findViewById(R.id.symptomSelectedTextView);
+        irritantGraphRecyclerView = findViewById(R.id.irritantGraphRecyclerView);
+        symptomGraphRecyclerView = findViewById(R.id.symptomGraphRecyclerView);
         graph = findViewById(R.id.graph);
         //series1 = new PointsGraphSeries<DataPoint>();
         //series2 = new PointsGraphSeries<DataPoint>();
@@ -58,7 +72,7 @@ public class ActivityGraphView extends AppCompatActivity {
         graph.addSeries(series1);
         graph.addSeries(series2);
 
-        testerButton.setOnClickListener(new View.OnClickListener() {
+        startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -66,6 +80,24 @@ public class ActivityGraphView extends AppCompatActivity {
                 Date d1 = calendar.getInstance().getTime();
                 Toast.makeText(ActivityGraphView.this, d1.toString(), Toast.LENGTH_SHORT).show();
                 */
+            }
+        });
+
+        endDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                /*
+                Date d1 = calendar.getInstance().getTime();
+                Toast.makeText(ActivityGraphView.this, d1.toString(), Toast.LENGTH_SHORT).show();
+                */
+            }
+        });
+
+        fabPopulateGraph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
 
@@ -116,6 +148,8 @@ public class ActivityGraphView extends AppCompatActivity {
         }
         return series;
     }
+
+    //region Unused experimental clutter functions
 
     public PointsGraphSeries<DataPoint> testPointSymptomSeriesDpModel(int tagId) {
         int y;
@@ -168,7 +202,7 @@ public class ActivityGraphView extends AppCompatActivity {
         return series;
     }
 
-    //region Unused experimental clutter functions
+
 
     //Returns selected irritant records.  Modeled after symptom function of the same purpose.
     public PointsGraphSeries<DataPoint> testPointIrritantSeries(int tagId) {
