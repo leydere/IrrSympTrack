@@ -23,7 +23,7 @@ import java.util.Locale;
 
 public class ActivityGraphView extends AppCompatActivity {
 
-    PointsGraphSeries<DataPoint> series1, series2, testSeries;
+    PointsGraphSeries<DataPoint> series1, series2;
     GraphView graph;
     Calendar calendar;
     Button testerButton;
@@ -47,7 +47,8 @@ public class ActivityGraphView extends AppCompatActivity {
         graph.setTitle("Irr-Sym Sev v. Date");
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(ActivityGraphView.this));
 
-        series1 = testPointSymptomSeriesDpModel(3);
+        //series1 = testPointSymptomSeriesDpModel(3);
+        series1 = testPointSymptomSeriesDpModelByDateRange(3, "2021-03-21", "2021-03-28");
         //series2 = testPointIrritantSeriesDpModel(3);
         series2 = testPointIrritantSeriesDpModelByDateRange(3, "2021-03-21", "2021-03-28");
         series1.setShape(PointsGraphSeries.Shape.POINT);
@@ -56,14 +57,6 @@ public class ActivityGraphView extends AppCompatActivity {
         series2.setColor(Color.RED);
         graph.addSeries(series1);
         graph.addSeries(series2);
-        //So the second series cannot be created until the first series is plotted.
-
-
-
-
-
-
-        //testSeries = testPointIrritantSeriesDpModelByDateRange(3, "2021-03-20", "2021-03-25");
 
         testerButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -78,7 +71,29 @@ public class ActivityGraphView extends AppCompatActivity {
 
     }
 
-    //attempting to
+    public PointsGraphSeries<DataPoint> testPointSymptomSeriesDpModelByDateRange(int tagId, String startDateRange, String endDateRange) {
+        int y;
+        Date x = new Date();
+        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
+        ArrayList<ModelDataPoint> selectedDataPointList = databaseHelper.getSelectedSymptomsByDateRangeAndTagId(tagId, startDateRange, endDateRange);
+
+        for (ModelDataPoint modelDataPoint : selectedDataPointList) {
+            //y = sev
+            y = modelDataPoint.getDpSeverity();
+            //x = date
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
+                x = calendar.getTime();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from irritant calendar", Toast.LENGTH_SHORT).show();
+            }
+            series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
+        }
+        return series;
+    }
+
     public PointsGraphSeries<DataPoint> testPointIrritantSeriesDpModelByDateRange(int tagId, String startDateRange, String endDateRange) {
         int y;
         Date x = new Date();
@@ -86,30 +101,19 @@ public class ActivityGraphView extends AppCompatActivity {
         ArrayList<ModelDataPoint> selectedDataPointList = databaseHelper.getSelectedIrritantsByDateRangeAndTagId(tagId, startDateRange, endDateRange);
 
         for (ModelDataPoint modelDataPoint : selectedDataPointList) {
-
-            //Toast.makeText(ActivityGraphView.this, "model date = " + modelDataPoint.getDpDate() + " model severity sum = " + modelDataPoint.getDpSeverity(), Toast.LENGTH_SHORT).show();
             //y = sev
             y = modelDataPoint.getDpSeverity();
-            //Toast.makeText(ActivityGraphView.this, "model severity sum = " + y, Toast.LENGTH_SHORT).show();
             //x = date
             //set db time data to calendar format - took this from the load existing record to add symptom activity
             SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
             try{
                 calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
                 x = calendar.getTime();
-                //Toast.makeText(ActivityGraphView.this, "model date = " + x, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(ActivityGraphView.this, "input error from irritant calendar", Toast.LENGTH_SHORT).show();
             }
-            try{
-                series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
-                //Toast.makeText(ActivityGraphView.this, "datapoint appended to series", Toast.LENGTH_SHORT).show();
-            } catch (Exception e){
-                Toast.makeText(ActivityGraphView.this, "datapoint NOT appended to series", Toast.LENGTH_SHORT).show();
-            }
-
+            series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
         }
-
         return series;
     }
 

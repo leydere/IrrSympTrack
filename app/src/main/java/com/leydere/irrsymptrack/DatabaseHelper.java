@@ -398,6 +398,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
+    //returns list of symptom data point models that meet the tag association and date requirements - list is used to populate graph
+    public ArrayList<ModelDataPoint> getSelectedSymptomsByDateRangeAndTagId(int tagId, String startDate, String endDate) {
+        ArrayList<ModelDataPoint> compiledResults = new ArrayList();
+        String queryString = "SELECT SUM(" + COLUMN_SYM_SEVERITY + ") AS \"SEVERITYSUM\", strftime('%Y-%m-%d', " + COLUMN_SYM_TIMEDATE + ") AS \"SHORTTIME\" FROM " + TABLE_SYMPTOMS +
+                " INNER JOIN " + TABLE_SYM_TAG_ASSOC +
+                " ON " + TABLE_SYMPTOMS + "." + COLUMN_SYM_ID + " = " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_ID +
+                " INNER JOIN " + TABLE_SYM_TAGS +
+                " ON " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_TAG_ID + " = " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_ID +
+                " WHERE " + COLUMN_SYM_TAG_ID + " = " + tagId +
+                " AND " + COLUMN_SYM_TIMEDATE + " BETWEEN \'" + startDate + "\' AND \'" + endDate +
+                "\' GROUP BY SHORTTIME" +
+                " ORDER BY SHORTTIME;";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int severity = cursor.getInt(0);
+                String date = cursor.getString(1) + " 12:00:00.000";
+
+                ModelDataPoint newDataPoint = new ModelDataPoint(severity, date);
+                compiledResults.add(newDataPoint);
+            } while (cursor.moveToNext());
+        } else {
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
+
     //returns list of irritant data point models that meet the tag association and date requirements - list is used to populate graph
     public ArrayList<ModelDataPoint> getSelectedIrritantsByDateRangeAndTagId(int tagId, String startDate, String endDate) {
         ArrayList<ModelDataPoint> compiledResults = new ArrayList();
