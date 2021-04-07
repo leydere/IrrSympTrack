@@ -11,7 +11,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.jjoe64.graphview.GraphView;
@@ -26,7 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class ActivityGraphView extends AppCompatActivity {
+public class ActivityGraphView extends AppCompatActivity implements AdapterGraphTagIrritant.OnItemClickListener {
 
     PointsGraphSeries<DataPoint> series1, series2;
     GraphView graph;
@@ -35,6 +38,8 @@ public class ActivityGraphView extends AppCompatActivity {
     FloatingActionButton fabPopulateGraph;
     TextView startDateTextView, endDateTextView, irritantSelectedTextView, symptomSelectedTextView;
     RecyclerView irritantGraphRecyclerView, symptomGraphRecyclerView;
+    ArrayList<ModelIrritantTag> irritantTagsList;
+    int selectedIrritantTagID;
 
     ArrayList<ModelSymptom> allSymptomsList;
     DatabaseHelper databaseHelper;
@@ -53,6 +58,7 @@ public class ActivityGraphView extends AppCompatActivity {
         symptomSelectedTextView = findViewById(R.id.symptomSelectedTextView);
         irritantGraphRecyclerView = findViewById(R.id.irritantGraphRecyclerView);
         symptomGraphRecyclerView = findViewById(R.id.symptomGraphRecyclerView);
+        selectedIrritantTagID = -1;
         graph = findViewById(R.id.graph);
         series1 = new PointsGraphSeries<DataPoint>();
         series2 = new PointsGraphSeries<DataPoint>();
@@ -69,6 +75,11 @@ public class ActivityGraphView extends AppCompatActivity {
         CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
         startDateTextView.setText(dateCharSequence);
         endDateTextView.setText(dateCharSequence);
+
+        //list to support recycler view
+        irritantTagsList = new ArrayList<>();
+        irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
+        setIrritantTagsSelectionAdapter();
 
 
         //TODO: The actual graph population logic will be called from the FAB click listener.
@@ -148,6 +159,21 @@ public class ActivityGraphView extends AppCompatActivity {
             series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
         }
         return series;
+    }
+
+    private void setIrritantTagsSelectionAdapter() {
+        AdapterGraphTagIrritant adapter = new AdapterGraphTagIrritant(irritantTagsList, this, this::onItemClick);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        irritantGraphRecyclerView.setLayoutManager(layoutManager);
+        irritantGraphRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        irritantGraphRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onItemClick(int irrTagModelID, String irrTagModelTitle) {
+        selectedIrritantTagID = irrTagModelID;
+        irritantSelectedTextView.setText(irrTagModelTitle);
+
     }
 
     private void handleCalendarWidget(Calendar calendar, TextView textView) {
