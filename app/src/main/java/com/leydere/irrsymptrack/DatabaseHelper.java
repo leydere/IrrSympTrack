@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -386,6 +387,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
                 ModelIrritant newIrritant = new ModelIrritant(irrId, irrTitle, irrDateTime, irrSeverity);
                 compiledResults.add(newIrritant);
+            } while (cursor.moveToNext());
+        } else {
+
+        }
+
+        cursor.close();
+        db.close();
+
+        return compiledResults;
+    }
+
+    //returns list of irritant data point models that meet the tag association and date requirements - list is used to populate graph
+    public ArrayList<ModelDataPoint> getSelectedIrritantsByDateRangeAndTagId(int tagId, String startDate, String endDate) {
+        ArrayList<ModelDataPoint> compiledResults = new ArrayList();
+        String queryString = "SELECT SUM(" + COLUMN_IRR_SEVERITY + ") AS \"SEVERITYSUM\", strftime('%Y-%m-%d', " + COLUMN_IRR_TIMEDATE + ") AS \"SHORTTIME\" FROM " + TABLE_IRRITANTS +
+                " INNER JOIN " + TABLE_IRR_TAG_ASSOC +
+                " ON " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID +
+                " INNER JOIN " + TABLE_IRR_TAGS +
+                " ON " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_TAG_ID + " = " + TABLE_IRR_TAGS + "." + COLUMN_IRR_TAG_ID +
+                " WHERE " + COLUMN_IRR_TAG_ID + " = " + tagId +
+                " AND " + COLUMN_IRR_TIMEDATE + " BETWEEN \'" + startDate + "\' AND \'" + endDate +
+                "\' GROUP BY SHORTTIME" +
+                " ORDER BY SHORTTIME;";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(queryString, null);
+
+        if (cursor.moveToFirst()){
+            do {
+                int severity = cursor.getInt(0);
+                String date = cursor.getString(1) + " 12:00:00.000";
+
+                ModelDataPoint newDataPoint = new ModelDataPoint(severity, date);
+                compiledResults.add(newDataPoint);
             } while (cursor.moveToNext());
         } else {
 
