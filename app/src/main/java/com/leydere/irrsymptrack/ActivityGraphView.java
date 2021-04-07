@@ -1,10 +1,12 @@
 package com.leydere.irrsymptrack;
 
+import android.app.DatePickerDialog;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +30,7 @@ public class ActivityGraphView extends AppCompatActivity {
 
     PointsGraphSeries<DataPoint> series1, series2;
     GraphView graph;
-    Calendar calendar;
+    Calendar calendar, startCalendar, endCalendar;
     Button startDateButton, endDateButton;
     FloatingActionButton fabPopulateGraph;
     TextView startDateTextView, endDateTextView, irritantSelectedTextView, symptomSelectedTextView;
@@ -52,19 +54,26 @@ public class ActivityGraphView extends AppCompatActivity {
         irritantGraphRecyclerView = findViewById(R.id.irritantGraphRecyclerView);
         symptomGraphRecyclerView = findViewById(R.id.symptomGraphRecyclerView);
         graph = findViewById(R.id.graph);
-        //series1 = new PointsGraphSeries<DataPoint>();
-        //series2 = new PointsGraphSeries<DataPoint>();
+        series1 = new PointsGraphSeries<DataPoint>();
+        series2 = new PointsGraphSeries<DataPoint>();
         calendar = Calendar.getInstance();
+        startCalendar = Calendar.getInstance();
+        endCalendar = Calendar.getInstance();
 
         databaseHelper = new DatabaseHelper(ActivityGraphView.this);
 
         graph.setTitle("Irr-Sym Sev v. Date");
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(ActivityGraphView.this));
 
-        //series1 = testPointSymptomSeriesDpModel(3);
-        series1 = testPointSymptomSeriesDpModelByDateRange(3, "2021-03-21", "2021-03-28");
-        //series2 = testPointIrritantSeriesDpModel(3);
-        series2 = testPointIrritantSeriesDpModelByDateRange(3, "2021-03-21", "2021-03-28");
+        //set date text
+        CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
+        startDateTextView.setText(dateCharSequence);
+        endDateTextView.setText(dateCharSequence);
+
+
+        //TODO: The actual graph population logic will be called from the FAB click listener.
+        series1 = symptomGraphPopulationWithUserInput(3, "2021-03-21", "2021-03-28");
+        series2 = irritantGraphPopulationWithUserInput(3, "2021-03-21", "2021-03-28");
         series1.setShape(PointsGraphSeries.Shape.POINT);
         series1.setColor(Color.BLUE);
         series2.setShape(PointsGraphSeries.Shape.POINT);
@@ -75,22 +84,14 @@ public class ActivityGraphView extends AppCompatActivity {
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*
-                Date d1 = calendar.getInstance().getTime();
-                Toast.makeText(ActivityGraphView.this, d1.toString(), Toast.LENGTH_SHORT).show();
-                */
+                handleCalendarWidget(startCalendar, startDateTextView);
             }
         });
 
         endDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                /*
-                Date d1 = calendar.getInstance().getTime();
-                Toast.makeText(ActivityGraphView.this, d1.toString(), Toast.LENGTH_SHORT).show();
-                */
+                handleCalendarWidget(endCalendar, endDateTextView);
             }
         });
 
@@ -103,7 +104,7 @@ public class ActivityGraphView extends AppCompatActivity {
 
     }
 
-    public PointsGraphSeries<DataPoint> testPointSymptomSeriesDpModelByDateRange(int tagId, String startDateRange, String endDateRange) {
+    public PointsGraphSeries<DataPoint> symptomGraphPopulationWithUserInput(int tagId, String startDateRange, String endDateRange) {
         int y;
         Date x = new Date();
         PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
@@ -126,7 +127,7 @@ public class ActivityGraphView extends AppCompatActivity {
         return series;
     }
 
-    public PointsGraphSeries<DataPoint> testPointIrritantSeriesDpModelByDateRange(int tagId, String startDateRange, String endDateRange) {
+    public PointsGraphSeries<DataPoint> irritantGraphPopulationWithUserInput(int tagId, String startDateRange, String endDateRange) {
         int y;
         Date x = new Date();
         PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
@@ -147,6 +148,29 @@ public class ActivityGraphView extends AppCompatActivity {
             series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
         }
         return series;
+    }
+
+    private void handleCalendarWidget(Calendar calendar, TextView textView) {
+
+        int YEAR = calendar.get(Calendar.YEAR);
+        int MONTH = calendar.get(Calendar.MONTH);
+        int DATE = calendar.get(Calendar.DATE);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DATE, dayOfMonth);
+
+                CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
+                textView.setText(dateCharSequence);
+
+            }
+        }, YEAR, MONTH, DATE);
+
+        datePickerDialog.show();
     }
 
     //region Unused experimental clutter functions
@@ -292,16 +316,16 @@ public class ActivityGraphView extends AppCompatActivity {
     }
 
     //First graph series function.  Testing graph population using linear function.
-    private LineGraphSeries<DataPoint> createLinearSeries(){
+    private PointsGraphSeries<DataPoint> createLinearSeries(){
         int y,x;
         x = 0;
-        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<DataPoint>();
+        PointsGraphSeries<DataPoint> series1 = new PointsGraphSeries<DataPoint>();
         // This is were the math happens. x & y is set and then appended as data points to the line graph series.
-        for (int i = 0; i<5; i++){
+        for (int i = 0; i<6; i++){
             x = x + 1;
             y = x * 2 + 1;
 
-            this.series1.appendData(new DataPoint(x, y), true, 5); //Youtuber says maxDataPoints attribute must equal number of data points in series
+            this.series1.appendData(new DataPoint(x, y), true, 6); //Youtuber says maxDataPoints attribute must equal number of data points in series
         }
         return series1;
     }
