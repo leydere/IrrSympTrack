@@ -29,7 +29,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class ActivityGraphView extends AppCompatActivity implements AdapterGraphTagIrritant.OnItemClickListener {
+public class ActivityGraphView extends AppCompatActivity implements AdapterGraphTagIrritant.OnItemClickListener, AdapterGraphTagSymptom.OnItemClickListener {
 
     PointsGraphSeries<DataPoint> series1, series2;
     GraphView graph;
@@ -39,7 +39,8 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
     TextView startDateTextView, endDateTextView, irritantSelectedTextView, symptomSelectedTextView;
     RecyclerView irritantGraphRecyclerView, symptomGraphRecyclerView;
     ArrayList<ModelIrritantTag> irritantTagsList;
-    int selectedIrritantTagID;
+    ArrayList<ModelSymptomTag> symptomTagsList;
+    int selectedIrritantTagID, selectedSymptomTagID;
 
     ArrayList<ModelSymptom> allSymptomsList;
     DatabaseHelper databaseHelper;
@@ -80,6 +81,9 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         irritantTagsList = new ArrayList<>();
         irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
         setIrritantTagsSelectionAdapter();
+        symptomTagsList = new ArrayList<>();
+        symptomTagsList.addAll(databaseHelper.getAllSymptomTags());
+        setSymptomTagsSelectionAdapter();
 
 
         //TODO: The actual graph population logic will be called from the FAB click listener.
@@ -162,17 +166,32 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
     }
 
     private void setIrritantTagsSelectionAdapter() {
-        AdapterGraphTagIrritant adapter = new AdapterGraphTagIrritant(irritantTagsList, this, this::onItemClick);
+        AdapterGraphTagIrritant adapter = new AdapterGraphTagIrritant(irritantTagsList, this, this::onIrrItemClick);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         irritantGraphRecyclerView.setLayoutManager(layoutManager);
         irritantGraphRecyclerView.setItemAnimator(new DefaultItemAnimator());
         irritantGraphRecyclerView.setAdapter(adapter);
     }
 
+    private void setSymptomTagsSelectionAdapter() {
+        AdapterGraphTagSymptom adapter = new AdapterGraphTagSymptom(symptomTagsList, this, this::onSymItemClick);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        symptomGraphRecyclerView.setLayoutManager(layoutManager);
+        symptomGraphRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        symptomGraphRecyclerView.setAdapter(adapter);
+    }
+
     @Override
-    public void onItemClick(int irrTagModelID, String irrTagModelTitle) {
+    public void onIrrItemClick(int irrTagModelID, String irrTagModelTitle) {
         selectedIrritantTagID = irrTagModelID;
         irritantSelectedTextView.setText(irrTagModelTitle);
+
+    }
+
+    @Override
+    public void onSymItemClick(int symTagModelID, String symTagModelTitle) {
+        selectedSymptomTagID = symTagModelID;
+        symptomSelectedTextView.setText(symTagModelTitle);
 
     }
 

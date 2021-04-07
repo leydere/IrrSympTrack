@@ -40,7 +40,7 @@ public class AdapterGraphTagIrritant extends RecyclerView.Adapter<AdapterGraphTa
     }
 
     public interface OnItemClickListener {
-        void onItemClick(int irrTagModelID, String irrTagModelTitle);
+        void onIrrItemClick(int irrTagModelID, String irrTagModelTitle);
     }
 
     @NonNull
@@ -59,7 +59,7 @@ public class AdapterGraphTagIrritant extends RecyclerView.Adapter<AdapterGraphTa
             @Override
             // id of model associated to clicked card is sent to activity
             public void onClick(View v) {
-                onItemClickListener.onItemClick(irritantTagList.get(position).getId(), irritantTagList.get(position).getIrrTagTitle());
+                onItemClickListener.onIrrItemClick(irritantTagList.get(position).getId(), irritantTagList.get(position).getIrrTagTitle());
             }
         });
 
