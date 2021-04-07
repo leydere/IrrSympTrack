@@ -71,6 +71,7 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
 
         graph.setTitle("Irr-Sym Sev v. Date");
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(ActivityGraphView.this));
+        graph.getGridLabelRenderer().setHorizontalLabelsAngle(45);
 
         //set date text
         CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
