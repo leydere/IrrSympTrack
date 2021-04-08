@@ -226,7 +226,6 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
 
         //adding record now returns the new modelID instead of boolean & a -1 if it fails
         int returnedID = databaseHelper.addSymptomRecord(modelSymptom);
-        Toast.makeText(ActivityAddSymptom.this, "returned ID " + returnedID, Toast.LENGTH_SHORT).show();
         if (returnedID != -1) {
             Toast.makeText(ActivityAddSymptom.this, "record added successfully", Toast.LENGTH_SHORT).show();
         } else {

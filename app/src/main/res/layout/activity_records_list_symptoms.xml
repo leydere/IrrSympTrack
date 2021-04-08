@@ -18,7 +18,7 @@
                 android:id="@+id/symptomRecordsToolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/colorPrimary"
+                android:background="@color/blue_500"
                 app:popupTheme="@style/Theme.IrrSympTrack.PopupOverlay" />
 
         </com.google.android.material.appbar.AppBarLayout>

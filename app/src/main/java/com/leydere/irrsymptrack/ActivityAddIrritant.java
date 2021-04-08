@@ -223,7 +223,6 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
         //adding record now returns the new modelID instead of boolean & a -1 if it fails
         int returnedID = databaseHelper.addIrritantRecord(modelIrritant);
-        Toast.makeText(ActivityAddIrritant.this, "returned ID " + returnedID, Toast.LENGTH_SHORT).show();
         if (returnedID != -1) {
             Toast.makeText(ActivityAddIrritant.this, "record added successfully", Toast.LENGTH_SHORT).show();
         } else {

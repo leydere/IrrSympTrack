@@ -10,14 +10,13 @@
         android:id="@+id/graphViewAppBarLayout"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:theme="@style/Theme.IrrSympTrack.AppBarOverlay"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/graphViewToolbarTop"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
+            android:background="@color/off_white"
             app:popupTheme="@style/Theme.IrrSympTrack.PopupOverlay">
 
             <TextView
@@ -25,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=""
-                android:textColor="#FFFFFFFF"
+                android:textColor="@color/blue_700"
                 android:textSize="18dp"
                 android:textStyle="bold" />
 
@@ -33,16 +32,6 @@
         </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
-
-    <TextView
-        android:id="@+id/exampleText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="This is the graph view activity"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="32dp"
-        android:layout_marginRight="32dp"
-        app:layout_constraintTop_toBottomOf="@+id/graphViewAppBarLayout"/>
 
     <com.jjoe64.graphview.GraphView
         android:layout_width="match_parent"
@@ -53,13 +42,15 @@
         android:layout_marginRight="32dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exampleText"/>
+        app:layout_constraintTop_toBottomOf="@+id/graphViewAppBarLayout"/>
 
     <Button
         android:id="@+id/startDateButton"
         android:layout_width="128dp"
         android:layout_height="wrap_content"
         android:text="Start Date"
+        android:backgroundTint="@color/off_white"
+        android:textColor="@color/red_700"
         android:layout_marginTop="4dp"
         android:layout_marginLeft="32dp"
         app:layout_constraintTop_toBottomOf="@+id/graph"
@@ -70,6 +61,8 @@
         android:layout_width="128dp"
         android:layout_height="wrap_content"
         android:text="End Date"
+        android:backgroundTint="@color/off_white"
+        android:textColor="@color/red_700"
         android:layout_marginTop="4dp"
         android:layout_marginLeft="32dp"
         app:layout_constraintTop_toBottomOf="@+id/startDateButton"
@@ -101,6 +94,8 @@
         android:layout_height="wrap_content"
         android:clickable="true"
         app:srcCompat="@drawable/ic_baseline_check_24"
+        app:tint="@color/blue_500"
+        android:backgroundTint="@color/off_white"
         android:layout_marginTop="28dp"
         android:layout_marginRight="32dp"
         app:layout_constraintTop_toBottomOf="@+id/graph"
@@ -111,6 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="selected irritant"
+        android:textColor="@color/red_700"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="32dp"
         app:layout_constraintTop_toBottomOf="@+id/endDateButton"
@@ -121,6 +117,7 @@
         android:layout_width="152dp"
         android:layout_height="wrap_content"
         android:text="selected symptom"
+        android:textColor="@color/blue_700"
         android:layout_marginLeft="16dp"
         android:layout_marginRight="32dp"
         app:layout_constraintTop_toTopOf="@+id/irritantSelectedTextView"
@@ -143,7 +140,6 @@
         android:layout_height="160dp"
         android:layout_marginBottom="32dp"
         app:layout_constraintTop_toTopOf="@+id/irritantGraphRecyclerView"
-        app:layout_constraintLeft_toLeftOf="@+id/symptomSelectedTextView"
-        app:layout_constraintBottom_toBottomOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="@+id/symptomSelectedTextView"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
