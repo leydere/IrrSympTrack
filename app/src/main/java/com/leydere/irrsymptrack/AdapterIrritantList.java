@@ -49,7 +49,6 @@ public class AdapterIrritantList extends RecyclerView.Adapter<AdapterIrritantLis
 
     @Override
     public void onBindViewHolder(@NonNull AdapterIrritantList.MyViewHolder holder, int position) {
-        //TODO improvements to card UI object data can be made here
         //get time-date and format for use
         String irrTimeDate = irritantList.get(position).getIrrTimeDate();
         SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);

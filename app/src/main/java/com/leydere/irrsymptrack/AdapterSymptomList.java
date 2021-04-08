@@ -2,6 +2,7 @@ package com.leydere.irrsymptrack;
 
 import android.content.Context;
 import android.content.Intent;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.MyViewHolder> {
     private final Context context;
@@ -24,11 +28,13 @@ public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
         private TextView symptomText;
+        private TextView dateText;
         LinearLayout symptomParentLayout;
 
         public MyViewHolder(final View view){
             super(view);
             symptomText = view.findViewById(R.id.symptom_text_display);
+            dateText = view.findViewById(R.id.symptom_under_text_display);
             symptomParentLayout = view.findViewById(R.id.symptomParentLayout);
         }
     }
@@ -42,9 +48,17 @@ public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.
 
     @Override
     public void onBindViewHolder(@NonNull AdapterSymptomList.MyViewHolder holder, int position) {
-        //TODO improvements to card UI object data can be made here
+        //get time-date and format for use
+        String irrTimeDate = symptomList.get(position).getSymTimeDate();
+        SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+        Calendar calendar = Calendar.getInstance();
+        try {calendar.setTime(dbStringToCalendar.parse(irrTimeDate));
+        } catch (Exception e) { }
+        CharSequence timeDateCharSequence = DateFormat.format("MM/dd/yyyy hh:mm a", calendar);
+
         String titleFound = symptomList.get(position).getSymTitle();
         holder.symptomText.setText(titleFound);
+        holder.dateText.setText(timeDateCharSequence);
         holder.symptomParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
