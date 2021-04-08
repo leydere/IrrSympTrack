@@ -11,7 +11,7 @@
         android:theme="@style/Theme.IrrSympTrack">
         <activity
             android:name=".ActivityMain"
-            android:label="@string/app_name"
+            android:label="Irritant-Symptom Tracker"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,21 +20,28 @@
             </intent-filter>
         </activity>
         <activity android:name=".ActivityRecordsListIrritants"
+            android:label="Irritant Records"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
         <activity android:name=".ActivityRecordsListSymptoms"
+            android:label="Symptom Records"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
         <activity android:name=".ActivityAddIrritant"
+            android:label=""
             android:theme="@style/Theme.IrrSympTrack.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ActivityAddSymptom"
+            android:label=""
             android:theme="@style/Theme.IrrSympTrack.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ActivityGraphView"
+            android:label="Generate Graphs"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
         <activity android:name=".ActivityNewIrritantTags"
+            android:label="Create New Irritant Tags"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".ActivityNewSymptomTags"
+            android:label="Create New Symptom Tags"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
 

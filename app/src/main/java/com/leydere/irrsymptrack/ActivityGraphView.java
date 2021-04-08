@@ -1,9 +1,12 @@
 package com.leydere.irrsymptrack;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.format.DateFormat;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -11,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -48,6 +52,8 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph_view);
+        Toolbar toolbar = findViewById(R.id.graphViewToolbarTop);
+        setSupportActionBar(toolbar);
 
         startDateButton = findViewById(R.id.startDateButton);
         endDateButton = findViewById(R.id.endDateButton);
@@ -87,19 +93,6 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         setSymptomTagsSelectionAdapter();
 
 
-        //TODO: The actual graph population logic will be called from the FAB click listener.
-        /*
-        symptomSeries = symptomGraphPopulationWithUserInput(3, "2021-03-21", "2021-03-28");
-        irritantSeries = irritantGraphPopulationWithUserInput(3, "2021-03-21", "2021-03-28");
-        symptomSeries.setShape(PointsGraphSeries.Shape.POINT);
-        symptomSeries.setColor(Color.BLUE);
-        irritantSeries.setShape(PointsGraphSeries.Shape.POINT);
-        irritantSeries.setColor(Color.RED);
-        graph.addSeries(symptomSeries);
-        graph.addSeries(irritantSeries);
-
-         */
-
         startDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +110,6 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         fabPopulateGraph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: this is where the graph pop functionality goes; need to check for inputs, check for viability, and if all good use to populate graph
                 graph.removeAllSeries();
                 boolean calendarSet = false;
                 CharSequence startDateCharSequence = "";
@@ -257,6 +249,46 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
 
         datePickerDialog.show();
     }
+
+    //region Menu support
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.menu_main_page) {
+            Intent intent = new Intent(ActivityGraphView.this, ActivityMain.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.menu_irritant_records) {
+            Intent intent = new Intent(ActivityGraphView.this, ActivityRecordsListIrritants.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.menu_symptom_records) {
+            Intent intent = new Intent(ActivityGraphView.this, ActivityRecordsListSymptoms.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.menu_generate_graphs) {
+            Toast.makeText(ActivityGraphView.this, "Already at the generate graphs page.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    //endregion
 
     //region Unused experimental clutter functions
 
