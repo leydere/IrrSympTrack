@@ -21,8 +21,8 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
     private ArrayList<ModelIrritantTag> irritantTagList;
     private OnItemClickListener onItemClickListener;
 
-    int lightPurple = Color.parseColor("#FFBB86FC");
-    int standardPurple = Color.parseColor("#FF6200EE");
+    int lightRed = Color.parseColor("#ff5c5c");
+    int standardRed = Color.parseColor("#ff1f1f");
 
 
 
@@ -70,7 +70,7 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
             for (int idOfAssociatedRecords : selectedIrritantTagIDsList) {
                 int idOfIrrTagModel = irritantTagList.get(position).getId();
                 if(idOfAssociatedRecords == idOfIrrTagModel) {
-                    holder.cardView.setCardBackgroundColor(standardPurple);
+                    holder.cardView.setCardBackgroundColor(standardRed);
                 }
 
             }
@@ -91,11 +91,11 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
                 ColorStateList c = holder.cardView.getCardBackgroundColor();
                 int i = c.getDefaultColor();
 
-                if (i == lightPurple){
-                    holder.cardView.setCardBackgroundColor(standardPurple);
+                if (i == lightRed){
+                    holder.cardView.setCardBackgroundColor(standardRed);
                     onItemClickListener.onItemClick(irritantTagList.get(position).getId(), true);
-                }else if (i == standardPurple){
-                    holder.cardView.setCardBackgroundColor(lightPurple);
+                }else if (i == standardRed){
+                    holder.cardView.setCardBackgroundColor(lightRed);
                     onItemClickListener.onItemClick(irritantTagList.get(position).getId(), false);
                 }
             }

@@ -21,8 +21,8 @@ public class AdapterTagSymptomSelection extends RecyclerView.Adapter<AdapterTagS
     private ArrayList<ModelSymptomTag> symptomTagList;
     private AdapterTagSymptomSelection.OnItemClickListener onItemClickListener;
 
-    int lightPurple = Color.parseColor("#FFBB86FC");
-    int standardPurple = Color.parseColor("#FF6200EE");
+    int lightBlue = Color.parseColor("#5c5cff");
+    int standardBlue = Color.parseColor("#1f1fff");
 
 
 
@@ -70,7 +70,7 @@ public class AdapterTagSymptomSelection extends RecyclerView.Adapter<AdapterTagS
             for (int idOfAssociatedRecords : selectedSymptomTagIDsList) {
                 int idOfSymTagModel = symptomTagList.get(position).getId();
                 if(idOfAssociatedRecords == idOfSymTagModel) {
-                    holder.cardView.setCardBackgroundColor(standardPurple);
+                    holder.cardView.setCardBackgroundColor(standardBlue);
                 }
 
             }
@@ -91,11 +91,11 @@ public class AdapterTagSymptomSelection extends RecyclerView.Adapter<AdapterTagS
                 ColorStateList c = holder.cardView.getCardBackgroundColor();
                 int i = c.getDefaultColor();
 
-                if (i == lightPurple){
-                    holder.cardView.setCardBackgroundColor(standardPurple);
+                if (i == lightBlue){
+                    holder.cardView.setCardBackgroundColor(standardBlue);
                     onItemClickListener.onItemClick(symptomTagList.get(position).getId(), true);
-                }else if (i == standardPurple){
-                    holder.cardView.setCardBackgroundColor(lightPurple);
+                }else if (i == standardBlue){
+                    holder.cardView.setCardBackgroundColor(lightBlue);
                     onItemClickListener.onItemClick(symptomTagList.get(position).getId(), false);
                 }
             }

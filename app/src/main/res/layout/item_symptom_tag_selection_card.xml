@@ -14,7 +14,7 @@
         android:padding="10dp"
         app:cardCornerRadius="5dp"
         app:cardElevation="3dp"
-        app:cardBackgroundColor="@color/purple_200">
+        app:cardBackgroundColor="@color/blue_100">
 
         <LinearLayout
             android:layout_width="wrap_content"

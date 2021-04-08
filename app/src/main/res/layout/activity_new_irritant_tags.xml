@@ -92,6 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         app:srcCompat="@drawable/ic_baseline_arrow_back_24"
+        app:backgroundTint="@color/red_200"
         android:layout_marginRight="56dp"
         android:layout_marginBottom="56dp"
         app:layout_constraintRight_toRightOf="parent"
