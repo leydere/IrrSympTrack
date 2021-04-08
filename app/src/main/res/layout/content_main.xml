@@ -12,21 +12,12 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:defaultNavHost="true"
-        app:layout_constraintBottom_toTopOf="@+id/buttonNavToGraphView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/nav_graph" />
 
-    <Button
-        android:id="@+id/buttonNavToGraphView"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:text="@string/generate_graphs"
-        app:layout_constraintTop_toBottomOf="@+id/nav_host_fragment"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="56dp"
-        android:layout_marginRight="56dp" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

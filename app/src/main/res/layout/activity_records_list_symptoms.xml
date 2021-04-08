@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentSecond">
+    tools:context=".ActivityRecordsListSymptoms">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -62,49 +62,6 @@
                     app:layout_constraintTop_toBottomOf="@+id/textview_second" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-        </RelativeLayout>
-
-        <!-- bottom relative layout -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/relLayoutBot"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="56dp"
-            android:layout_marginRight="56dp"
-            android:layout_marginBottom="8dp">
-
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true">
-
-                <Button
-                    android:id="@+id/button_second_navToFirst"
-                    android:layout_width="128dp"
-                    android:layout_height="48dp"
-                    android:text="@string/irritants"/>
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
-
-                <Button
-                    android:id="@+id/button_second_dummy"
-                    android:layout_width="128dp"
-                    android:layout_height="48dp"
-                    android:text="@string/symptoms"
-                    android:backgroundTint="@color/purple_200"
-                    />
-
-            </RelativeLayout>
 
         </RelativeLayout>
 

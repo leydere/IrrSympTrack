@@ -7,9 +7,9 @@
 
     <fragment
         android:id="@+id/FirstFragment"
-        android:name="com.leydere.irrsymptrack.FragmentFirst"
+        android:name="com.leydere.irrsymptrack.ActivityRecordsListIrritants"
         android:label="@string/first_fragment_label"
-        tools:layout="@layout/fragment_first">
+        tools:layout="@layout/activity_records_list_irritants">
 
         <action
             android:id="@+id/action_FirstFragment_to_SecondFragment"
@@ -17,9 +17,9 @@
     </fragment>
     <fragment
         android:id="@+id/SecondFragment"
-        android:name="com.leydere.irrsymptrack.FragmentSecond"
+        android:name="com.leydere.irrsymptrack.ActivityRecordsListSymptoms"
         android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
+        tools:layout="@layout/activity_records_list_symptoms">
 
         <action
             android:id="@+id/action_SecondFragment_to_FirstFragment"

@@ -12,9 +12,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class ActivityMain extends AppCompatActivity {
 
-    Button buttonNavToGraphView;
+    Button buttonNavToGraphView, buttonNavToIrritantRecords, buttonNavToSymptomRecords;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +24,29 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         buttonNavToGraphView = findViewById(R.id.buttonNavToGraphView);
+        buttonNavToIrritantRecords = findViewById(R.id.buttonNavToIrritantRecords);
+        buttonNavToSymptomRecords = findViewById(R.id.buttonNavToSymptomRecords);
 
         buttonNavToGraphView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, ActivityGraphView.class);
+                Intent intent = new Intent(ActivityMain.this, ActivityGraphView.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonNavToIrritantRecords.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityMain.this, ActivityRecordsListIrritants.class);
+                startActivity(intent);
+            }
+        });
+
+        buttonNavToSymptomRecords.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ActivityMain.this, ActivityRecordsListSymptoms.class);
                 startActivity(intent);
             }
         });

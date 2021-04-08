@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.IrrSympTrack">
         <activity
-            android:name=".MainActivity"
+            android:name=".ActivityMain"
             android:label="@string/app_name"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar">
             <intent-filter>
@@ -19,6 +19,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ActivityRecordsListIrritants"
+            android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
+        <activity android:name=".ActivityRecordsListSymptoms"
+            android:theme="@style/Theme.IrrSympTrack.NoActionBar" />
         <activity android:name=".ActivityAddIrritant"
             android:theme="@style/Theme.IrrSympTrack.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
