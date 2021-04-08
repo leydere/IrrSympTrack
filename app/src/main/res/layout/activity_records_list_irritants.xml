@@ -41,6 +41,7 @@
             android:layout_marginBottom="24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            android:backgroundTint="@color/red_200"
             app:srcCompat="@drawable/ic_baseline_add_24"/>
 
         <androidx.recyclerview.widget.RecyclerView

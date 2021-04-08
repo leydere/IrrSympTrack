@@ -14,10 +14,10 @@
         android:layout_marginRight="32dp"
         android:layout_marginLeft="32dp"
         android:layout_marginBottom="4dp"
-        android:padding="10dp"
+        android:padding="16dp"
         app:cardCornerRadius="5dp"
         app:cardElevation="3dp"
-        app:cardBackgroundColor="@color/teal_700">
+        app:cardBackgroundColor="@color/off_white">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -31,14 +31,34 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true">
 
-                <TextView
-                    android:id="@+id/irritant_text_display"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="8dp"
-                    tools:text="TempText"
-                    android:textSize="16dp"
-                    android:textColor="@color/white"/>
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/irritant_text_display"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginLeft="8dp"
+                        tools:text="TempText"
+                        android:textSize="16dp"
+                        android:textColor="@color/red_700"/>
+                    <TextView
+                        android:id="@+id/irritant_under_text_display"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:layout_marginBottom="4dp"
+                        android:layout_marginLeft="8dp"
+                        tools:text="date and such text"
+                        android:textSize="12dp"
+                        android:textColor="@color/red_700"/>
+
+                </LinearLayout>
+
+
 
             </RelativeLayout>
             <RelativeLayout
@@ -50,8 +70,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_baseline_edit_24"
-                    android:layout_margin="4dp"
-                    app:tint="@color/white"/>
+                    android:layout_marginTop="16dp"
+                    android:layout_marginRight="8dp"
+                    app:tint="@color/red_500"/>
 
             </RelativeLayout>
 

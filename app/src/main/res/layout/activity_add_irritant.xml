@@ -12,7 +12,7 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/addIrritantAppbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:theme="@style/Theme.IrrSympTrack.AppBarOverlay"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,18 +21,24 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.IrrSympTrack.PopupOverlay" />
+            app:popupTheme="@style/Theme.IrrSympTrack.PopupOverlay">
 
-        <TextView
-            android:id="@+id/addIrritantToolbarText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#FFFFFFFF"
-            android:textSize="18dp"
-            android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/addIrritantToolbarText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test"
+                android:textColor="#FFFFFFFF"
+                android:textSize="18dp"
+                android:textStyle="bold"/>
+
+    </androidx.appcompat.widget.Toolbar>
+
+
 
     </com.google.android.material.appbar.AppBarLayout>
+
+
 
     <TextView
         android:id="@+id/addIrritantTextFieldTextView"
@@ -206,6 +212,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginRight="32dp"
         android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/red_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_baseline_check_24" />

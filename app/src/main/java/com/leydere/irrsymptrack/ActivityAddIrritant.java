@@ -163,10 +163,8 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
                 }else {
                     addIrritantRecordFAB(calendar, selectedIrritantTagIDsList);
                 }
-                //TODO insert navigate back to mainactivity.firstfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature **nope, unrelated**
-                /*Intent intent = new Intent(ActivityAddIrritant.this, MainActivity.class);
-                intent.putExtra("fragmentNumber", 1);
-                startActivity(intent);*/
+                Intent intent = new Intent(ActivityAddIrritant.this, ActivityRecordsListIrritants.class);
+                startActivity(intent);
             }
         });
 

@@ -36,7 +36,7 @@ public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.
     @NonNull
     @Override
     public AdapterSymptomList.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_custom_symptom_row, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_record_symptom_row, parent, false);
         return new AdapterSymptomList.MyViewHolder(view);
     }
 

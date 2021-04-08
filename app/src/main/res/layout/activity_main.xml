@@ -25,31 +25,57 @@
 
     <Button
         android:id="@+id/buttonNavToIrritantRecords"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:text="Irritant Records"
-        android:layout_margin="16dp"
+        android:layout_marginTop="96dp"
+        android:layout_marginLeft="24dp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/buttonNavToGraphView"/>
+        app:layout_constraintTop_toBottomOf="@+id/mainAppbar"/>
+
+    <TextView
+        android:id="@+id/irritantRecordMainTextView"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="Go to irritant records to view, add, or edit instances of potential irritants."
+        app:layout_constraintLeft_toLeftOf="@+id/buttonNavToIrritantRecords"
+        app:layout_constraintTop_toBottomOf="@+id/buttonNavToIrritantRecords"/>
+
 
     <Button
         android:id="@+id/buttonNavToSymptomRecords"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:text="Symptom Records"
-        android:layout_margin="16dp"
+        android:layout_marginRight="24dp"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/buttonNavToGraphView"/>
+        app:layout_constraintTop_toTopOf="@+id/buttonNavToIrritantRecords"/>
+
+    <TextView
+        android:id="@+id/symptomRecordMainTextView"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="Go to symptom records to view, add, or edit instances of suspected symptoms."
+        app:layout_constraintLeft_toLeftOf="@+id/buttonNavToSymptomRecords"
+        app:layout_constraintTop_toBottomOf="@+id/buttonNavToSymptomRecords"/>
 
     <Button
         android:id="@+id/buttonNavToGraphView"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_width="160dp"
+        android:layout_height="160dp"
         android:text="@string/generate_graphs"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="56dp"
-        android:layout_marginRight="56dp" />
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/irritantRecordMainTextView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:id="@+id/generateGraphsMainTextView"
+        android:layout_width="160dp"
+        android:layout_height="wrap_content"
+        android:text="Go to generate graphs to create graphs based on selected date and irritant-symptom criteria."
+        app:layout_constraintLeft_toLeftOf="@+id/buttonNavToGraphView"
+        app:layout_constraintTop_toBottomOf="@+id/buttonNavToGraphView"/>
 
 
 

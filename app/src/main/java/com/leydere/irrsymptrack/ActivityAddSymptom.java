@@ -166,7 +166,8 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
                 }else {
                     addSymptomRecordFAB(calendar, selectedSymptomTagIDsList);
                 }
-                //TODO insert navigate back to mainactivity.secondfragment here; believe can base off FindToolsApp.AddToolActivity line 63 .requestFocus() feature
+                Intent intent = new Intent(ActivityAddSymptom.this, ActivityRecordsListSymptoms.class);
+                startActivity(intent);
             }
         });
 
