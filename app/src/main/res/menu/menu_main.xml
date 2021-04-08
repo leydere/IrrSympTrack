@@ -2,9 +2,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.leydere.irrsymptrack.ActivityMain">
+
     <item
-        android:id="@+id/action_settings"
-        android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:id="@+id/menu_main_page"
+        android:title="Home"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_irritant_records"
+        android:title="Irritant Records"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_symptom_records"
+        android:title="Symptom Records"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/menu_generate_graphs"
+        android:title="Generate Graphs"
+        app:showAsAction="never" />
+
 </menu>
