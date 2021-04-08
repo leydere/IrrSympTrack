@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -9,256 +9,206 @@
 
 
 
-        <RelativeLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/addIrritantAppbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/Theme.IrrSympTrack.AppBarOverlay"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/addIrritantToolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/relLayout">
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/Theme.IrrSympTrack.PopupOverlay" />
 
-            <!-- top relative layout -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/relLayoutTopBar"
-                android:layout_alignParentTop="true">
+        <TextView
+            android:id="@+id/addIrritantToolbarText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#FFFFFFFF"
+            android:textSize="18dp"
+            android:textStyle="bold"/>
 
-                <!-- top toolbar -->
-                <com.google.android.material.appbar.AppBarLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+    </com.google.android.material.appbar.AppBarLayout>
 
-                    <androidx.appcompat.widget.Toolbar
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/toolbarTop">
+    <TextView
+        android:id="@+id/addIrritantTextFieldTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Irritant Title"
+        android:textSize="18dp"
+        app:layout_constraintTop_toBottomOf="@+id/addIrritantAppbar"/>
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=""
-                            android:textColor="#FFFFFFFF"
-                            android:textSize="18dp"
-                            android:textStyle="bold"
-                            android:id="@+id/addIrritantToolbarText"/>
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textFieldIrritantTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="TITLE"
+        android:layout_gravity="center"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="8dp"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/addIrritantTextFieldTextView">
 
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/editTextIrritantTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:imeOptions="actionDone"/>
 
-                    </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.appbar.AppBarLayout>
+    <!-- start of time date section -->
+    <TextView
+        android:id="@+id/addIrritantTimeDateTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        android:text="Irritant Time &amp; Date"
+        android:textSize="18dp"
+        app:layout_constraintTop_toBottomOf="@+id/textFieldIrritantTitle"/>
 
-            </RelativeLayout>
+    <Button
+        android:id="@+id/dateButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Select Date"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/timeButton"
+        app:layout_constraintTop_toBottomOf="@+id/addIrritantTimeDateTextView"/>
 
-            <!-- middle relative layout -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:id="@+id/relLayoutMiddle"
-                android:layout_below="@+id/relLayoutTopBar"
-                android:layout_above="@+id/relLayoutBotBar">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:id="@+id/addLinearLayout"
-                    android:orientation="vertical"
-                    android:layout_marginTop="56dp"
-                    android:layout_marginLeft="56dp"
-                    android:layout_marginRight="56dp">
-
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Irritant Title"
-                        android:textSize="18dp"/>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/textFieldIrritantTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="TITLE"
-                        android:layout_gravity="center"
-                        android:layout_marginBottom="24dp"
-                        app:boxCornerRadiusBottomEnd="8dp"
-                        app:boxCornerRadiusTopEnd="8dp"
-                        app:boxCornerRadiusBottomStart="8dp"
-                        app:boxCornerRadiusTopStart="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/editTextIrritantTitle"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="text"
-                            android:imeOptions="actionDone"/>
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <!-- time date picker relative layout-->
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="8dp"
-                        android:text="Irritant Time &amp; Date"
-                        android:textSize="18dp"/>
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginRight="16dp"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginBottom="24dp">
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/selectDateLinearLayout"
-                                android:orientation="vertical">
-                                <Button
-                                    android:id="@+id/dateButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:padding="10dp"
-                                    android:text="Select Date" />
-
-                                <TextView
-                                    android:id="@+id/dateTextView"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:padding="10dp" />
-                            </LinearLayout>
-                        </RelativeLayout>
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true">
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:id="@+id/selectTimeLinearLayout"
-                                android:orientation="vertical">
-                                <Button
-                                    android:id="@+id/timeButton"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:padding="10dp"
-                                    android:text="Select Time" />
-
-                                <TextView
-                                    android:id="@+id/timeTextView"
-                                    android:layout_width="fill_parent"
-                                    android:layout_height="wrap_content"
-                                    android:gravity="center"
-                                    android:padding="10dp" />
-                            </LinearLayout>
-                        </RelativeLayout>
-                    </RelativeLayout>
-                    <!-- timedate relative layout ends-->
+    <TextView
+        android:id="@+id/dateTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/dateButton"
+        app:layout_constraintTop_toBottomOf="@+id/dateButton"/>
 
 
-                    <!-- start of severity & tags layout -->
+    <Button
+        android:id="@+id/timeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Select Time"
+        android:layout_marginTop="8dp"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintLeft_toRightOf="@+id/dateButton"
+        app:layout_constraintTop_toBottomOf="@+id/addIrritantTimeDateTextView"/>/>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:layout_marginBottom="24dp">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:text="Irritant Severity"
-                            android:textSize="18dp"/>
+    <TextView
+        android:id="@+id/timeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="@+id/timeButton"
+        app:layout_constraintTop_toBottomOf="@+id/timeButton"/>
+    <!-- end of time date layout -->
 
-                        <RadioGroup
-                            android:id="@+id/radioGroupIrritant"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
+    <TextView
+        android:id="@+id/addIrritantSeverityTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Irritant Severity"
+        android:textSize="18dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dateTextView"/>
 
-                            <RadioButton
-                                android:id="@+id/radioButtonIrrLow"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="LOW" />
+    <RadioGroup
+        android:id="@+id/radioGroupIrritant"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/addIrritantSeverityTextView">
 
-                            <RadioButton
-                                android:id="@+id/radioButtonIrrMid"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="MID" />
+        <RadioButton
+            android:id="@+id/radioButtonIrrLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LOW" />
 
-                            <RadioButton
-                                android:id="@+id/radioButtonIrrHigh"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="HIGH" />
-                        </RadioGroup>
+        <RadioButton
+            android:id="@+id/radioButtonIrrMid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MID" />
 
-                    </LinearLayout>
+        <RadioButton
+            android:id="@+id/radioButtonIrrHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="HIGH" />
+    </RadioGroup>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp">
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true">
+    <TextView
+        android:id="@+id/addIrritantTagTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Irritant Tags"
+        android:textSize="18dp"
+        android:layout_marginLeft="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupIrritant"/>
 
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="8dp"
-                                android:text="Irritant Tags"
-                                android:textSize="18dp"/>
-
-                        </RelativeLayout>
-                        <RelativeLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true">
-
-                            <Button
-                                android:id="@+id/newIrritantTagsButton"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:padding="10dp"
-                                android:text="Create New Tag" />
-
-                        </RelativeLayout>
-                    </RelativeLayout>
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/irritantTagSelectionRecyclerView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fabAddIrritantRecord"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|end"
-                        app:srcCompat="@drawable/ic_baseline_check_24" />
-
-                </LinearLayout> <!--end of linear layout internal to main relative layout-->
-            </RelativeLayout>
-
-            <!-- bottom relative layout -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:id="@+id/relLayoutBotBar"
-                android:layout_alignParentBottom="true">
+    <Button
+        android:id="@+id/newIrritantTagsButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="Create New Tag"
+        android:layout_marginRight="40dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroupIrritant"/>
 
 
 
-            </RelativeLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/irritantTagSelectionRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="24dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/newIrritantTagsButton"/>
 
-        </RelativeLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddIrritantRecord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/ic_baseline_check_24" />
 
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

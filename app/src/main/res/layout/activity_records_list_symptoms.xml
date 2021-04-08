@@ -7,66 +7,50 @@
     android:layout_height="match_parent"
     tools:context=".ActivityRecordsListSymptoms">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/relLayout">
 
-        <!-- top relative layout -->
-        <RelativeLayout
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/symptomRecordsAppbar"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:id="@+id/relLayoutTop"
-            android:layout_alignParentTop="true">
+            android:layout_height="wrap_content"
+            android:theme="@style/Theme.IrrSympTrack.AppBarOverlay"
+            app:layout_constraintTop_toTopOf="parent">
 
-        </RelativeLayout>
-
-        <!-- middle relative layout -->
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/relLayoutMiddle"
-            android:layout_below="@+id/relLayoutTop"
-            android:layout_above="@+id/relLayoutBot">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/symptomRecordsToolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/Theme.IrrSympTrack.PopupOverlay" />
 
-                <TextView
-                    android:id="@+id/textview_second"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text='Symptoms Fragment'
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"  />
+        </com.google.android.material.appbar.AppBarLayout>
 
-                    <com.google.android.material.floatingactionbutton.FloatingActionButton
-                        android:id="@+id/fab_navToAddSymptom"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom|end"
-                        android:layout_marginRight="32dp"
-                        android:layout_marginBottom="24dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:srcCompat="@drawable/ic_baseline_add_24"
-                        />
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/symptomRecyclerView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="top"
-                    app:layout_constraintEnd_toEndOf="@+id/innerConstraintLayout"
-                    app:layout_constraintTop_toBottomOf="@+id/textview_second" />
+        <TextView
+            android:id="@+id/symptomRecordsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Symptom Records"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/symptomRecordsAppbar"  />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_navToAddSymptom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="32dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@drawable/ic_baseline_add_24" />
 
-        </RelativeLayout>
-
-    </RelativeLayout>
-
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/symptomRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/symptomRecordsTextView" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
