@@ -7,11 +7,10 @@
     android:layout_height="match_parent"
     tools:context=".ActivityRecordsListSymptoms">
 
-
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/symptomRecordsAppbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:theme="@style/Theme.IrrSympTrack.AppBarOverlay"
             app:layout_constraintTop_toTopOf="parent">
 

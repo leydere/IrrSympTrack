@@ -3,11 +3,15 @@ package com.leydere.irrsymptrack;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +32,8 @@ public class ActivityRecordsListSymptoms extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_records_list_symptoms);
+        Toolbar toolbar = findViewById(R.id.symptomRecordsToolbar);
+        setSupportActionBar(toolbar);
 
         symptomRecyclerView = findViewById(R.id.symptomRecyclerView);
         fab_navToAddSymptom = findViewById(R.id.fab_navToAddSymptom);
@@ -61,4 +67,43 @@ public class ActivityRecordsListSymptoms extends AppCompatActivity {
         symptomRecyclerView.setAdapter(adapter);
     }
 
+    //region Menu support
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.menu_main_page) {
+            Intent intent = new Intent(ActivityRecordsListSymptoms.this, ActivityMain.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.menu_irritant_records) {
+            Intent intent = new Intent(ActivityRecordsListSymptoms.this, ActivityRecordsListIrritants.class);
+            startActivity(intent);
+            return true;
+        }
+        if (id == R.id.menu_symptom_records) {
+            Toast.makeText(ActivityRecordsListSymptoms.this, "Already at the symptom records page.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (id == R.id.menu_generate_graphs) {
+            Intent intent = new Intent(ActivityRecordsListSymptoms.this, ActivityGraphView.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    //endregion
 }
