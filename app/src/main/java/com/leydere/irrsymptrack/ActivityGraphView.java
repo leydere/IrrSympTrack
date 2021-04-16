@@ -121,6 +121,14 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
                     endCalendar.add(Calendar.DATE, 1);
                     startDateCharSequence = DateFormat.format("yyyy-MM-dd", startCalendar);
                     endDateCharSequence = DateFormat.format("yyyy-MM-dd", endCalendar);
+                    //TODO: Need to programmatically set the upper and lower bounds of the x-axis to correspond to the input date range.
+                    //TODO: Alternatively could make the graph scrollable. Might be a reasonable solution.
+                    //TODO: Possible additional formatting/override of x-axis labeler would allow for this.
+                    /*
+                    graph.getViewport().setXAxisBoundsManual(true);
+                    graph.getViewport().setMinX(endCalendar.getTimeInMillis());
+                    graph.getViewport().setMaxX(startCalendar.getTimeInMillis());
+                    */
                     endCalendar.add(Calendar.DATE, -1);
                     calendarSet = true;
                 }
