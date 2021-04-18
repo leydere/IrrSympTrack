@@ -13,6 +13,9 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
+/**
+ * ActivityMain class is the landing page activity.  Contains buttons for navigation to other activities only.
+ */
 public class ActivityMain extends AppCompatActivity {
 
     Button buttonNavToGraphView, buttonNavToIrritantRecords, buttonNavToSymptomRecords;
@@ -58,19 +61,14 @@ public class ActivityMain extends AppCompatActivity {
     //region Menu support
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_main_page) {
             Toast.makeText(ActivityMain.this, "Already at the main page.", Toast.LENGTH_SHORT).show();
             return true;

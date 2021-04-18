@@ -17,6 +17,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Adapter class for the recyclerview utilized in ActivityRecordsListSymptoms.java.
+ */
 public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.MyViewHolder> {
     private final Context context;
     private ArrayList<ModelSymptom> symptomList;
@@ -46,6 +49,11 @@ public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.
         return new AdapterSymptomList.MyViewHolder(view);
     }
 
+    /**
+     * Sets the details displayed in the recyclerview cards. OnClick navigates to ActivityAddSymptom.java.  Edit record variant is utilized by sending the symptom record ID as an extra.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull AdapterSymptomList.MyViewHolder holder, int position) {
         //get time-date and format for use
@@ -62,7 +70,6 @@ public class AdapterSymptomList extends RecyclerView.Adapter<AdapterSymptomList.
         holder.symptomParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //send control to the add-edit symptom activity?
                 Intent intent = new Intent(context, ActivityAddSymptom.class);
                 intent.putExtra("id", symptomList.get(position).getId());
                 context.startActivity(intent);

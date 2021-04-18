@@ -21,6 +21,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * ActivityRecordsListSymptoms displays all symptom records in a recycler view.  Record cards can be clicked to edit records.  FAB can be clicked to create a new record.  Menu navigation is enabled.
+ */
 public class ActivityRecordsListSymptoms extends AppCompatActivity {
 
     ArrayList<ModelSymptom> allSymptomsList;
@@ -28,6 +31,10 @@ public class ActivityRecordsListSymptoms extends AppCompatActivity {
     RecyclerView symptomRecyclerView;
     FloatingActionButton fab_navToAddSymptom;
 
+    /**
+     * OnCreate the FAB onClickListener and recyclerview adapter are set. The adapter populates the recyclerview and enables its onClickListener.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,12 +60,19 @@ public class ActivityRecordsListSymptoms extends AppCompatActivity {
 
     }
 
+    /**
+     * Returns list of symptoms to be displayed in the recyclerview.
+     * @return
+     */
     private ArrayList<ModelSymptom> getAllSymptoms(){
         ArrayList<ModelSymptom> arrayListToReturn = new ArrayList<>();
         arrayListToReturn.addAll(databaseHelper.getAllSymptoms());
         return arrayListToReturn;
     }
 
+    /**
+     * Defines settings for the recyclerview including what it is populated with and how onclick events are handled.  See AdapterSymptomList.java for more details.
+     */
     private void setAdapter() {
         AdapterSymptomList adapter = new AdapterSymptomList(allSymptomsList, ActivityRecordsListSymptoms.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ActivityRecordsListSymptoms.this);

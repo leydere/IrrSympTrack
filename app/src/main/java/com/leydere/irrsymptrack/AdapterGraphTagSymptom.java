@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter class for the recyclerview utilized in ActivityGraphView.java.
+ */
 public class AdapterGraphTagSymptom extends RecyclerView.Adapter<AdapterGraphTagSymptom.MyViewHolder> {
     private final Context context;
     private ArrayList<ModelSymptomTag> symptomTagList;
@@ -49,6 +52,11 @@ public class AdapterGraphTagSymptom extends RecyclerView.Adapter<AdapterGraphTag
         return new AdapterGraphTagSymptom.MyViewHolder(view);
     }
 
+    /**
+     * Sets the details displayed in the recyclerview cards. OnClick sends tag record ID and title to ActivityGraphView.java.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull AdapterGraphTagSymptom.MyViewHolder holder, int position) {
         String titleFound = symptomTagList.get(position).getSymTagTitle();

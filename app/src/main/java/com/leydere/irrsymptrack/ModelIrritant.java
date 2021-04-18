@@ -1,5 +1,8 @@
 package com.leydere.irrsymptrack;
 
+/**
+ * Model object used in passing information back and forth between application and DB.
+ */
 public class ModelIrritant {
 
     private int id;

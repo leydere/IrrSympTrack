@@ -18,6 +18,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * Adapter class for the recyclerview utilized in ActivityRecordsListIrritants.java.
+ */
 public class AdapterIrritantList extends RecyclerView.Adapter<AdapterIrritantList.MyViewHolder> {
     private final Context context;
     private ArrayList<ModelIrritant> irritantList;
@@ -47,6 +50,11 @@ public class AdapterIrritantList extends RecyclerView.Adapter<AdapterIrritantLis
         return new AdapterIrritantList.MyViewHolder(view);
     }
 
+    /**
+     * Sets the details displayed in the recyclerview cards. OnClick navigates to ActivityAddIrritant.java.  Edit record variant is utilized by sending the irritant record ID as an extra.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull AdapterIrritantList.MyViewHolder holder, int position) {
         //get time-date and format for use
@@ -63,7 +71,6 @@ public class AdapterIrritantList extends RecyclerView.Adapter<AdapterIrritantLis
         holder.irritantParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //send control to the add-edit symptom activity?
                 Intent intent = new Intent(context, ActivityAddIrritant.class);
                 intent.putExtra("id", irritantList.get(position).getId());
                 context.startActivity(intent);

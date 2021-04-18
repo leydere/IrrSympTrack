@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter class for the recyclerview utilized in ActivityAddIrritant.java.
+ */
 public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTagIrritantSelection.MyViewHolder> {
     private final Context context;
     private ArrayList<Integer> selectedIrritantTagIDsList;
@@ -23,8 +26,6 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
 
     int lightRed = Color.parseColor("#ff5c5c");
     int standardRed = Color.parseColor("#ff1f1f");
-
-
 
     public AdapterTagIrritantSelection(ArrayList<Integer> selectedIrritantTagIDsList, ArrayList<ModelIrritantTag> irritantTagList, Context context, OnItemClickListener onItemClickListener){
         this.selectedIrritantTagIDsList = selectedIrritantTagIDsList;
@@ -59,6 +60,11 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
         return new AdapterTagIrritantSelection.MyViewHolder(view);
     }
 
+    /**
+     * Sets details of recyclerview cards including color based on whether or not the tag record is selected or not.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull AdapterTagIrritantSelection.MyViewHolder holder, int position) {
         String titleFound = irritantTagList.get(position).getIrrTagTitle();
@@ -76,17 +82,19 @@ public class AdapterTagIrritantSelection extends RecyclerView.Adapter<AdapterTag
             }
         }
 
+        //TODO: consider removing this; ensure functional after removal though
         holder.irritantTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //not sure if I have any use for this on click listener after having implemented card view listener
-
             }
         });
 
+        /**
+         * Functions as toggle for is tag selected or not.  Card color is set accordingly.  Tag record id is sent to AddIrritantActivity to support correct tag associative record data.
+         */
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
-            // id of model associated to clicked card is sent to activity along with toggle status - this supports creating the correct associative table data
             public void onClick(View v) {
                 ColorStateList c = holder.cardView.getCardBackgroundColor();
                 int i = c.getDefaultColor();

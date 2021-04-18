@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * ActivityAddSymptom is used to create new symptom records. Edit record variant is accessed if symptom record id is passed to activity as an extra.
+ * ActivityNewSymptomTags is accessible through this activity. FAB creates new record or updates existing record depending
+ * on which variant of the activity has been selected.
+ */
 public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagIrritantSelection.OnItemClickListener{
 
     ArrayList<ModelSymptomTag> symptomTagsList;
@@ -45,6 +50,11 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
     DatabaseHelper databaseHelper;
     RecyclerView symptomTagSelectionRecyclerView;
 
+    /**
+     * OnCreate recycler view is populated with existing symptom tags, fields for input are set to existing record if record id was passed to activity.
+     * Otherwise time and date default to current calendar instance and other fields remain blank.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,11 +85,7 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
         // if statement that determines if to display a record or start with blank
         if (idOfExistingSymptomRecord > -1) {
             addSymptomToolbarText.setText("Edit Existing Symptom Record");
-            //editing a record
-            //TODO: if returned symptom record below is id -1 abort process
             ModelSymptom symptomToEdit = databaseHelper.getSingleSymptomRecord(idOfExistingSymptomRecord);
-            //Toast.makeText(ActivityAddSymptom.this, "TimeDate from pushed extra == " + symptomToEdit.getSymTimeDate(), Toast.LENGTH_SHORT).show();
-
             //set title text
             editTextSymptomTitle.setText(symptomToEdit.getSymTitle());
             //get time-date and format for use
@@ -98,7 +104,6 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
             timeTextView.setText(timeCharSequence);
             //set severity radio button
             try{
-                //Toast.makeText(ActivityAddSymptom.this, "Sev record is: " + symptomToEdit.getSymSeverity(), Toast.LENGTH_SHORT).show();
                 int i = symptomToEdit.getSymSeverity();
                 if (i == 1){
                     radioButtonSymLow.setChecked(true);
@@ -110,7 +115,6 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
                     radioButtonSymHigh.setChecked(true);
                     radioSymIdSelected = 3;
                 }
-                //Toast.makeText(ActivityAddSymptom.this, "Radio selected is: " + radioSymIdSelected, Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(ActivityAddSymptom.this, "input error from severity", Toast.LENGTH_SHORT).show();
             }
@@ -189,6 +193,9 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
 
     } //end of OnCreate
 
+    /**
+     * OnResume the tag list and recyclerview are reset to accommodate any tags that may have been added.
+     */
     @Override
     protected void onResume(){
         super.onResume();
@@ -200,6 +207,9 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
 
     }
 
+    /**
+     * Defines settings for the recyclerview including what it is populated with and how onclick events are handled.  See AdapterTagSymptomSelection.java for more details.
+     */
     private void setSymptomTagsSelectionAdapter() {
         AdapterTagSymptomSelection adapter = new AdapterTagSymptomSelection(selectedSymptomTagIDsList, symptomTagsList, this, this::onItemClick);
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL);
@@ -209,6 +219,13 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
     }
 
     //region FAB supporting functions
+
+    /**
+     * Creates symptom model object, adds object to DB as new record.  Success and failure toasts for symptom record added and associative tag records added.
+     * Toast for failure to create model object.
+     * @param calendar
+     * @param selectedSymptomTagIDsList
+     */
     private void addSymptomRecordFAB(Calendar calendar, ArrayList<Integer> selectedSymptomTagIDsList) {
 
         //format dateTime for DB
@@ -232,7 +249,7 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
             Toast.makeText(ActivityAddSymptom.this, "record added failure", Toast.LENGTH_SHORT).show();
         }
 
-        // create associative data for new records here - uses irritant ID of newly created record & list of selected tag IDs
+        // create associative data for new records here - uses symptom ID of newly created record & list of selected tag IDs
         int numberOfTagsIDs = selectedSymptomTagIDsList.size();
         if (numberOfTagsIDs > 0 && returnedID != -1){
             boolean associativeSuccess = databaseHelper.createSymptomTagAssociativeRecord(returnedID, selectedSymptomTagIDsList);
@@ -245,6 +262,12 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
 
     }
 
+    /**
+     * Creates symptom model object, updates object to existing record in DB.  Success and failure toasts for symptom record updated and associative tag records updated.
+     * Toast for failure to create model object.
+     * @param calendar
+     * @param selectedSymptomTagIDsList
+     */
     private void updateExistingSymptomRecordFAB(Calendar calendar, ArrayList<Integer> selectedSymptomTagIDsList) {
 
         //format dateTime for DB
@@ -280,7 +303,11 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
         }
     }
 
-
+    /**
+     * Formats the calendar data to the format required by the DB to be recognized as a datetime record.
+     * @param calendar
+     * @return
+     */
     private CharSequence dateTimeFormatToDB(Calendar calendar) {
         CharSequence dateCharSequence = DateFormat.format("yyyy-MM-dd", calendar);
         CharSequence timeCharSequence = DateFormat.format("HH:mm:ss.sss", calendar);
@@ -290,6 +317,11 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
     //endregion
 
     //region Supporting time date methods
+
+    /**
+     * Accesses the calendar widget when date button is clicked.  Sets the calendar object to the selected date.
+     * @param calendar1
+     */
     private void handleDateButton(Calendar calendar1) {
 
         int YEAR = calendar1.get(Calendar.YEAR);
@@ -313,6 +345,10 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
         datePickerDialog.show();
     }
 
+    /**
+     * Accesses the clock widget when time button is clicked. Sets the calendar object to the selected time.
+     * @param calendar1
+     */
     private void handleTimeButton(Calendar calendar1) {
         int HOUR = calendar1.get(Calendar.HOUR_OF_DAY);
         int MINUTE = calendar1.get(Calendar.MINUTE);
@@ -335,6 +371,11 @@ public class ActivityAddSymptom extends AppCompatActivity implements AdapterTagI
     }
     //endregion
 
+    /**
+     * OnItemClick of tag recyclerview cards updates the list used to track which tags will be associated to this symptom record when saved.
+     * @param symTagModelID
+     * @param tagRecordSelected
+     */
     @Override
     public void onItemClick(int symTagModelID, boolean tagRecordSelected) {
         boolean listContains = selectedSymptomTagIDsList.contains(symTagModelID);

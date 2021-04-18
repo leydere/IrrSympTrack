@@ -17,6 +17,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ActivityNewSymptomTags is used to create new symptom tag records.  Add button creates new record. FAB returns to ActivityAddSymptom.
+ */
 public class ActivityNewSymptomTags extends AppCompatActivity implements AdapterTagSymptomList.OnItemClickListener {
 
     DatabaseHelper databaseHelper;
@@ -25,9 +28,12 @@ public class ActivityNewSymptomTags extends AppCompatActivity implements Adapter
     EditText symptomTagTitleEditText;
     Button addNewSymptomTagRecordButton;
     FloatingActionButton fabReturnSelectedSymTagRecord;
-    ArrayList<Integer> selectedSymptomTagIdsList; //so far no use I believe
     int idOfExistingSymptomRecord;
 
+    /**
+     * OnCreate recycler view is populated with existing symptom tags and on click listeners are set.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +48,6 @@ public class ActivityNewSymptomTags extends AppCompatActivity implements Adapter
         Intent intent = getIntent();
         idOfExistingSymptomRecord = intent.getIntExtra("id", -1); //record Id from add record activity - brought here to be passed back if using navigate button
 
-        selectedSymptomTagIdsList = new ArrayList<>(); //so far no use I believe, this was meant to be part of a larger solution of passing selected data back a forth between adapter and activity
-        //irritantTagsList = getAllIrritantTags();
         symptomTagsList = new ArrayList<>();
         symptomTagsList.addAll(databaseHelper.getAllSymptomTags());
         setSymptomTagsListAdapter();
@@ -115,6 +119,11 @@ public class ActivityNewSymptomTags extends AppCompatActivity implements Adapter
         });
     }
 
+    /**
+     * Checks for duplicate records to support duplicate records not being created.
+     * @param inputText
+     * @return
+     */
     public boolean doesSymptomTagRecordAlreadyExist(String inputText){
         List<ModelSymptomTag> allSymptomTagsList = getAllSymptomTags();
         for (ModelSymptomTag var : allSymptomTagsList) {
@@ -126,6 +135,7 @@ public class ActivityNewSymptomTags extends AppCompatActivity implements Adapter
         return false;
     }
 
+    //TODO: see if can remove this after editing above function
     //redundant as only second line in function serves a purpose.  Creates a new list to return a list.
     private ArrayList<ModelSymptomTag> getAllSymptomTags(){
         ArrayList<ModelSymptomTag> arrayListToReturn = new ArrayList<>();
@@ -133,6 +143,9 @@ public class ActivityNewSymptomTags extends AppCompatActivity implements Adapter
         return arrayListToReturn;
     }
 
+    /**
+     * Defines settings for the recyclerview including what it is populated with and how onclick events are handled.  See AdapterTagSymptomList.java for more details.
+     */
     private void setSymptomTagsListAdapter() {
         AdapterTagSymptomList adapter = new AdapterTagSymptomList(symptomTagsList, this, this::onItemClick);
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(10, StaggeredGridLayoutManager.HORIZONTAL);
@@ -143,7 +156,7 @@ public class ActivityNewSymptomTags extends AppCompatActivity implements Adapter
 
     @Override
     public void onItemClick(int position) {
-        //TODO: pretty sure I can do away with the on click interface in the new tags activity
+        //TODO: Remove onItemClick and test functionality.
     }
 
 }

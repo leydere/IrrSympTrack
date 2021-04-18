@@ -32,6 +32,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * ActivityGraphView allows user to select records to be displayed in a graph. FAB populates graph with selected data. Menu navigation is enabled.
+ */
 public class ActivityGraphView extends AppCompatActivity implements AdapterGraphTagIrritant.OnItemClickListener, AdapterGraphTagSymptom.OnItemClickListener {
 
     PointsGraphSeries<DataPoint> symptomSeries, irritantSeries;
@@ -45,9 +48,12 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
     ArrayList<ModelSymptomTag> symptomTagsList;
     int selectedIrritantTagID, selectedSymptomTagID;
 
-    ArrayList<ModelSymptom> allSymptomsList;
     DatabaseHelper databaseHelper;
 
+    /**
+     * OnCreate onClickListeners are set, recycler views are populated with existing tag records and start and end date are defaulted to today's date.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,6 +113,11 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
             }
         });
 
+        /**
+         * FAB generates graph.  Checks for minimum input requirements (end date not before start date, both irritant and symptom have been selected).
+         * User prompted with toast if input requirements not met.  If conditions are met graph population is attempted. User receives toast message on success.
+         * Known issues with bounds of x-axis not setting correctly with some inputs and graph sometimes not displaying all or any data points when <5 data points in selection.
+         */
         fabPopulateGraph.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -159,6 +170,13 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
 
     }
 
+    /**
+     * Requests DB query using symptom tag ID and date range.  Results should be returned as data point model objects that are derived from symptom records as severity sums grouped by dates.
+     * @param tagId
+     * @param startDateRange
+     * @param endDateRange
+     * @return
+     */
     public PointsGraphSeries<DataPoint> symptomGraphPopulationWithUserInput(int tagId, String startDateRange, String endDateRange) {
         int y;
         Date x = new Date();
@@ -182,6 +200,13 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         return series;
     }
 
+    /**
+     * Requests DB query using irritant tag ID and date range.  Results should be returned as data point model objects that are derived from irritant records as severity sums grouped by dates.
+     * @param tagId
+     * @param startDateRange
+     * @param endDateRange
+     * @return
+     */
     public PointsGraphSeries<DataPoint> irritantGraphPopulationWithUserInput(int tagId, String startDateRange, String endDateRange) {
         int y;
         Date x = new Date();
@@ -205,6 +230,9 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         return series;
     }
 
+    /**
+     * Defines settings for the recyclerview including what it is populated with and how onclick events are handled.  See AdapterGraphTagIrritant.java for more details.
+     */
     private void setIrritantTagsSelectionAdapter() {
         AdapterGraphTagIrritant adapter = new AdapterGraphTagIrritant(irritantTagsList, this, this::onIrrItemClick);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -213,6 +241,9 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         irritantGraphRecyclerView.setAdapter(adapter);
     }
 
+    /**
+     * Defines settings for the recyclerview including what it is populated with and how onclick events are handled.  See AdapterGraphTagSymptom.java for more details.
+     */
     private void setSymptomTagsSelectionAdapter() {
         AdapterGraphTagSymptom adapter = new AdapterGraphTagSymptom(symptomTagsList, this, this::onSymItemClick);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -235,6 +266,11 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
 
     }
 
+    /**
+     * Accesses the calendar widget when date button is clicked.  Sets the calendar object to the selected date.
+     * @param calendar
+     * @param textView
+     */
     private void handleCalendarWidget(Calendar calendar, TextView textView) {
 
         int YEAR = calendar.get(Calendar.YEAR);
@@ -261,19 +297,14 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
     //region Menu support
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_main_page) {
             Intent intent = new Intent(ActivityGraphView.this, ActivityMain.class);
             startActivity(intent);
@@ -298,161 +329,4 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
     }
     //endregion
 
-    //region Unused experimental clutter functions
-
-    public PointsGraphSeries<DataPoint> testPointSymptomSeriesDpModel(int tagId) {
-        int y;
-        Date x = new Date();
-        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
-        ArrayList<ModelDataPoint> selectedDataPointList = databaseHelper.getSelectedSymptomsDateSpecificNoClock(tagId);
-
-        for (ModelDataPoint modelDataPoint : selectedDataPointList) {
-            //y = sev
-            y = modelDataPoint.getDpSeverity();
-            //x = date
-            //set db time data to calendar format - took this from the load existing record to add symptom activity
-            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
-            try{
-                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
-                x = calendar.getTime();
-            } catch (Exception e) {
-                Toast.makeText(ActivityGraphView.this, "input error from irritant calendar", Toast.LENGTH_SHORT).show();
-            }
-            series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
-        }
-
-        return series;
-    }
-
-    public PointsGraphSeries<DataPoint> testPointIrritantSeriesDpModel(int tagId) {
-        int y;
-        Date x = new Date();
-        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
-        ArrayList<ModelDataPoint> selectedDataPointList = databaseHelper.getSelectedIrritantsDateSpecificNoClock(tagId);
-
-        for (ModelDataPoint modelDataPoint : selectedDataPointList) {
-            //Toast.makeText(ActivityGraphView.this, "model date = " + modelDataPoint.getDpDate() + " model severity sum = " + modelDataPoint.getDpSeverity(), Toast.LENGTH_SHORT).show();
-            //y = sev
-            y = modelDataPoint.getDpSeverity();
-            //Toast.makeText(ActivityGraphView.this, "model severity sum = " + y, Toast.LENGTH_SHORT).show();
-            //x = date
-            //set db time data to calendar format - took this from the load existing record to add symptom activity
-            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
-            try{
-                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
-                x = calendar.getTime();
-                //Toast.makeText(ActivityGraphView.this, "model date = " + x, Toast.LENGTH_SHORT).show();
-            } catch (Exception e) {
-                Toast.makeText(ActivityGraphView.this, "input error from irritant calendar", Toast.LENGTH_SHORT).show();
-            }
-            series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
-        }
-
-        return series;
-    }
-
-
-
-    //Returns selected irritant records.  Modeled after symptom function of the same purpose.
-    public PointsGraphSeries<DataPoint> testPointIrritantSeries(int tagId) {
-        int y;
-        Date x = new Date();
-        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
-        ArrayList<ModelIrritant> selectedIrritantsList = databaseHelper.getSelectedIrritants(tagId);
-
-        for (ModelIrritant modelIrritant : selectedIrritantsList) {
-            //y = sev
-            int severity = Integer.valueOf(modelIrritant.getIrrSeverity());
-            y = severity;
-            //x = date
-            //set db time data to calendar format - took this from the load existing record to add symptom activity
-            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
-            try{
-                calendar.setTime(dbStringToCalendar.parse(modelIrritant.getIrrTimeDate()));
-                x = calendar.getTime();
-            } catch (Exception e) {
-                Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
-            }
-            series.appendData(new DataPoint(x, y), true, selectedIrritantsList.size());
-        }
-
-        return series;
-    }
-
-
-
-    //This test function should be close to the final function needed.  Severity = y-axis, date = x-axis, filtered by selected tag.
-    public PointsGraphSeries<DataPoint> testPointSymptomSeries(int tagId) {
-        int y;
-        Date x = new Date();
-        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
-        ArrayList<ModelSymptom> selectedSymptomsList = databaseHelper.getSelectedSymptoms(tagId);
-
-        for (ModelSymptom modelSymptom : selectedSymptomsList) {
-            //y = sev
-            int severity = Integer.valueOf(modelSymptom.getSymSeverity());
-            y = severity;
-            //x = date
-            //set db time data to calendar format - took this from the load existing record to add symptom activity
-            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
-            try{
-                calendar.setTime(dbStringToCalendar.parse(modelSymptom.getSymTimeDate()));
-                x = calendar.getTime();
-            } catch (Exception e) {
-                Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
-            }
-            series.appendData(new DataPoint(x, y), true, selectedSymptomsList.size());
-        }
-
-        return series;
-    }
-
-    // In this test series the goal is to have dates along the x-axis of the graph and severity along the y-axis of the graph.
-    public LineGraphSeries<DataPoint> testLineSeries1() {
-        int y,x;
-        x = 0;
-        LineGraphSeries<DataPoint> series1 = new LineGraphSeries<DataPoint>();
-
-        //Let's try going through each DB item one by one, setting the data to ints, and appending to series.
-        //In the final version I am likely to do some of the date grouping on the DB side.
-        allSymptomsList.addAll(databaseHelper.getAllSymptoms()); //shortcut around redundant getAllSymptoms method
-        for (int i = 0; i < allSymptomsList.size(); i++) {
-            ModelSymptom modelSymptom = allSymptomsList.get(i);
-
-            //y = sev
-            int severity = Integer.valueOf(modelSymptom.getSymSeverity());
-            y = severity;
-            //x = date
-            String date = modelSymptom.getSymTimeDate();
-            //set time data to calendar - took this from the load existing record to add symptom activity
-            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
-            try{
-                calendar.setTime(dbStringToCalendar.parse(date));
-                //Toast.makeText(ActivityGraphView.this, "HERE!", Toast.LENGTH_SHORT).show(); //resolved reaching here with Calendar get instance
-                CharSequence dateCharSequence = DateFormat.format("yyyyMMdd", calendar);
-                int formattedDate = Integer.parseInt(dateCharSequence.toString());
-                x = formattedDate;
-            } catch (Exception e) {
-                Toast.makeText(ActivityGraphView.this, "input error from calendar", Toast.LENGTH_SHORT).show();
-            }
-            this.symptomSeries.appendData(new DataPoint(x, y), true, allSymptomsList.size());
-        }
-        return series1;
-    }
-
-    //First graph series function.  Testing graph population using linear function.
-    private PointsGraphSeries<DataPoint> createLinearSeries(){
-        int y,x;
-        x = 0;
-        PointsGraphSeries<DataPoint> series1 = new PointsGraphSeries<DataPoint>();
-        // This is were the math happens. x & y is set and then appended as data points to the line graph series.
-        for (int i = 0; i<6; i++){
-            x = x + 1;
-            y = x * 2 + 1;
-
-            this.symptomSeries.appendData(new DataPoint(x, y), true, 6); //Youtuber says maxDataPoints attribute must equal number of data points in series
-        }
-        return series1;
-    }
-    //endregion
 }

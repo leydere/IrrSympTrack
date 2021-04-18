@@ -21,6 +21,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+/**
+ * ActivityRecordsListIrritants displays all irritant records in a recycler view.  Record cards can be clicked to edit records.  FAB can be clicked to create a new record.  Menu navigation is enabled.
+ */
 public class ActivityRecordsListIrritants extends AppCompatActivity {
 
     ArrayList<ModelIrritant> allIrritantsList;
@@ -28,6 +31,10 @@ public class ActivityRecordsListIrritants extends AppCompatActivity {
     RecyclerView irritantRecyclerView;
     FloatingActionButton fab_navToAddIrritant;
 
+    /**
+     * OnCreate the FAB onClickListener and recyclerview adapter are set. The adapter populates the recyclerview and enables its onClickListener.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,12 +61,19 @@ public class ActivityRecordsListIrritants extends AppCompatActivity {
 
     }
 
+    /**
+     * Returns list of irritants to be displayed in the recyclerview.
+     * @return
+     */
    private ArrayList<ModelIrritant> getAllIrritants(){
         ArrayList<ModelIrritant> arrayListToReturn = new ArrayList<ModelIrritant>();
         arrayListToReturn.addAll(databaseHelper.getAllIrritants());
         return arrayListToReturn;
     }
 
+    /**
+     * Defines settings for the recyclerview including what it is populated with and how onclick events are handled.  See AdapterIrritantList.java for more details.
+     */
     private void setAdapter() {
         AdapterIrritantList adapter = new AdapterIrritantList(allIrritantsList, ActivityRecordsListIrritants.this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ActivityRecordsListIrritants.this);
@@ -71,19 +85,14 @@ public class ActivityRecordsListIrritants extends AppCompatActivity {
     //region Menu support
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.menu_main_page) {
             Intent intent = new Intent(ActivityRecordsListIrritants.this, ActivityMain.class);
             startActivity(intent);

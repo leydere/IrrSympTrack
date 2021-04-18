@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * DatabaseHelper class contains the various functions that interact directly with the database.
+ */
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     //irritant table
@@ -60,6 +63,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         super(context, "IrritantsSymptomsTracker.db", null, 1);
     }
 
+    /**
+     * OnCreate the database and its tables are created.  This only occurs if the DB has not been previously established.
+     * @param db
+     */
     @Override
     public void onCreate(SQLiteDatabase db) {
         String createTableStatement1 = "CREATE TABLE " + TABLE_IRRITANTS +
@@ -120,6 +127,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //region ADD RECORDS
+
+    /**
+     * Inserts new irritant record to DB.  Returns -1 if record was not successfully added, otherwise returns ID of newly added record.
+     * Returned ID necessary to create associative tag data for new records. Utilized in ActivityAddIrritant.java.
+     * @param modelIrritant
+     * @return
+     */
     public int addIrritantRecord(ModelIrritant modelIrritant){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -144,9 +158,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //end attempt
         db.close();
         return returnedID;
-        //if (insert == -1) { return false; } else { return true; }
     }
 
+    /**
+     * Inserts new symptom record to DB.  Returns -1 if record was not successfully added, otherwise returns ID of newly added record.
+     * Returned ID necessary to create associative tag data for new records. Utilized in ActivityAddSymptom.java.
+     * @param modelSymptom
+     * @return
+     */
     public int addSymptomRecord(ModelSymptom modelSymptom){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -172,9 +191,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //end attempt
         db.close();
         return returnedID;
-        //if (insert == -1) { return false; } else { return true; }
     }
 
+    /**
+     * Inserts new irritant tag record to DB.  Returns false if record was not successfully added, otherwise returns true.
+     * Utilized in ActivityNewIrritantTags.java.
+     * @param modelIrritantTag
+     * @return
+     */
     public boolean addIrritantTagRecord(ModelIrritantTag modelIrritantTag){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -186,6 +210,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (insert == -1) { return false; } else { return true; }
     }
 
+    /**
+     * Inserts new symptom tag record to DB.  Returns false if record was not successfully added, otherwise returns true.
+     * Utilized in ActivityNewSymptomTags.java.
+     * @param modelSymptomTag
+     * @return
+     */
     public boolean addSymptomTagRecord(ModelSymptomTag modelSymptomTag){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -199,7 +229,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //endregion
 
     //region GET ALL RECORDS
-    // gets all irritant records, to be used in populating the fragment 1 recycler view
+    /**
+     * Gets all irritant records from DB and returns in the form of a list of ModelIrritants.
+     * Utilized in ActivityRecordsListIrritants.java to populate the recyclerview.
+     * @return
+     */
     public List<ModelIrritant> getAllIrritants() {
         List<ModelIrritant> compiledResults = new ArrayList();
         String queryString = "SELECT * FROM " + TABLE_IRRITANTS;
@@ -226,7 +260,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
-    // gets all symptoms records, to be used in populating the fragment 2 recycler view
+    /**
+     * Gets all symptom records from DB and returns in the form of a list of ModelSymptoms.
+     * Utilized in ActivityRecordsListSymptoms.java to populate the recyclerview.
+     * @return
+     */
     public List<ModelSymptom> getAllSymptoms() {
         List<ModelSymptom> compiledResults = new ArrayList();
         String queryString = "SELECT * FROM " + TABLE_SYMPTOMS;
@@ -254,6 +292,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     //endregion
 
+    /**
+     * Gets a single symptom record from the DB based on a requested symptom record ID. Returns in the form of ModelSymptom.
+     * Utilized in ActivityAddSymptom.java edit record variant to populate the various fields with record data of the record to edit.
+     * @param id
+     * @return
+     */
     public ModelSymptom getSingleSymptomRecord(int id){
         ModelSymptom newSymptom = new ModelSymptom(-1, null, null, -1, null);
         String queryString = "SELECT * FROM " + TABLE_SYMPTOMS + " WHERE " + COLUMN_SYM_ID + "=" + id + ";";
@@ -275,6 +319,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return newSymptom;
     }
 
+    /**
+     * Updates DB existing symptom record based on the known record ID. Returns false if record was not successfully added, otherwise returns true.
+     * Utilized in ActivityAddSymptom.java edit record variant.
+     * @param modelSymptom
+     * @return
+     */
     public boolean updateExistingSymptomRecord(ModelSymptom modelSymptom){
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -292,6 +342,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (insert == -1) { return false; } else { return true; }
     }
 
+    /**
+     * Gets a single irritant record from the DB based on a requested irritant record ID. Returns in the form of ModelIrritant.
+     * Utilized in ActivityAddIrritant.java edit record variant to populate the various fields with record data of the record to edit.
+     * @param id
+     * @return
+     */
     public ModelIrritant getSingleIrritantRecord(int id){
         ModelIrritant newIrritant = new ModelIrritant(-1, null, null, -1);
         String queryString = "SELECT * FROM " + TABLE_IRRITANTS + " WHERE " + COLUMN_IRR_ID + "=" + id + ";";
@@ -313,6 +369,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return newIrritant;
     }
 
+    /**
+     * Updates DB existing irritant record based on the known record ID. Returns false if record was not successfully added, otherwise returns true.
+     * Utilized in ActivityAddIrritant.java edit record variant.
+     * @param modelIrritant
+     * @return
+     */
     public boolean updateExistingIrritantRecord(ModelIrritant modelIrritant){
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -329,76 +391,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (insert == -1) { return false; } else { return true; }
     }
 
-    //returns list of symptom models that meet the tag association requirement - list is used to populate graph
-    public ArrayList<ModelSymptom> getSelectedSymptoms(int tagId) {
-        ArrayList<ModelSymptom> compiledResults = new ArrayList();
-        //String queryString = "SELECT " + TABLE_SYMPTOMS + "." + COLUMN_SYM_TITLE + ", " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_TITLE +
-        String queryString = "SELECT * FROM " + TABLE_SYMPTOMS +
-        " INNER JOIN " + TABLE_SYM_TAG_ASSOC +
-        " ON " + TABLE_SYMPTOMS + "." + COLUMN_SYM_ID + " = " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_ID +
-        " INNER JOIN " + TABLE_SYM_TAGS +
-        " ON " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_TAG_ID + " = " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_ID +
-        " WHERE " + COLUMN_SYM_TAG_ID + " = " + tagId +
-        " ORDER BY " + COLUMN_SYM_TIMEDATE + ";";
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(queryString, null);
-
-        if (cursor.moveToFirst()){
-            do {
-                int symId = cursor.getInt(0);
-                String symTitle = cursor.getString(1);
-                String symDateTime = cursor.getString(2);
-                int symSeverity = cursor.getInt(3);
-
-                ModelSymptom newSymptom = new ModelSymptom(symId, symTitle, symDateTime, symSeverity, null);
-                compiledResults.add(newSymptom);
-            } while (cursor.moveToNext());
-        } else {
-
-        }
-
-        cursor.close();
-        db.close();
-
-        return compiledResults;
-    }
-
-    //returns list of irritant models that meet the tag association requirement - list is used to populate graph
-    public ArrayList<ModelIrritant> getSelectedIrritants(int tagId) {
-        ArrayList<ModelIrritant> compiledResults = new ArrayList();
-        String queryString = "SELECT * FROM " + TABLE_IRRITANTS +
-                " INNER JOIN " + TABLE_IRR_TAG_ASSOC +
-                " ON " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID +
-                " INNER JOIN " + TABLE_IRR_TAGS +
-                " ON " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_TAG_ID + " = " + TABLE_IRR_TAGS + "." + COLUMN_IRR_TAG_ID +
-                " WHERE " + COLUMN_IRR_TAG_ID + " = " + tagId +
-                " ORDER BY " + COLUMN_IRR_TIMEDATE + ";";
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(queryString, null);
-
-        if (cursor.moveToFirst()){
-            do {
-                int irrId = cursor.getInt(0);
-                String irrTitle = cursor.getString(1);
-                String irrDateTime = cursor.getString(2);
-                int irrSeverity = cursor.getInt(3);
-
-                ModelIrritant newIrritant = new ModelIrritant(irrId, irrTitle, irrDateTime, irrSeverity);
-                compiledResults.add(newIrritant);
-            } while (cursor.moveToNext());
-        } else {
-
-        }
-
-        cursor.close();
-        db.close();
-
-        return compiledResults;
-    }
-
-    //returns list of symptom data point models that meet the tag association and date requirements - list is used to populate graph
+    /**
+     * Gets all symptom records that meet the criteria of associated tag ID and date range. Returns in the form of list of ModelDataPoints which are severity sums grouped by date.
+     * Utilized in ActivityGraphView.java to populate the graph.
+     * @param tagId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public ArrayList<ModelDataPoint> getSelectedSymptomsByDateRangeAndTagId(int tagId, String startDate, String endDate) {
         ArrayList<ModelDataPoint> compiledResults = new ArrayList();
         String queryString = "SELECT SUM(" + COLUMN_SYM_SEVERITY + ") AS \"SEVERITYSUM\", strftime('%Y-%m-%d', " + COLUMN_SYM_TIMEDATE + ") AS \"SHORTTIME\" FROM " + TABLE_SYMPTOMS +
@@ -432,7 +432,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
-    //returns list of irritant data point models that meet the tag association and date requirements - list is used to populate graph
+    /**
+     * Gets all irritants records that meet the criteria of associated tag ID and date range. Returns in the form of list of ModelDataPoints which are severity sums grouped by date.
+     * Utilized in ActivityGraphView.java to populate the graph.
+     * @param tagId
+     * @param startDate
+     * @param endDate
+     * @return
+     */
     public ArrayList<ModelDataPoint> getSelectedIrritantsByDateRangeAndTagId(int tagId, String startDate, String endDate) {
         ArrayList<ModelDataPoint> compiledResults = new ArrayList();
         String queryString = "SELECT SUM(" + COLUMN_IRR_SEVERITY + ") AS \"SEVERITYSUM\", strftime('%Y-%m-%d', " + COLUMN_IRR_TIMEDATE + ") AS \"SHORTTIME\" FROM " + TABLE_IRRITANTS +
@@ -466,73 +473,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
-    //returns list of symptom data point models that meet the tag association requirement - list is used to populate graph
-    public ArrayList<ModelDataPoint> getSelectedSymptomsDateSpecificNoClock(int tagId) {
-        ArrayList<ModelDataPoint> compiledResults = new ArrayList();
-        String queryString = "SELECT SUM(" + COLUMN_SYM_SEVERITY + ") AS \"SEVERITYSUM\", strftime('%Y-%m-%d', " + COLUMN_SYM_TIMEDATE + ") AS \"SHORTTIME\" FROM " + TABLE_SYMPTOMS +
-                " INNER JOIN " + TABLE_SYM_TAG_ASSOC +
-                " ON " + TABLE_SYMPTOMS + "." + COLUMN_SYM_ID + " = " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_ID +
-                " INNER JOIN " + TABLE_SYM_TAGS +
-                " ON " + TABLE_SYM_TAG_ASSOC + "." + COLUMN_A_SYM_TAG_ID + " = " + TABLE_SYM_TAGS + "." + COLUMN_SYM_TAG_ID +
-                " WHERE " + COLUMN_SYM_TAG_ID + " = " + tagId +
-                " GROUP BY SHORTTIME" +
-                " ORDER BY SHORTTIME;";
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(queryString, null);
-
-        if (cursor.moveToFirst()){
-            do {
-                int severity = cursor.getInt(0);
-                String date = cursor.getString(1) + " 12:00:00.000";
-
-                ModelDataPoint newDataPoint = new ModelDataPoint(severity, date);
-                compiledResults.add(newDataPoint);
-            } while (cursor.moveToNext());
-        } else {
-
-        }
-
-        cursor.close();
-        db.close();
-
-        return compiledResults;
-    }
-
-    //returns list of irritant data point models that meet the tag association requirement - list is used to populate graph
-    public ArrayList<ModelDataPoint> getSelectedIrritantsDateSpecificNoClock(int tagId) {
-        ArrayList<ModelDataPoint> compiledResults = new ArrayList();
-        String queryString = "SELECT SUM(" + COLUMN_IRR_SEVERITY + ") AS \"SEVERITYSUM\", strftime('%Y-%m-%d', " + COLUMN_IRR_TIMEDATE + ") AS \"SHORTTIME\" FROM " + TABLE_IRRITANTS +
-                " INNER JOIN " + TABLE_IRR_TAG_ASSOC +
-                " ON " + TABLE_IRRITANTS + "." + COLUMN_IRR_ID + " = " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_ID +
-                " INNER JOIN " + TABLE_IRR_TAGS +
-                " ON " + TABLE_IRR_TAG_ASSOC + "." + COLUMN_A_IRR_TAG_ID + " = " + TABLE_IRR_TAGS + "." + COLUMN_IRR_TAG_ID +
-                " WHERE " + COLUMN_IRR_TAG_ID + " = " + tagId +
-                " GROUP BY SHORTTIME" +
-                " ORDER BY SHORTTIME;";
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(queryString, null);
-
-        if (cursor.moveToFirst()){
-            do {
-                int severity = cursor.getInt(0);
-                String date = cursor.getString(1) + " 12:00:00.000";
-
-                ModelDataPoint newDataPoint = new ModelDataPoint(severity, date);
-                compiledResults.add(newDataPoint);
-            } while (cursor.moveToNext());
-        } else {
-
-        }
-
-        cursor.close();
-        db.close();
-
-        return compiledResults;
-    }
-
-    // function for updating/creating associative data - works for both new and existing irritant records
+    /**
+     * Creates irritant tag associative data records.  Previous records are deleted from DB to avoid duplicate records.
+     * Returns true if record is successfully created, otherwise returns false.
+     * Utilized in ActivityAddIrritant.java immediately following the adding or editing of an irritant record.
+     * @param recordID
+     * @param selectedIrritantTagIDsList
+     * @return
+     */
     public boolean createIrritantTagAssociativeRecord(int recordID, ArrayList<Integer> selectedIrritantTagIDsList){
         SQLiteDatabase db = this.getWritableDatabase();
         try{
@@ -557,7 +505,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    // function for updating/creating associative data - works for both new and existing symptom records
+    /**
+     * Creates symptom tag associative data records.  Previous records are deleted from DB to avoid duplicate records.
+     * Returns true if record is successfully created, otherwise returns false.
+     * Utilized in ActivityAddSymptom.java immediately following the adding or editing of a symptom record.
+     * @param recordID
+     * @param selectedSymptomTagIDsList
+     * @return
+     */
     public boolean createSymptomTagAssociativeRecord(int recordID, ArrayList<Integer> selectedSymptomTagIDsList){
         SQLiteDatabase db = this.getWritableDatabase();
         try{
@@ -582,64 +537,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
-    //region Dummy data
-    //create dummy symptom tag associative data
-    public boolean createDummySymptomAssociativeData(){
-        try{
-            SQLiteDatabase db = this.getWritableDatabase();
-            //value pairs go (sym ID. tag ID)
-            String insertQuery =  "INSERT INTO " + TABLE_SYM_TAG_ASSOC + "(" + COLUMN_A_SYM_ID + ", " + COLUMN_A_SYM_TAG_ID + ") " +
-                    "VALUES (1, 1), (2, 1), (3, 1), (4, 1), (2, 2), (4, 3), (5, 3), (6, 3);";
-            db.execSQL(insertQuery);
-            db.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    //create dummy symptom tag data
-    public boolean createDummySymptomTagData(){
-        try{
-            SQLiteDatabase db = this.getWritableDatabase();
-            String insertQuery =  "INSERT INTO " + TABLE_SYM_TAGS + "(" + COLUMN_SYM_TAG_TITLE + ") " +
-                    "VALUES ('Itchy'), ('Swelling'), ('Dry');";
-            db.execSQL(insertQuery);
-            db.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    //create dummy irritant tag associative data
-    public boolean createDummyIrritantAssociativeData(){
-        try{
-            SQLiteDatabase db = this.getWritableDatabase();
-            //value pairs go (sym ID. tag ID)
-            String insertQuery =  "INSERT INTO " + TABLE_IRR_TAG_ASSOC + "(" + COLUMN_A_IRR_ID + ", " + COLUMN_A_IRR_TAG_ID + ") " +
-                    "VALUES (1, 1), (2, 2), (3, 3), (4, 3);";
-            db.execSQL(insertQuery);
-            db.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    //create dummy irritant tag data
-    public boolean createDummyIrritantTagData(){
-        try{
-            SQLiteDatabase db = this.getWritableDatabase();
-            String insertQuery =  "INSERT INTO " + TABLE_IRR_TAGS + "(" + COLUMN_IRR_TAG_TITLE + ") " +
-                    "VALUES ('Eggs'), ('Dairy'), ('Citrus');";
-            db.execSQL(insertQuery);
-            db.close();
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-    //endregion
-
     //region Supporting Tag Recycler Views
+    /**
+     * Gets all irritant tag records from DB. Returns in the form of list of ModelIrritantTags.
+     * Utilized to populate recycler views in ActivityAddIrritant.java, ActivityGraphView.java, and ActivityNewIrritantTags.java.
+     * @return
+     */
     public List<ModelIrritantTag> getAllIrritantTags() {
         List<ModelIrritantTag> compiledResults = new ArrayList();
         String queryString = "SELECT * FROM " + TABLE_IRR_TAGS;
@@ -664,6 +567,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
+    /**
+     * Gets all symptom tag records from DB. Returns in the form of list of ModelSymptomTags.
+     * Utilized to populate recycler views in ActivityAddSymptom.java, ActivityGraphView.java, and ActivityNewSymptomTags.java.
+     * @return
+     */
     public List<ModelSymptomTag> getAllSymptomTags() {
         List<ModelSymptomTag> compiledResults = new ArrayList();
         String queryString = "SELECT * FROM " + TABLE_SYM_TAGS;
@@ -688,26 +596,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
-    public ModelIrritantTag getSingleIrritantTagRecord(int id){
-        ModelIrritantTag newIrritantTag = new ModelIrritantTag(id, null);
-        String queryString = "SELECT * FROM " + TABLE_IRR_TAGS + " WHERE " + COLUMN_IRR_TAG_ID + "=" + id + ";";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(queryString, null);
-
-        if (cursor.moveToFirst()){
-            String irrTagTitle = cursor.getString(1);
-
-            newIrritantTag = new ModelIrritantTag(id, irrTagTitle);
-
-        } else  {
-            //
-        }
-        cursor.close();
-        db.close();
-        return newIrritantTag;
-    }
-
-    // return list of tag IDs associated to the given irritant ID - used to support toggling tag selection recycler view for existing records
+    /**
+     * Gets all tag IDs associated to an irritant record based on irritant record ID.  Returns in the form of array list of ints.
+     * Utilized in ActivityAddIrritant.java to ensure the proper tags in the recycler view are toggled as selected when an existing record is accessed for editing.
+     * @param idOfExistingIrritantRecord
+     * @return
+     */
     public ArrayList<Integer> getTagIDsAssociatedToThisIrritantRecord(int idOfExistingIrritantRecord) {
         ArrayList<Integer> compiledResults = new ArrayList();
         String queryString = "SELECT " + COLUMN_IRR_TAG_ID + " FROM " + TABLE_IRR_TAGS +
@@ -736,7 +630,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return compiledResults;
     }
 
-    // return list of tag IDs associated to the given symptom ID - used to support toggling tag selection recycler view for existing records
+    /**
+     * Gets all tag IDs associated to an symptom record based on symptom record ID.  Returns in the form of array list of ints.
+     * Utilized in ActivityAddSymptom.java to ensure the proper tags in the recycler view are toggled as selected when an existing record is accessed for editing.
+     * @param idOfExistingSymptomRecord
+     * @return
+     */
     public ArrayList<Integer> getTagIDsAssociatedToThisSymptomRecord(int idOfExistingSymptomRecord) {
         ArrayList<Integer> compiledResults = new ArrayList();
         String queryString = "SELECT " + COLUMN_SYM_TAG_ID + " FROM " + TABLE_SYM_TAGS +

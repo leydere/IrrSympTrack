@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter class for the recyclerview utilized in ActivityAddSymptom.java.
+ */
 public class AdapterTagSymptomSelection extends RecyclerView.Adapter<AdapterTagSymptomSelection.MyViewHolder> {
     private final Context context;
     private ArrayList<Integer> selectedSymptomTagIDsList;
@@ -23,8 +26,6 @@ public class AdapterTagSymptomSelection extends RecyclerView.Adapter<AdapterTagS
 
     int lightBlue = Color.parseColor("#5c5cff");
     int standardBlue = Color.parseColor("#1f1fff");
-
-
 
     public AdapterTagSymptomSelection(ArrayList<Integer> selectedSymptomTagIDsList, ArrayList<ModelSymptomTag> symptomTagList, Context context, AdapterTagSymptomSelection.OnItemClickListener onItemClickListener){
         this.selectedSymptomTagIDsList = selectedSymptomTagIDsList;
@@ -59,6 +60,11 @@ public class AdapterTagSymptomSelection extends RecyclerView.Adapter<AdapterTagS
         return new AdapterTagSymptomSelection.MyViewHolder(view);
     }
 
+    /**
+     * Sets details of recyclerview cards including color based on whether or not the tag record is selected or not.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull AdapterTagSymptomSelection.MyViewHolder holder, int position) {
         String titleFound = symptomTagList.get(position).getSymTagTitle();
@@ -76,14 +82,17 @@ public class AdapterTagSymptomSelection extends RecyclerView.Adapter<AdapterTagS
             }
         }
 
+        //TODO: consider removing this; ensure functional after removal though
         holder.symptomTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //not sure if I have any use for this on click listener after having implemented card view listener
-
             }
         });
 
+        /**
+         * Functions as toggle for is tag selected or not.  Card color is set accordingly.  Tag record id is sent to AddSymptomActivity to support correct tag associative record data.
+         */
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             // id of model associated to clicked card is sent to activity along with toggle status - this supports creating the correct associative table data

@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter class for recyclerview utilized in ActivityNewSymptomTags.java.
+ */
 public class AdapterTagSymptomList extends RecyclerView.Adapter<AdapterTagSymptomList.MyViewHolder> {
     private final Context context;
     private ArrayList<ModelSymptomTag> symptomTagList;
@@ -50,6 +53,11 @@ public class AdapterTagSymptomList extends RecyclerView.Adapter<AdapterTagSympto
         return new AdapterTagSymptomList.MyViewHolder(view);
     }
 
+    /**
+     * Sets details of recyclerview cards.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull AdapterTagSymptomList.MyViewHolder holder, int position) {
         String titleFound = symptomTagList.get(position).getSymTagTitle();
@@ -58,14 +66,14 @@ public class AdapterTagSymptomList extends RecyclerView.Adapter<AdapterTagSympto
         holder.symptomTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // don't think I need on click listeners for this implementation of recyclerview adapter
+                //TODO: remove onClickListener and test functionality
             }
         });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // don't think I need on click listeners for this implementation of recyclerview adapter
+                //TODO: remove onClickListener and test functionality
             }
         });
     }

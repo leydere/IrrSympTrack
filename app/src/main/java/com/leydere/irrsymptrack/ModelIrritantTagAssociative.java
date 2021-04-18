@@ -1,5 +1,9 @@
 package com.leydere.irrsymptrack;
 
+//TODO: Check to see where I had intended to use this model object.  Remove if unnecessary.
+/**
+ * Model object used in passing information back and forth between application and DB.
+ */
 public class ModelIrritantTagAssociative {
 
     private int irrId;

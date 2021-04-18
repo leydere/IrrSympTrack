@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+/**
+ * ActivityAddIrritant is used to create new irritant records. Edit record variant is accessed if irritant record id is passed to activity as an extra.
+ * ActivityNewIrritantTags is accessible through this activity. FAB creates new record or updates existing record depending
+ * on which variant of the activity has been selected.
+ */
 public class ActivityAddIrritant extends AppCompatActivity implements AdapterTagIrritantSelection.OnItemClickListener {
 
     ArrayList<ModelIrritantTag> irritantTagsList;
@@ -45,6 +50,11 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     DatabaseHelper databaseHelper;
     RecyclerView irritantTagSelectionRecyclerView;
 
+    /**
+     * OnCreate recycler view is populated with existing irritant tags, fields for input are set to existing record if record id was passed to activity.
+     * Otherwise time and date default to current calendar instance and other fields remain blank.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +85,7 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         // if > -1 edit existing record
         if (idOfExistingIrritantRecord > -1) {
             addIrritantToolbarText.setText("Edit Existing Irritant Record");
-            //editing a record
-            //TODO: if returned record below is id -1 abort process
             ModelIrritant irritantToEdit = databaseHelper.getSingleIrritantRecord(idOfExistingIrritantRecord);
-
             //set title text
             editTextIrritantTitle.setText(irritantToEdit.getIrrTitle());
             //get time-date and format for use
@@ -186,6 +193,9 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
     } //end of OnCreate
 
+    /**
+     * OnResume the tag list and recyclerview are reset to accommodate any tags that may have been added.
+     */
     @Override
     protected void onResume(){
         super.onResume();
@@ -197,6 +207,9 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
     }
 
+    /**
+     * Defines settings for the recyclerview including what it is populated with and how onclick events are handled.  See AdapterTagIrritantSelection.java for more details.
+     */
     private void setIrritantTagsSelectionAdapter() {
         AdapterTagIrritantSelection adapter = new AdapterTagIrritantSelection(selectedIrritantTagIDsList,irritantTagsList, this, this::onItemClick);
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.HORIZONTAL);
@@ -206,6 +219,13 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     }
 
     //region FAB supporting functions
+
+    /**
+     * Creates irritant model object, adds object to DB as new record.  Success and failure toasts for irritant record added and associative tag records added.
+     * Toast for failure to create model object.
+     * @param calendar
+     * @param selectedIrritantTagIDsList
+     */
     private void addIrritantRecordFAB(Calendar calendar, ArrayList<Integer> selectedIrritantTagIDsList) {
 
         //format dateTime for DB
@@ -242,6 +262,12 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
     }
 
+    /**
+     * Creates irritant model object, updates object to existing record in DB.  Success and failure toasts for irritant record updated and associative tag records updated.
+     * Toast for failure to create model object.
+     * @param calendar
+     * @param selectedIrritantTagIDsList
+     */
     private void updateExistingIrritantRecordFAB(Calendar calendar, ArrayList<Integer> selectedIrritantTagIDsList) {
 
         //format dateTime for DB
@@ -278,6 +304,11 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
 
     }
 
+    /**
+     * Formats the calendar data to the format required by the DB to be recognized as a datetime record.
+     * @param calendar
+     * @return
+     */
     private CharSequence dateTimeFormatToDB(Calendar calendar) {
         CharSequence dateCharSequence = DateFormat.format("yyyy-MM-dd", calendar);
         CharSequence timeCharSequence = DateFormat.format("HH:mm:ss.sss", calendar);
@@ -287,6 +318,11 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     //endregion
 
     //region Supporting time date methods
+
+    /**
+     * Accesses the calendar widget when date button is clicked.  Sets the calendar object to the selected date.
+     * @param calendar1
+     */
     private void handleDateButton(Calendar calendar1) {
 
         int YEAR = calendar1.get(Calendar.YEAR);
@@ -310,6 +346,10 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
         datePickerDialog.show();
     }
 
+    /**
+     * Accesses the clock widget when time button is clicked. Sets the calendar object to the selected time.
+     * @param calendar1
+     */
     private void handleTimeButton(Calendar calendar1) {
         int HOUR = calendar1.get(Calendar.HOUR_OF_DAY);
         int MINUTE = calendar1.get(Calendar.MINUTE);
@@ -332,6 +372,11 @@ public class ActivityAddIrritant extends AppCompatActivity implements AdapterTag
     }
     //endregion
 
+    /**
+     * OnItemClick of tag recyclerview cards updates the list used to track which tags will be associated to this irritant record when saved.
+     * @param irrTagModelID
+     * @param tagRecordSelected
+     */
     @Override
     public void onItemClick(int irrTagModelID, boolean tagRecordSelected) {
         boolean listContains = selectedIrritantTagIDsList.contains(irrTagModelID);

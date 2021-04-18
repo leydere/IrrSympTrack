@@ -18,6 +18,9 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * ActivityNewIrritantTags is used to create new irritant tag records.  Add button creates new record. FAB returns to ActivityAddIrritant.
+ */
 public class ActivityNewIrritantTags extends AppCompatActivity implements AdapterTagIrritantList.OnItemClickListener {
 
     DatabaseHelper databaseHelper;
@@ -26,9 +29,12 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
     EditText irritantTagTitleEditText;
     Button addNewIrritantTagRecordButton;
     FloatingActionButton fabReturnSelectedIrrTagRecord;
-    ArrayList<Integer> selectedIrritantTagIdsList; //so far no use I believe
     int idOfExistingIrritantRecord;
 
+    /**
+     * OnCreate recycler view is populated with existing irritant tags and on click listeners are set.
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +49,6 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
         Intent intent = getIntent();
         idOfExistingIrritantRecord = intent.getIntExtra("id", -1); //record Id from add record activity - brought here to be passed back if using navigate button
 
-        selectedIrritantTagIdsList = new ArrayList<>(); //so far no use I believe, this was meant to be part of a larger solution of passing selected data back a forth between adapter and activity
-        //irritantTagsList = getAllIrritantTags();
         irritantTagsList = new ArrayList<>();
         irritantTagsList.addAll(databaseHelper.getAllIrritantTags());
         setIrritantTagsListAdapter();
@@ -116,6 +120,11 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
         });
     }
 
+    /**
+     * Checks for duplicate records to support duplicate records not being created.
+     * @param inputText
+     * @return
+     */
     public boolean doesIrritantTagRecordAlreadyExist(String inputText){
         List<ModelIrritantTag> allIrritantTagsList = getAllIrritantTags();
         for (ModelIrritantTag var : allIrritantTagsList) {
@@ -127,6 +136,7 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
         return false;
     }
 
+    //TODO: see if can remove this after editing above function
     //redundant as only second line in function serves a purpose.  Creates a new list to return a list.
     private ArrayList<ModelIrritantTag> getAllIrritantTags(){
         ArrayList<ModelIrritantTag> arrayListToReturn = new ArrayList<ModelIrritantTag>();
@@ -134,6 +144,9 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
         return arrayListToReturn;
     }
 
+    /**
+     * Defines settings for the recyclerview including what it is populated with and how onclick events are handled.  See AdapterTagIrritantList.java for more details.
+     */
     private void setIrritantTagsListAdapter() {
         AdapterTagIrritantList adapter = new AdapterTagIrritantList(irritantTagsList, this, this::onItemClick);
         RecyclerView.LayoutManager layoutManager = new StaggeredGridLayoutManager(10, StaggeredGridLayoutManager.HORIZONTAL);
@@ -144,7 +157,7 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
 
     @Override
     public void onItemClick(int position) {
-        //TODO: pretty sure I can do away with the on click interface in the new tags activity
+        //TODO: Remove onItemClick and test functionality.
     }
 
 }

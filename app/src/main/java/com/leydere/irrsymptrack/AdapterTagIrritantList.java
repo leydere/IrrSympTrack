@@ -15,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter class for recyclerview utilized in ActivityNewIrritantTags.java.
+ */
 public class AdapterTagIrritantList extends RecyclerView.Adapter<AdapterTagIrritantList.MyViewHolder> {
     private final Context context;
     private ArrayList<ModelIrritantTag> irritantTagList;
@@ -52,6 +55,11 @@ public class AdapterTagIrritantList extends RecyclerView.Adapter<AdapterTagIrrit
         return new AdapterTagIrritantList.MyViewHolder(view);
     }
 
+    /**
+     * Sets details of recyclerview cards.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull AdapterTagIrritantList.MyViewHolder holder, int position) {
         String titleFound = irritantTagList.get(position).getIrrTagTitle();
@@ -60,14 +68,14 @@ public class AdapterTagIrritantList extends RecyclerView.Adapter<AdapterTagIrrit
         holder.irritantTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // don't think I need on click listeners for this implementation of recyclerview adapter
+                //TODO: remove onClickListener and test functionality
             }
         });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // don't think I need on click listeners for this implementation of recyclerview adapter
+                //TODO: remove onClickListener and test functionality
             }
         });
     }
