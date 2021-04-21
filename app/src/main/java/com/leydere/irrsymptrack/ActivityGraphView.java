@@ -46,6 +46,7 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
     RecyclerView irritantGraphRecyclerView, symptomGraphRecyclerView;
     ArrayList<ModelIrritantTag> irritantTagsList;
     ArrayList<ModelSymptomTag> symptomTagsList;
+    ArrayList<ModelDataPoint> symptomDataPoints, irritantDataPoints;
     int selectedIrritantTagID, selectedSymptomTagID;
     final int millisecondsInADay = 86400000;
 
@@ -76,6 +77,8 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         graph = findViewById(R.id.graph);
         symptomSeries = new PointsGraphSeries<DataPoint>();
         irritantSeries = new PointsGraphSeries<DataPoint>();
+        symptomDataPoints = new ArrayList<ModelDataPoint>();
+        irritantDataPoints = new ArrayList<ModelDataPoint>();
         calendar = Calendar.getInstance();
         startCalendar = Calendar.getInstance();
         endCalendar = Calendar.getInstance();
@@ -123,6 +126,7 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
             @Override
             public void onClick(View v) {
                 graph.removeAllSeries();
+                //TODO: possibly set default graph date range here if it resets when remove all series runs and the graph does not then populate; alt set it in the failed calendar if-toast below
                 boolean calendarSet = false;
                 boolean bothSeriesHaveData = false;
                 CharSequence startDateCharSequence = "";
@@ -134,9 +138,6 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
                     endCalendar.add(Calendar.DATE, 1);
                     startDateCharSequence = DateFormat.format("yyyy-MM-dd", startCalendar);
                     endDateCharSequence = DateFormat.format("yyyy-MM-dd", endCalendar);
-                    //TODO: Need to programmatically set the upper and lower bounds of the x-axis to correspond to the input date range.
-                    //TODO: Alternatively could make the graph scrollable. Might be a reasonable solution.
-                    //TODO: Possible additional formatting/override of x-axis labeler would allow for this.
                     //****************************************************SETS THE X-AXIS UPPER AND LOWER BOUNDS TO SELECTED INPUT******************************************
                     graph.getViewport().setXAxisBoundsManual(true);
                     graph.getViewport().setMinX(startCalendar.getTimeInMillis() - millisecondsInADay);
@@ -156,8 +157,35 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
                     try {
                         //here is where DB queries are run and series are returned
                         //TODO: need to check for symptom lengths and not populate graph if either is empty, toast user with relevant information, think the internal series list is not accessible to find size() directly
-                        symptomSeries = symptomGraphPopulationWithUserInput(selectedSymptomTagID, startDateCharSequence.toString(), endDateCharSequence.toString());
-                        irritantSeries = irritantGraphPopulationWithUserInput(selectedIrritantTagID, startDateCharSequence.toString(), endDateCharSequence.toString());
+                        symptomDataPoints = symptomDataPointModelsBasedOnUserInput(selectedSymptomTagID, startDateCharSequence.toString(), endDateCharSequence.toString());
+                        irritantDataPoints = irritantDataPointModelsBasedOnUserInput(selectedIrritantTagID, startDateCharSequence.toString(), endDateCharSequence.toString());
+
+                        //TODO: length check before set true
+                        int numberOfSymptomDataPoints = symptomDataPoints.size();
+                        int numberOfIrritantDataPoints = irritantDataPoints.size();
+                        //once minimum amount is determined can add check for if sum of both is greater than X then run otherwise catch
+                        if (numberOfIrritantDataPoints > 0 && numberOfSymptomDataPoints > 0) {
+                            bothSeriesHaveData = true;
+                        } else {
+                            if (numberOfIrritantDataPoints == 0) {
+                                Toast.makeText(ActivityGraphView.this, "No irritant records found matching these parameters. Please select alternative inputs.", Toast.LENGTH_LONG).show();
+                            }
+                            if (numberOfSymptomDataPoints == 0) {
+                                Toast.makeText(ActivityGraphView.this, "No symptom records found matching these parameters. Please select alternative inputs.", Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        //Toast.makeText(ActivityGraphView.this, "Graph query successful. WARNING: Queries resulting in four or less data points are known to not populate correctly to graph.", Toast.LENGTH_LONG).show();
+                    } catch (Exception e){
+                        Toast.makeText(ActivityGraphView.this, "An issue with the data series was detected. Unable to process request.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                if (bothSeriesHaveData) {
+                    try {
+                        //TODO: make above check for series lengths and move graph population to here to run if all good
+                        symptomSeries = symptomPointsGraphDataSeries(symptomDataPoints);
+                        irritantSeries = irritantPointsGraphDataSeries(irritantDataPoints);
 
                         symptomSeries.setShape(PointsGraphSeries.Shape.POINT);
                         symptomSeries.setColor(Color.BLUE);
@@ -165,15 +193,6 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
                         irritantSeries.setColor(Color.RED);
                         graph.addSeries(symptomSeries);
                         graph.addSeries(irritantSeries);
-                        //Toast.makeText(ActivityGraphView.this, "Graph query successful. WARNING: Queries resulting in four or less data points are known to not populate correctly to graph.", Toast.LENGTH_LONG).show();
-                    } catch (Exception e){
-                        Toast.makeText(ActivityGraphView.this, "An issue with the calendar dates was detected. End date may not be prior to start date. Unable to process request.", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                if (bothSeriesHaveData) {
-                    try {
-                        //TODO: make above check for series lengths and move graph population to here to run if all good
 
                     } catch (Exception e){
 
@@ -184,6 +203,8 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
 
     }
 
+
+    //TODO: remove function
     /**
      * Requests DB query using symptom tag ID and date range.  Results should be returned as data point model objects that are derived from symptom records as severity sums grouped by dates.
      * @param tagId
@@ -200,7 +221,70 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         //TODO: This is where I could check for the number of returned records. However the function is set up to return a data point series.  So either have to try catch when this is run to avoid crash or break into two functions.
         Toast.makeText(ActivityGraphView.this, "symptom series length = " + selectedDataPointList.size(), Toast.LENGTH_SHORT).show();
 
+        //TODO: split this method above-below; top section returns array list of data point models; check for size of list performed outside of function; that list is fed to bottom section to return a graph series
+
         for (ModelDataPoint modelDataPoint : selectedDataPointList) {
+            //y = sev
+            y = modelDataPoint.getDpSeverity();
+            //x = date
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
+                x = calendar.getTime();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from symptom calendar", Toast.LENGTH_SHORT).show();
+            }
+            series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
+        }
+        return series;
+    }
+
+    //TODO: XML comment the four new functions below, remove two unused functions
+    //top half of split function above
+    public ArrayList<ModelDataPoint> symptomDataPointModelsBasedOnUserInput(int tagId, String startDateRange, String endDateRange) {
+        ArrayList<ModelDataPoint> selectedDataPointList = databaseHelper.getSelectedSymptomsByDateRangeAndTagId(tagId, startDateRange, endDateRange);
+
+        return selectedDataPointList;
+    }
+
+    //bottom half of split function above
+    public PointsGraphSeries<DataPoint> symptomPointsGraphDataSeries(ArrayList<ModelDataPoint> inputList) {
+        int y;
+        Date x = new Date();
+        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
+
+        for (ModelDataPoint modelDataPoint : inputList) {
+            //y = sev
+            y = modelDataPoint.getDpSeverity();
+            //x = date
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
+                x = calendar.getTime();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from symptom calendar", Toast.LENGTH_SHORT).show();
+            }
+            series.appendData(new DataPoint(x, y), true, inputList.size());
+        }
+        return series;
+    }
+
+    //top half of split function below
+    public ArrayList<ModelDataPoint> irritantDataPointModelsBasedOnUserInput(int tagId, String startDateRange, String endDateRange) {
+        ArrayList<ModelDataPoint> selectedDataPointList = databaseHelper.getSelectedIrritantsByDateRangeAndTagId(tagId, startDateRange, endDateRange);
+
+        return selectedDataPointList;
+    }
+
+    //bottom half of split function below
+    public PointsGraphSeries<DataPoint> irritantPointsGraphDataSeries(ArrayList<ModelDataPoint> inputList) {
+        int y;
+        Date x = new Date();
+        PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
+
+        for (ModelDataPoint modelDataPoint : inputList) {
             //y = sev
             y = modelDataPoint.getDpSeverity();
             //x = date
@@ -212,11 +296,12 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
             } catch (Exception e) {
                 Toast.makeText(ActivityGraphView.this, "input error from irritant calendar", Toast.LENGTH_SHORT).show();
             }
-            series.appendData(new DataPoint(x, y), true, selectedDataPointList.size());
+            series.appendData(new DataPoint(x, y), true, inputList.size());
         }
         return series;
     }
 
+    //TODO: remove function
     /**
      * Requests DB query using irritant tag ID and date range.  Results should be returned as data point model objects that are derived from irritant records as severity sums grouped by dates.
      * @param tagId
