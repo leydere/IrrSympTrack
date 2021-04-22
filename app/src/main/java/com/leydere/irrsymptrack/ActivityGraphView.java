@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ import java.util.Locale;
 public class ActivityGraphView extends AppCompatActivity implements AdapterGraphTagIrritant.OnItemClickListener, AdapterGraphTagSymptom.OnItemClickListener {
 
     PointsGraphSeries<DataPoint> symptomSeries, irritantSeries;
+    LineGraphSeries<DataPoint> symptomLineSeries, irritantLineSeries;
     GraphView graph;
     Calendar calendar, startCalendar, endCalendar;
     Button startDateButton, endDateButton;
@@ -77,6 +79,8 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         graph = findViewById(R.id.graph);
         symptomSeries = new PointsGraphSeries<DataPoint>();
         irritantSeries = new PointsGraphSeries<DataPoint>();
+        symptomLineSeries = new LineGraphSeries<DataPoint>();
+        irritantLineSeries = new LineGraphSeries<DataPoint>();
         symptomDataPoints = new ArrayList<ModelDataPoint>();
         irritantDataPoints = new ArrayList<ModelDataPoint>();
         calendar = Calendar.getInstance();
@@ -194,6 +198,13 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
                         graph.addSeries(symptomSeries);
                         graph.addSeries(irritantSeries);
 
+                        symptomLineSeries = symptomLineGraphDataSeries(symptomDataPoints);
+                        irritantLineSeries = irritantLineGraphDataSeries(irritantDataPoints);
+                        symptomLineSeries.setColor(Color.BLUE);
+                        irritantLineSeries.setColor(Color.RED);
+                        graph.addSeries(symptomLineSeries);
+                        graph.addSeries(irritantLineSeries);
+
                     } catch (Exception e){
 
                     }
@@ -283,6 +294,52 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         int y;
         Date x = new Date();
         PointsGraphSeries<DataPoint> series = new PointsGraphSeries<DataPoint>();
+
+        for (ModelDataPoint modelDataPoint : inputList) {
+            //y = sev
+            y = modelDataPoint.getDpSeverity();
+            //x = date
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
+                x = calendar.getTime();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from irritant calendar", Toast.LENGTH_SHORT).show();
+            }
+            series.appendData(new DataPoint(x, y), true, inputList.size());
+        }
+        return series;
+    }
+
+    //bottom half of split function above
+    public LineGraphSeries<DataPoint> symptomLineGraphDataSeries(ArrayList<ModelDataPoint> inputList) {
+        int y;
+        Date x = new Date();
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
+
+        for (ModelDataPoint modelDataPoint : inputList) {
+            //y = sev
+            y = modelDataPoint.getDpSeverity();
+            //x = date
+            //set db time data to calendar format - took this from the load existing record to add symptom activity
+            SimpleDateFormat dbStringToCalendar = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.sss", Locale.ENGLISH);
+            try{
+                calendar.setTime(dbStringToCalendar.parse(modelDataPoint.getDpDate()));
+                x = calendar.getTime();
+            } catch (Exception e) {
+                Toast.makeText(ActivityGraphView.this, "input error from symptom calendar", Toast.LENGTH_SHORT).show();
+            }
+            series.appendData(new DataPoint(x, y), true, inputList.size());
+        }
+        return series;
+    }
+
+    //bottom half of split function below
+    public LineGraphSeries<DataPoint> irritantLineGraphDataSeries(ArrayList<ModelDataPoint> inputList) {
+        int y;
+        Date x = new Date();
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>();
 
         for (ModelDataPoint modelDataPoint : inputList) {
             //y = sev
