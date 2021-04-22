@@ -37,7 +37,7 @@
         android:id="@+id/irritantRecordMainTextView"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:text="Go to irritant records to view, add, or edit instances of potential irritants."
+        android:text="View, add, or edit recorded potential irritants."
         app:layout_constraintLeft_toLeftOf="@+id/buttonNavToIrritantRecords"
         app:layout_constraintTop_toBottomOf="@+id/buttonNavToIrritantRecords"/>
 
@@ -56,7 +56,7 @@
         android:id="@+id/symptomRecordMainTextView"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:text="Go to symptom records to view, add, or edit instances of suspected symptoms."
+        android:text="View, add, or edit recorded symptoms."
         app:layout_constraintLeft_toLeftOf="@+id/buttonNavToSymptomRecords"
         app:layout_constraintTop_toBottomOf="@+id/buttonNavToSymptomRecords"/>
 
@@ -76,7 +76,7 @@
         android:id="@+id/generateGraphsMainTextView"
         android:layout_width="160dp"
         android:layout_height="wrap_content"
-        android:text="Go to generate graphs to create graphs based on selected date and irritant-symptom criteria."
+        android:text="Create graphs based on selected date and irritant-symptom criteria."
         app:layout_constraintLeft_toLeftOf="@+id/buttonNavToGraphView"
         app:layout_constraintTop_toBottomOf="@+id/buttonNavToGraphView"/>
 

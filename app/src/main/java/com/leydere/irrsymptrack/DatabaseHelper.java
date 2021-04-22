@@ -236,7 +236,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public List<ModelIrritant> getAllIrritants() {
         List<ModelIrritant> compiledResults = new ArrayList();
-        String queryString = "SELECT * FROM " + TABLE_IRRITANTS;
+        String queryString = "SELECT * FROM " + TABLE_IRRITANTS + " ORDER BY " + COLUMN_IRR_TIMEDATE + " DESC";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, null);
 
@@ -267,7 +267,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
      */
     public List<ModelSymptom> getAllSymptoms() {
         List<ModelSymptom> compiledResults = new ArrayList();
-        String queryString = "SELECT * FROM " + TABLE_SYMPTOMS;
+        String queryString = "SELECT * FROM " + TABLE_SYMPTOMS + " ORDER BY " + COLUMN_SYM_TIMEDATE + " DESC";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(queryString, null);
 

@@ -93,6 +93,10 @@ public class ActivityGraphView extends AppCompatActivity implements AdapterGraph
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(ActivityGraphView.this));
         graph.getGridLabelRenderer().setHorizontalLabelsAngle(45);
 
+        graph.getViewport().setXAxisBoundsManual(true);
+        graph.getViewport().setMinX(calendar.getTimeInMillis() - (millisecondsInADay * 8));
+        graph.getViewport().setMaxX(calendar.getTimeInMillis() + millisecondsInADay);
+
         //set date text
         CharSequence dateCharSequence = DateFormat.format("MM/dd/yyyy", calendar);
         startDateTextView.setText(dateCharSequence);
