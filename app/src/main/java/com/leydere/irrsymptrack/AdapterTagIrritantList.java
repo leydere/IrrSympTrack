@@ -68,14 +68,14 @@ public class AdapterTagIrritantList extends RecyclerView.Adapter<AdapterTagIrrit
         holder.irritantTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: remove onClickListener and test functionality
+
             }
         });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: remove onClickListener and test functionality
+
             }
         });
     }

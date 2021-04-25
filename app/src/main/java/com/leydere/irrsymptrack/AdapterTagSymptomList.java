@@ -66,14 +66,14 @@ public class AdapterTagSymptomList extends RecyclerView.Adapter<AdapterTagSympto
         holder.symptomTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: remove onClickListener and test functionality
+
             }
         });
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: remove onClickListener and test functionality
+
             }
         });
     }

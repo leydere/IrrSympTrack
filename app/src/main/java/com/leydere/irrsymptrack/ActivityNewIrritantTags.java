@@ -136,8 +136,6 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
         return false;
     }
 
-    //TODO: see if can remove this after editing above function
-    //redundant as only second line in function serves a purpose.  Creates a new list to return a list.
     private ArrayList<ModelIrritantTag> getAllIrritantTags(){
         ArrayList<ModelIrritantTag> arrayListToReturn = new ArrayList<ModelIrritantTag>();
         arrayListToReturn.addAll(databaseHelper.getAllIrritantTags());
@@ -157,7 +155,7 @@ public class ActivityNewIrritantTags extends AppCompatActivity implements Adapte
 
     @Override
     public void onItemClick(int position) {
-        //TODO: Remove onItemClick and test functionality.
+
     }
 
 }

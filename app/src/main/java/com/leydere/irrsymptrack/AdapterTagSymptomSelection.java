@@ -82,11 +82,10 @@ public class AdapterTagSymptomSelection extends RecyclerView.Adapter<AdapterTagS
             }
         }
 
-        //TODO: consider removing this; ensure functional after removal though
         holder.symptomTagParentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //not sure if I have any use for this on click listener after having implemented card view listener
+
             }
         });
 

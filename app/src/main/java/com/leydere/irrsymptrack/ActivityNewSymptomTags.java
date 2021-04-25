@@ -135,8 +135,6 @@ public class ActivityNewSymptomTags extends AppCompatActivity implements Adapter
         return false;
     }
 
-    //TODO: see if can remove this after editing above function
-    //redundant as only second line in function serves a purpose.  Creates a new list to return a list.
     private ArrayList<ModelSymptomTag> getAllSymptomTags(){
         ArrayList<ModelSymptomTag> arrayListToReturn = new ArrayList<>();
         arrayListToReturn.addAll(databaseHelper.getAllSymptomTags());
@@ -156,7 +154,7 @@ public class ActivityNewSymptomTags extends AppCompatActivity implements Adapter
 
     @Override
     public void onItemClick(int position) {
-        //TODO: Remove onItemClick and test functionality.
+
     }
 
 }
